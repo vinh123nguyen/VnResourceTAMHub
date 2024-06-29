@@ -37,11 +37,11 @@ jobs:
 
       - uses: actions/upload-artifact@v3
         with:
-          name: WpfApp1-${{ github.ref_name }}
+          name: TAMHubApp-${{ github.ref_name }}
           path: ${{ github.workspace }}/publish
     outputs:
       BuildVersion: ${{ github.ref_name}}
-      artifact_net6x: WpfApp1-${{ github.ref_name }}
+      artifact_net6x: TAMHubApp-${{ github.ref_name }}
   create-release-private-repo:
     name: Create release private
     runs-on: ubuntu-latest
@@ -87,14 +87,14 @@ jobs:
         run: ls -R ${{ github.workspace }}
       - uses: actions/download-artifact@v2
         with:
-          name: WpfApp1-${{ github.ref_name }}
-          path: WpfApp1-${{ github.ref_name }}
+          name: TAMHubApp-${{ github.ref_name }}
+          path: TAMHubApp-${{ github.ref_name }}
 
       - name: Easy Zip Files
         uses: vimtor/action-zip@v1
         with:
-          files: WpfApp1-${{ github.ref_name }}
-          dest: WpfApp1-${{ github.ref_name }}.zip
+          files: TAMHubApp-${{ github.ref_name }}
+          dest: TAMHubApp-${{ github.ref_name }}.zip
 
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
@@ -102,8 +102,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ needs.create-release-private-repo.outputs.upload_url }}
-          asset_path: WpfApp1-${{ github.ref_name }}.zip
-          asset_name: WpfApp1-${{ github.ref_name }}.zip
+          asset_path: TAMHubApp-${{ github.ref_name }}.zip
+          asset_name: TAMHubApp-${{ github.ref_name }}.zip
           asset_content_type: application/zip
   
   create-tag-release-public-repo:
@@ -131,7 +131,7 @@ jobs:
         with:
           repository: '${{ github.repository_owner }}/${{ vars.PUBLIC_REPO }}'
           token: ${{ secrets.PUBLIC_REPO_TOKEN }}
-          fetch-depth: 0  # Fetch all history including tags
+          fetch-depth: 0
       - name: Print GitHub Ref
         run: echo "GitHub Ref is ${{ github.ref }}"
       - name: Fetch Commit SHA for Tag
@@ -174,13 +174,13 @@ jobs:
       - name: Download Artifact
         uses: actions/download-artifact@v2
         with:
-          name: WpfApp1-${{ github.ref_name }}
-          path: WpfApp1-${{ github.ref_name }}
+          name: TAMHubApp-${{ github.ref_name }}
+          path: TAMHubApp-${{ github.ref_name }}
       - name: Easy Zip Files
         uses: vimtor/action-zip@v1
         with:
-          files: WpfApp1-${{ github.ref_name }}
-          dest: WpfApp1-${{ github.ref_name }}.zip
+          files: TAMHubApp-${{ github.ref_name }}
+          dest: TAMHubApp-${{ github.ref_name }}.zip
       - name: Log upload_url
         run: echo "${{ toJson(needs.create-release-public-repo.outputs) }}"
       - name: Upload Release Asset
@@ -189,8 +189,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
         with:
           upload_url: ${{ needs.create-release-public-repo.outputs.upload_url }}
-          asset_path: WpfApp1-${{ github.ref_name }}.zip
-          asset_name: WpfApp1-${{ github.ref_name }}.zip
+          asset_path: TAMHubApp-${{ github.ref_name }}.zip
+          asset_name: TAMHubApp-${{ github.ref_name }}.zip
           asset_content_type: application/zip
   update-version-to-public-repo:
     runs-on: ubuntu-latest
@@ -205,11 +205,14 @@ jobs:
         run: |
           tag_name="${{ github.ref_name }}"
           tag_name_without_v="${tag_name:1}"
+          repo_owner="${{ github.repository_owner }}"
+          public_repo="${{ vars.PUBLIC_REPO }}"
+          public_branch="${{ vars.PUBLIC_BRANCH }}"
           xml_content="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
             <item>
               <version>${tag_name_without_v}</version>
-              <url>https://github.com/s1ron/RepoTestAutoUpdate/releases/latest/download/WpfApp1-${tag_name}.zip</url>
-              <changelog>https://github.com/s1ron/RepoTestAutoUpdate/releases</changelog>
+              <url>https://github.com/${repo_owner}/${public_repo}/releases/latest/download/TAMHubApp-${tag_name}.zip</url>
+              <changelog>https://github.com/${repo_owner}/${public_repo}/releases</changelog>
               <mandatory>true</mandatory>
             </item>"
           echo "$xml_content" > update.xml
@@ -217,7 +220,7 @@ jobs:
           git config --global user.name "GitHub Actions"
           git add update.xml
           git commit -m "Update version to ${tag_name}"
-          git push origin main
+          git push origin ${public_branch}
         env:
           GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
   
