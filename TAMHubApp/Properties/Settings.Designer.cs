@@ -25,7 +25,8 @@ namespace TAMHubApp.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/vnr-vuvoanh/VnResourceTAMHubRelease/main/update" +
+            ".xml")]
         public string GitHubUpdateVersionFile {
             get {
                 return ((string)(this["GitHubUpdateVersionFile"]));

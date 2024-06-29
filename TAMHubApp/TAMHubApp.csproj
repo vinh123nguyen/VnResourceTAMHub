@@ -13,8 +13,8 @@
     <Folder Include="Helpers\" />
     <Folder Include="Models\" />
     <Folder Include="Data\" />
+    <Folder Include="Resources\Images\" />
     <Folder Include="ViewModels\" />
-    <Folder Include="Resources\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.9.1" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +33,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
     </Compile>
   </ItemGroup>
+
+    <ItemGroup>
+	    <None Update="Resources\Images\icon.ico">
+		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+	    </None>
+    </ItemGroup>
 
   <ItemGroup>
     <None Update="Properties\Settings.settings">
