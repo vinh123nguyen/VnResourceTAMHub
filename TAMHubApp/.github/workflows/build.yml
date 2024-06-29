@@ -1,0 +1,223 @@
+name: Build and Release
+
+on:
+  # release:
+  #   types: [created]
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x'  # Replace with your desired .NET version
+
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build
+        run: dotnet build --configuration Release
+
+      - name: Publish Artifact
+        run: dotnet publish -c Release -o ${{ github.workspace }}/publish
+
+      - name: Verify Directory
+        run: ls -R ${{ github.workspace }}
+
+      - name: Verify Publish Directory
+        run: ls -R ${{ github.workspace }}/publish
+
+      - uses: actions/upload-artifact@v3
+        with:
+          name: WpfApp1-${{ github.ref_name }}
+          path: ${{ github.workspace }}/publish
+    outputs:
+      BuildVersion: ${{ github.ref_name}}
+      artifact_net6x: WpfApp1-${{ github.ref_name }}
+  create-release-private-repo:
+    name: Create release private
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
+      - name: Print GitHub Ref
+        run: echo "GitHub Ref is ${{ github.ref }}"
+      - name: Create Release
+        id: create_release_private
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          draft: false
+          prerelease: false
+      - name: Log upload_url
+        run: echo "GitHub Ref is ${{ steps.create_release_private.outputs.upload_url }}"
+    outputs:
+      upload_url: ${{ steps.create_release_private.outputs.upload_url }}
+  upload-asset-release-private-repo:
+    runs-on: ubuntu-latest
+    needs: create-release-private-repo
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+          submodules: recursive
+
+      - name: Print GitHub context
+        run: echo "${{ toJson(github) }}"
+
+      - name: Print GITHUB_TOKEN (masked)
+        run: echo "GITHUB_TOKEN is ${{ secrets.GITHUB_TOKEN }}"
+      - name: Verify Directory
+        run: ls -R ${{ github.workspace }}
+      - uses: actions/download-artifact@v2
+        with:
+          name: WpfApp1-${{ github.ref_name }}
+          path: WpfApp1-${{ github.ref_name }}
+
+      - name: Easy Zip Files
+        uses: vimtor/action-zip@v1
+        with:
+          files: WpfApp1-${{ github.ref_name }}
+          dest: WpfApp1-${{ github.ref_name }}.zip
+
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release-private-repo.outputs.upload_url }}
+          asset_path: WpfApp1-${{ github.ref_name }}.zip
+          asset_name: WpfApp1-${{ github.ref_name }}.zip
+          asset_content_type: application/zip
+  
+  create-tag-release-public-repo:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: '${{ github.repository_owner }}/${{ vars.PUBLIC_REPO }}'
+          token: ${{ secrets.PUBLIC_REPO_TOKEN }}
+      - name: Create Git Tag
+        run: git tag ${{ github.ref_name }}
+      - name: Push Git Tag
+        run: git push origin ${{ github.ref_name }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+
+  create-release-public-repo:
+    runs-on: ubuntu-latest
+    needs: create-tag-release-public-repo
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: '${{ github.repository_owner }}/${{ vars.PUBLIC_REPO }}'
+          token: ${{ secrets.PUBLIC_REPO_TOKEN }}
+          fetch-depth: 0  # Fetch all history including tags
+      - name: Print GitHub Ref
+        run: echo "GitHub Ref is ${{ github.ref }}"
+      - name: Fetch Commit SHA for Tag
+        id: fetch_commit
+        run: |
+          tag_name="${{ github.ref_name }}"
+          commit_sha=$(git rev-list -n 1 $tag_name)
+          echo "::set-output name=commit_sha::$commit_sha"
+      - name: Create Release
+        id: create_release_public
+        uses: actions/create-release@latest
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref_name }}
+          body: |
+            Changes in this Release
+            - First Change
+            - Second Change
+          draft: false
+          prerelease: false
+          owner: ${{ github.repository_owner }}
+          repo: ${{ vars.PUBLIC_REPO }}
+          commitish: ${{ steps.fetch_commit.outputs.commit_sha }}
+      - name: Log upload_url
+        run: echo "GitHub Ref is ${{ steps.create_release_public.outputs.upload_url }}"
+    outputs:
+      upload_url: ${{ steps.create_release_public.outputs.upload_url }}
+  upload-asset-release-public-repo:
+    runs-on: ubuntu-latest
+    needs: create-release-public-repo
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: '${{ github.repository_owner }}/${{ vars.PUBLIC_REPO }}'
+          token: ${{ secrets.PUBLIC_REPO_TOKEN }}
+          fetch-depth: 0
+      - name: Download Artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: WpfApp1-${{ github.ref_name }}
+          path: WpfApp1-${{ github.ref_name }}
+      - name: Easy Zip Files
+        uses: vimtor/action-zip@v1
+        with:
+          files: WpfApp1-${{ github.ref_name }}
+          dest: WpfApp1-${{ github.ref_name }}.zip
+      - name: Log upload_url
+        run: echo "${{ toJson(needs.create-release-public-repo.outputs) }}"
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+        with:
+          upload_url: ${{ needs.create-release-public-repo.outputs.upload_url }}
+          asset_path: WpfApp1-${{ github.ref_name }}.zip
+          asset_name: WpfApp1-${{ github.ref_name }}.zip
+          asset_content_type: application/zip
+  update-version-to-public-repo:
+    runs-on: ubuntu-latest
+    needs: create-tag-release-public-repo
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          repository: '${{ github.repository_owner }}/${{ vars.PUBLIC_REPO }}'
+          token: ${{ secrets.PUBLIC_REPO_TOKEN }}
+      - name: Update XML File
+        run: |
+          tag_name="${{ github.ref_name }}"
+          tag_name_without_v="${tag_name:1}"
+          xml_content="<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+            <item>
+              <version>${tag_name_without_v}</version>
+              <url>https://github.com/s1ron/RepoTestAutoUpdate/releases/latest/download/WpfApp1-${tag_name}.zip</url>
+              <changelog>https://github.com/s1ron/RepoTestAutoUpdate/releases</changelog>
+              <mandatory>true</mandatory>
+            </item>"
+          echo "$xml_content" > update.xml
+          git config --global user.email "actions@github.com"
+          git config --global user.name "GitHub Actions"
+          git add update.xml
+          git commit -m "Update version to ${tag_name}"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+  
