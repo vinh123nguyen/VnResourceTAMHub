@@ -2,6 +2,7 @@
 using System.Windows;
 using System.Windows.Forms;
 using TAMHubApp.Services;
+using TAMHubApp.ViewModels;
 using TAMHubApp.Views;
 
 namespace TAMHubApp
@@ -24,12 +25,16 @@ namespace TAMHubApp
 
         private void ConfigureServices(ServiceCollection services)
         {
+            services.AddSingleton<MainWindow>(provider => new MainWindow
+            {
+                DataContext = provider.GetRequiredService<MainViewModel>()
+            });
             services.AddSingleton<MainWindow>();
         }
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            mainWindows = serviceProvider.GetService<MainWindow>();
+            mainWindows = serviceProvider.GetRequiredService<MainWindow>();
             mainWindows.Show();
 
             TrayBarService.CreateTrayIcon(notifyIcon);

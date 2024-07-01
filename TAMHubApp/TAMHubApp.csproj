@@ -11,15 +11,32 @@
 
   <ItemGroup>
     <Folder Include="Helpers\" />
-    <Folder Include="Models\" />
     <Folder Include="Data\" />
     <Folder Include="Resources\Images\" />
-    <Folder Include="ViewModels\" />
+    <Folder Include="Resources\Styles\" />
+    <Folder Include="TAMSDKs\Realand\" />
+    <Folder Include="TAMSDKs\ZKTeco\" />
   </ItemGroup>
 
   <ItemGroup>
     <None Include=".github\workflows\build.yml" />
   </ItemGroup>
+
+	<ItemGroup>
+		<Reference Include="Riss.Devices">
+			<HintPath>TAMSDKs\Realand\Riss.Devices.dll</HintPath>
+		</Reference>
+		<COMReference Include="zkemkeeper">
+			<HintPath>$(ProjectDir)TAMSDKs\ZKTeco\x64\zkemkeeper.dll</HintPath>
+			<VersionMinor>0</VersionMinor>
+			<VersionMajor>1</VersionMajor>
+			<Guid>fe9ded34-e159-408e-8490-b720a5e632c7</Guid>
+			<Lcid>0</Lcid>
+			<WrapperTool>tlbimp</WrapperTool>
+			<Isolated>false</Isolated>
+			<EmbedInteropTypes>true</EmbedInteropTypes>
+		</COMReference>
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.9.1" />
