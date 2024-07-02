@@ -38,8 +38,8 @@ namespace TAMHubApp.Services.TAMServices
 
                 if (IsConnected)
                 {
-                    _isNewFirmwareMachine = _zkemClient.IsNewFirmwareMachine(_deviceInfo.DeviceID);
-                    _isTFTMachine = _zkemClient.IsTFTMachine(_deviceInfo.DeviceID);
+                    _isNewFirmwareMachine = _zkemClient.IsNewFirmwareMachine(_deviceInfo.MachineNo);
+                    _isTFTMachine = _zkemClient.IsTFTMachine(_deviceInfo.MachineNo);
                     if(_zkemClient.RegEvent(1, 32767))
                     {
                         _zkemClient.OnConnected += Event_OnConnected;
@@ -82,20 +82,20 @@ namespace TAMHubApp.Services.TAMServices
         public void Action_GetAllGlog()
         {
             var listAttRecord = new List<ZKTecoGLogModel>();
-            if (_zkemClient.ReadAllGLogData(_deviceInfo.DeviceID))
+            if (_zkemClient.ReadAllGLogData(_deviceInfo.MachineNo))
             {
                 if (_isTFTMachine)
                 {
                     int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
                     string enrollNumber;
-                    while (_zkemClient.SSR_GetGeneralLogData(_deviceInfo.DeviceID,
+                    while (_zkemClient.SSR_GetGeneralLogData(_deviceInfo.MachineNo,
                         out enrollNumber, out tVerifyMode,
                         out tInOutMode, out year, out month, out day, out hour, out minute, out second, ref workCode))
                     {
                         listAttRecord.Add(new ZKTecoGLogModel()
                         {
                             ID = Guid.NewGuid(),
-                            DeviceID = _deviceInfo.DeviceID,
+                            MachineNo = _deviceInfo.MachineNo,
                             EnrollNumber = enrollNumber,
                             VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                             InOutMode = ((ZKTecoINOUTMode)tInOutMode).ToString(),
@@ -109,14 +109,14 @@ namespace TAMHubApp.Services.TAMServices
                 {
                     int tVerifyMode = 0, tInOutMode = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, workCode = 0;
                     int enrollNumber = 0;
-                    while (_zkemClient.GetAllGLogData(_deviceInfo.DeviceID,
+                    while (_zkemClient.GetAllGLogData(_deviceInfo.MachineNo,
                         ref enrollNumber, ref tVerifyMode,
                         ref tInOutMode, ref year, ref month, ref day, ref hour, ref minute, ref second, ref workCode))
                     {
                         listAttRecord.Add(new ZKTecoGLogModel()
                         {
                             ID = Guid.NewGuid(),
-                            DeviceID = _deviceInfo.DeviceID,
+                            MachineNo = _deviceInfo.MachineNo,
                             EnrollNumber = enrollNumber.ToString(),
                             VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                             InOutMode = ((ZKTecoINOUTMode)tInOutMode).ToString(),

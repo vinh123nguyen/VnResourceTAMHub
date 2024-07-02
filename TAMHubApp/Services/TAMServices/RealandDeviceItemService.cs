@@ -16,14 +16,14 @@ namespace TAMHubApp.Services.TAMServices
         {
             IsConnected = false;
             _device = new Device();
-            _device.DN = deviceInfo.DeviceID;
+            _device.DN = deviceInfo.MachineNo;
 
             if (deviceInfo.CommPassword != null)
                 _device.Password = deviceInfo.CommPassword.ToString();
             _device.Model = "ZDC2911";
             _device.ConnectionModel = 5;
             _device.IpAddress = deviceInfo.IPAddress;
-            _device.IpPort = deviceInfo.DeviceID;
+            _device.IpPort = deviceInfo.MachineNo;
             _device.CommunicationType = CommunicationType.Tcp;
         }
 
