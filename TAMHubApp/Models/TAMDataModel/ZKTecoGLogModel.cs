@@ -3,7 +3,7 @@
     public class ZKTecoGLogModel
     {
         public Guid ID { set; get; }
-        public int DeviceID { get; set; }
+        public int MachineNo { get; set; }
         public string EnrollNumber { get; set; }
         public string VerifyMode { get; set; }
         public string InOutMode { get; set; }

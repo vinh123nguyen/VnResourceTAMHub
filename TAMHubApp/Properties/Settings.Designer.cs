@@ -32,5 +32,14 @@ namespace TAMHubApp.Properties {
                 return ((string)(this["GitHubUpdateVersionFile"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IsMigrateDb {
+            get {
+                return ((bool)(this["IsMigrateDb"]));
+            }
+        }
     }
 }

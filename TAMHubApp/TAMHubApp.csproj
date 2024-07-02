@@ -11,9 +11,9 @@
 
   <ItemGroup>
     <Folder Include="Helpers\" />
-    <Folder Include="Data\" />
     <Folder Include="Resources\Images\" />
     <Folder Include="Resources\Styles\" />
+    <Folder Include="ScheduleTasks\Jobs\" />
     <Folder Include="TAMSDKs\Realand\" />
     <Folder Include="TAMSDKs\ZKTeco\" />
   </ItemGroup>
@@ -40,7 +40,11 @@
 
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.9.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite.Core" Version="8.0.6" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
+    <PackageReference Include="Quartz" Version="3.10.0" />
+    <PackageReference Include="Quartz.Extensions.Hosting" Version="3.10.0" />
   </ItemGroup>
 
   <ItemGroup>
