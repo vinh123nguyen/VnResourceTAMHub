@@ -4,9 +4,50 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TAMHubApp"
+        xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="540" Width="960
+        ">
     <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="48"></RowDefinition>
+            <RowDefinition Height="*"></RowDefinition>
+        </Grid.RowDefinitions>
+
+        <Border Grid.Row="0" x:Name="navBar" Style="{StaticResource navBar}">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <Image Grid.Column="0" Source="/Resources/Images/logovnr.png" Margin="8,8,24,8"></Image>
+                <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto">
+
+                    <uc:Nav_NavigationButtonUC
+                        Icon="{DynamicResource home}"
+                        Title="{DynamicResource LANG_NAV_Home}"
+                        />
+
+                    <uc:Nav_NavigationButtonUC
+                        Icon="{DynamicResource home}"
+                        Title="{DynamicResource LANG_NAV_Home}"
+                        />          
+
+                </StackPanel>
+
+            </Grid>
+        </Border>
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="151*"/>
+                <ColumnDefinition Width="809*"/>
+            </Grid.ColumnDefinitions>
+
+
+            <TextBlock Grid.ColumnSpan="2">dfsefsefsefsefse</TextBlock>
+        </Grid>
 
     </Grid>
 </Window>

@@ -19,13 +19,14 @@ namespace TAMHubApp.Infrastructures.Helpers
                 });
 
                 ResourceDictionary newDic = new ResourceDictionary();
-                newDic.Source = new Uri($"/Settings/LocalizationResources.{languageCode}.xaml", UriKind.RelativeOrAbsolute);
+                newDic.Source = new Uri($"/Resources/Localizations/LocalizationResources.{languageCode}.xaml", UriKind.RelativeOrAbsolute);
                 Application.Current.Resources.MergedDictionaries.Add(newDic);
             }
             catch(Exception ex)
             {
                 MessageBox.Show($"Error loading language resources: {ex.Message}");
             }
+            var fggh = "dw".TranslateString();
         }
     }
 }

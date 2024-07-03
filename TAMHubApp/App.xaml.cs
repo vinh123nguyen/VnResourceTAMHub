@@ -6,6 +6,7 @@ using Quartz.Spi;
 using System.Windows;
 using System.Windows.Forms;
 using TAMHubApp.Data;
+using TAMHubApp.Infrastructures.Helpers;
 using TAMHubApp.ScheduleTasks;
 using TAMHubApp.Services;
 using TAMHubApp.ViewModels;
@@ -23,6 +24,7 @@ namespace TAMHubApp
         private readonly NotifyIcon notifyIcon;
         public App()
         {
+            SQLitePCL.Batteries.Init();
             ServiceCollection services = new ServiceCollection();
             ConfigureServices(services);
             serviceProvider = services.BuildServiceProvider();
@@ -34,8 +36,8 @@ namespace TAMHubApp
             // Schedule task DI Register
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
-            services.AddSingleton<Quartz.QuartzHostedService>();
-            services.AddHostedService(provider => provider.GetService<Quartz.QuartzHostedService>());
+            services.AddSingleton<QuartzHostedService>();
+            services.AddHostedService(provider => provider.GetService<QuartzHostedService>());
 
             // DB DI Register
             services.AddDbContext<AppDbContext>(opts =>
@@ -48,6 +50,7 @@ namespace TAMHubApp
                 DataContext = provider.GetRequiredService<MainViewModel>()
             });
             services.AddSingleton<MainWindow>();
+            
         }
         private async Task InitializeScheduler()
         {
@@ -65,6 +68,7 @@ namespace TAMHubApp
             AutoUpdaterService.CheckForUpdate();
             InitializeScheduler().GetAwaiter().GetResult();
             DataBaseService.EnsureUpdateDatabase(serviceProvider);
+            //LocalizationHelper.SetLanguage("vi-VN");
 
             base.OnStartup(e);
         }

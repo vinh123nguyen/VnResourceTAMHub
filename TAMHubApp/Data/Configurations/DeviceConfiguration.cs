@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Riss.Devices;
+using TAMHubApp.Data.Entities;
+
 
 namespace TAMHubApp.Data.Configurations
 {
