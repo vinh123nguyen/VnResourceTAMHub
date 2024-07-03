@@ -23,7 +23,6 @@ namespace TAMHubApp.Services
             {
                 Directory.CreateDirectory(folderPath);
             }
-
             if (!File.Exists(dbFilePath) || Properties.Settings.Default.IsMigrateDb)
             {
                 using (var scope = serviceProvider.CreateScope())
@@ -32,6 +31,11 @@ namespace TAMHubApp.Services
                     context.Database.Migrate();
                 }
             }
+            //if (Properties.Settings.Default.IsMigrateDb)
+            //{
+            //    Properties.Settings.Default.IsMigrateDb = false;
+            //    Properties.Settings.Default.Save();
+            //}
         }
     }
 }
