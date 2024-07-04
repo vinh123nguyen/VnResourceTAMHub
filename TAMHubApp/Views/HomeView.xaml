@@ -1,0 +1,16 @@
+﻿<UserControl x:Class="TAMHubApp.Views.HomeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TAMHubApp.Views"
+             mc:Ignorable="d" 
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             d:DesignHeight="484" d:DesignWidth="960">
+    <Grid Background="#EFF3FF">
+        <TextBlock>Home Page</TextBlock>
+        <TextBlock Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='HH:mm:ss'}"
+           FontSize="36" FontWeight="Bold"
+           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+    </Grid>
+</UserControl>

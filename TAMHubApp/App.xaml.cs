@@ -33,11 +33,21 @@ namespace TAMHubApp
 
         private void ConfigureServices(ServiceCollection services)
         {
+            // DI ViewModel
+
+            services.AddSingleton<MainViewModel>();
+            services.AddSingleton<HomeViewModel>();
+            services.AddSingleton<DeviceViewModel>();
+
             // Schedule task DI Register
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             services.AddSingleton<QuartzHostedService>();
             services.AddHostedService(provider => provider.GetService<QuartzHostedService>());
+
+            // Navigate Service
+            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider => viewModelType => (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
 
             // DB DI Register
             services.AddDbContext<AppDbContext>(opts =>
@@ -49,8 +59,8 @@ namespace TAMHubApp
             {
                 DataContext = provider.GetRequiredService<MainViewModel>()
             });
-            services.AddSingleton<MainWindow>();
-            
+            //services.AddSingleton<MainWindow>();
+
         }
         private async Task InitializeScheduler()
         {

@@ -32,12 +32,12 @@ namespace TAMHubApp.Views.UserControls
         }
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register("Title", typeof(string), typeof(Nav_NavigationButtonUC));
 
-        public bool IsActive
+        public string TabActive
         {
-            get { return (bool)GetValue(IsActiveProperty); }
-            set { SetValue(IsActiveProperty, value); }
+            get { return (string)GetValue(TabActiveProperty); }
+            set { SetValue(TabActiveProperty, value); }
         }
-        public static readonly DependencyProperty IsActiveProperty = DependencyProperty.Register("IsActive", typeof(bool), typeof(Nav_NavigationButtonUC));
+        public static readonly DependencyProperty TabActiveProperty = DependencyProperty.Register("TabActive", typeof(string), typeof(Nav_NavigationButtonUC));
 
 
         public PathGeometry Icon
@@ -47,5 +47,13 @@ namespace TAMHubApp.Views.UserControls
         }
 
         public static readonly DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(PathGeometry), typeof(Nav_NavigationButtonUC));
+
+
+        public ICommand NavigateCommand
+        {
+            get { return (ICommand)GetValue(NavigateCommandProperty); }
+            set { SetValue(NavigateCommandProperty, value); }
+        }
+        public static readonly DependencyProperty NavigateCommandProperty = DependencyProperty.Register("NavigateCommand", typeof(ICommand), typeof(Nav_NavigationButtonUC));
     }
 }
