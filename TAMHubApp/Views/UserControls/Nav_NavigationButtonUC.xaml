@@ -7,21 +7,20 @@
              mc:Ignorable="d" 
              Name="navButtonUC"
              d:DesignHeight="48" d:DesignWidth="100">
-    <Grid VerticalAlignment="Center">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"></RowDefinition>
-            <RowDefinition Height="7"></RowDefinition>
-        </Grid.RowDefinitions>
-        <Button Grid.Row="0" x:Name="navButton" Style="{StaticResource style_navButton}" Template="{StaticResource NoMouseOverButtonTemplate}">
-            <StackPanel Orientation="Horizontal">
+
+    <Button Template="{StaticResource NoMouseOverButtonTemplate}" Style="{StaticResource style_navButton}" x:Name="navButton" Command="{Binding ElementName=navButtonUC,Path=NavigateCommand}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="7"></RowDefinition>
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0"  Orientation="Horizontal">
                 <StackPanel Orientation="Horizontal">
                     <Path Data="{Binding ElementName=navButtonUC,Path=Icon}" Stroke="Black" StrokeThickness="0.7" Height="16" Width="16" Stretch="Fill" />
-                    <TextBlock Text="{Binding ElementName=navButtonUC,Path=Title}" FontSize="12" Padding="5,0"></TextBlock>
+                    <TextBlock Text="{Binding ElementName=navButtonUC,Path=Title}" FontSize="14" Padding="5,0"></TextBlock>
                 </StackPanel>
             </StackPanel>
-        </Button>
-
-        <Border Grid.Row="1" Style="{StaticResource style_navButtonLine}" Visibility="{Binding ElementName=Button1, Path=IsMouseOver, Converter={StaticResource BooleanToVisibilityConverter}}"></Border>
-
-    </Grid>
+            <Border Grid.Row="1" Style="{StaticResource style_navButtonLine}" Visibility="Hidden"></Border>
+        </Grid>
+    </Button>
 </UserControl>

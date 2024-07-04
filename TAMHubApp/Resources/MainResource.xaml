@@ -5,5 +5,6 @@
         <ResourceDictionary Source="/Resources/Styles/MainStyle.xaml"/>
         <ResourceDictionary Source="/Resources/Styles/IconPath.xaml"/>
         <ResourceDictionary Source="/Resources/Localizations/LocalizationResources.vi-VN.xaml"/>
+        
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
