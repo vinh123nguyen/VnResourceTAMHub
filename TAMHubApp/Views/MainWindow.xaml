@@ -15,7 +15,7 @@
             <RowDefinition Height="*"></RowDefinition>
         </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" x:Name="navBar" Style="{StaticResource navBar}">
+        <Border Grid.Row="0" x:Name="navBar" Style="{StaticResource style_navBar}">
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
