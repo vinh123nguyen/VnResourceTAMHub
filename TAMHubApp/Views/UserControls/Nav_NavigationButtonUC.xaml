@@ -4,10 +4,13 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
+             xmlns:converter="clr-namespace:TAMHubApp.Converters"
              mc:Ignorable="d" 
              Name="navButtonUC"
              d:DesignHeight="48" d:DesignWidth="100">
-
+    <UserControl.Resources>
+        <converter:StringTabNameToVisibilityConverter x:Key="StringTabNameToVisibilityConverter" />
+    </UserControl.Resources>
     <Button Template="{StaticResource NoMouseOverButtonTemplate}" Style="{StaticResource style_navButton}" x:Name="navButton" Command="{Binding ElementName=navButtonUC,Path=NavigateCommand}">
         <Grid>
             <Grid.RowDefinitions>
@@ -20,7 +23,17 @@
                     <TextBlock Text="{Binding ElementName=navButtonUC,Path=Title}" FontSize="14" Padding="5,0"></TextBlock>
                 </StackPanel>
             </StackPanel>
-            <Border Grid.Row="1" Style="{StaticResource style_navButtonLine}" Visibility="Hidden"></Border>
+            <Border Grid.Row="1" Style="{StaticResource style_navButtonLine}" 
+                    >
+                    <!--Visibility="{Binding TabActive, Converter={StaticResource StringTabNameToVisibilityConverter}, ConverterParameter=NameTab}"-->
+                <Border.Visibility>
+                    <MultiBinding Converter="{StaticResource StringTabNameToVisibilityConverter}">
+                        <Binding Path="TabActive" />
+                        <Binding ElementName="navButtonUC" Path="NameTab" />
+                    </MultiBinding>
+                </Border.Visibility>
+
+            </Border>
         </Grid>
     </Button>
 </UserControl>

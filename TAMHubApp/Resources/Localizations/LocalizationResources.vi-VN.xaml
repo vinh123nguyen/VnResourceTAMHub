@@ -6,4 +6,7 @@
     <system:String x:Key="LANG_NAV_Data">Dữ liệu</system:String>
     <system:String x:Key="LANG_NAV_Schedule">Lập lịch</system:String>
     <system:String x:Key="LANG_NAV_Setting">Thiết lập</system:String>
+    <system:String x:Key="LANG_DEV_AddDevice">Thêm thiết bị</system:String>
+    <system:String x:Key="LANG_DEV_ConnectAll">Kết nối tất cả</system:String>
+    <system:String x:Key="LANG_DEV_DisconnectAll">Ngắt kết nối tất cả</system:String>
 </ResourceDictionary>

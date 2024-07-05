@@ -3,6 +3,8 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:viewModel="clr-namespace:TAMHubApp.ViewModels"
              xmlns:view="clr-namespace:TAMHubApp.Views"
+             xmlns:deviceUCVM="clr-namespace:TAMHubApp.ViewModels.UserControls"
+             xmlns:viewUC="clr-namespace:TAMHubApp.Views.UserControls"
              >
     <Application.Resources>
         <ResourceDictionary>
@@ -10,12 +12,24 @@
                 <ResourceDictionary Source="/Resources/MainResource.xaml"/>
 
             </ResourceDictionary.MergedDictionaries>
-            <viewModel:MainViewModel x:Key="MainVM1"></viewModel:MainViewModel>
             <DataTemplate DataType="{x:Type TypeName=viewModel:HomeViewModel}">
                 <view:HomeView/>
             </DataTemplate>
             <DataTemplate DataType="{x:Type TypeName=viewModel:DeviceViewModel}">
                 <view:DeviceView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type TypeName=viewModel:DataViewModel}">
+                <view:DataView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type TypeName=viewModel:ScheduleViewModel}">
+                <view:ScheduleView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type TypeName=viewModel:SettingViewModel}">
+                <view:SettingView/>
+            </DataTemplate>
+
+            <DataTemplate DataType="{x:Type TypeName=deviceUCVM:Device_CreateOrUpdateUCViewModel}">
+                <viewUC:Device_CreateOrUpdateUC/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>
