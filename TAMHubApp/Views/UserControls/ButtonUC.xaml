@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="TAMHubApp.Views.UserControls.ButtonUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
+             mc:Ignorable="d" 
+             Name="buttonUC"
+             d:DesignHeight="30" d:DesignWidth="100">
+    <UserControl.Resources>
+        <Style x:Key="style_ActionButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="6"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Gray"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+    <Button Grid.Column="1" Style="{StaticResource style_ActionButton}" 
+            Width="Auto" Background="{Binding ElementName=buttonUC,Path=ButtonBackground}"
+             Command="{Binding ElementName=buttonUC,Path=ClickCommand}">
+        <StackPanel Orientation="Horizontal" Margin="4,2,2,2" Width="Auto">
+            <Border Background="{Binding ElementName=buttonUC,Path=IconBackground}" Height="18" Width="18" CornerRadius="4">
+                <Path Data="{Binding ElementName=buttonUC,Path=Icon}" Stroke="White" StrokeThickness="1" Height="14" Width="14" Stretch="Fill"/>
+            </Border>
+            <TextBlock Margin="4,0" FontSize="{Binding ElementName=buttonUC,Path=TextFontSize}" Foreground="{Binding ElementName=buttonUC,Path=IconBackground}" Text="{Binding ElementName=buttonUC,Path=Title}" VerticalAlignment="Center"></TextBlock>
+        </StackPanel>
+    </Button>
+</UserControl>

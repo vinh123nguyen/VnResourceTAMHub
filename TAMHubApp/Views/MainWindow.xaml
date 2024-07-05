@@ -4,66 +4,81 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:TAMHubApp"
+        xmlns:converter="clr-namespace:TAMHubApp.Converters"
         xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
         mc:Ignorable="d"
-        Title="MainWindow" Height="540" Width="960
-        ">
-    
+        Title="VnResource TAM Hub" Height="540" Width="960">
+    <Window.Icon>
+        <BitmapImage UriSource="/Resources/Images/windowicon.png"/>
+    </Window.Icon>
+    <Window.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </Window.Resources>
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="56"></RowDefinition>
-            <RowDefinition Height="*"></RowDefinition>
-        </Grid.RowDefinitions>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="56"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
 
-        <Border Grid.Row="0" x:Name="navBar" Style="{StaticResource style_navBar}">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>
-                    <!--<ColumnDefinition></ColumnDefinition>-->
-                </Grid.ColumnDefinitions>
+            <Border Grid.Row="0" x:Name="navBar" Style="{StaticResource style_navBar}">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
+                        <!--<ColumnDefinition></ColumnDefinition>-->
+                    </Grid.ColumnDefinitions>
 
-                <Image Grid.Column="0" Source="/Resources/Images/logovnr.png" Margin="8,8,8,8"></Image>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto">
+                    <Image Grid.Column="0" Source="/Resources/Images/logovnr.png" Margin="8,8,8,8"></Image>
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto">
 
-                    <uc:Nav_NavigationButtonUC
-                        Icon="{DynamicResource Icon_Home}"
-                        Title="{DynamicResource LANG_NAV_Home}"
-                        NavigateCommand="{Binding NavigateHomeCommand}"
-                        TabActive="{Binding TabActive}"
-                        />
-                    <uc:Nav_NavigationButtonUC
-                        Icon="{DynamicResource Icon_Device}"
-                        Title="{DynamicResource LANG_NAV_Device}"
-                        NavigateCommand="{Binding NavigateDeviceCommand}"
-                        TabActive="{Binding TabActive}"
-                        />
-                    <uc:Nav_NavigationButtonUC
-                        Icon="{DynamicResource Icon_Data}"
-                        Title="{DynamicResource LANG_NAV_Data}"
-                        NavigateCommand="{Binding NavigateDeviceCommand}"
-                        TabActive="{Binding TabActive}"
-                        />
-                    <uc:Nav_NavigationButtonUC
-                        Icon="{DynamicResource Icon_Calendar}"
-                        Title="{DynamicResource LANG_NAV_Schedule}"
-                        NavigateCommand="{Binding NavigateDeviceCommand}"
-                        TabActive="{Binding TabActive}"
-                        />
-                    <uc:Nav_NavigationButtonUC
-                        Icon="{DynamicResource Icon_Setting}"
-                        Title="{DynamicResource LANG_NAV_Setting}"
-                        NavigateCommand="{Binding NavigateDeviceCommand}"
-                        TabActive="{Binding TabActive}"
-                        />          
+                        <uc:Nav_NavigationButtonUC
+                            Icon="{DynamicResource Icon_Home}"
+                            Title="{DynamicResource LANG_NAV_Home}"
+                            NavigateCommand="{Binding NavigateHomeCommand}"
+                            TabActive="{Binding TabActive}"
+                            NameTab="HomeView"
+                            />
+                        <uc:Nav_NavigationButtonUC
+                            Icon="{DynamicResource Icon_Device}"
+                            Title="{DynamicResource LANG_NAV_Device}"
+                            NavigateCommand="{Binding NavigateDeviceCommand}"
+                            TabActive="{Binding TabActive}"
+                            NameTab="DeviceView"
+                            />
+                        <uc:Nav_NavigationButtonUC
+                            Icon="{DynamicResource Icon_Data}"
+                            Title="{DynamicResource LANG_NAV_Data}"
+                            NavigateCommand="{Binding NavigateDataCommand}"
+                            TabActive="{Binding TabActive}"
+                            NameTab="DataView"
+                            />
+                        <uc:Nav_NavigationButtonUC
+                            Icon="{DynamicResource Icon_Calendar}"
+                            Title="{DynamicResource LANG_NAV_Schedule}"
+                            NavigateCommand="{Binding NavigateScheduleCommand}"
+                            TabActive="{Binding TabActive}"
+                            NameTab="ScheduleView"
+                            />  
+                        <uc:Nav_NavigationButtonUC
+                            Icon="{DynamicResource Icon_Setting}"
+                            Title="{DynamicResource LANG_NAV_Setting}"
+                            NavigateCommand="{Binding NavigateSettingCommand}"
+                            TabActive="{Binding TabActive}"
+                            NameTab="SettingView"
+                            />
 
-                </StackPanel>
+                    </StackPanel>
 
-            </Grid>
-        </Border>
-        <ContentControl Grid.Row="1" Content="{Binding MainViewNavigate.CurrentView}">
-            
-        </ContentControl>
+                </Grid>
+            </Border>
+            <ContentControl Grid.Row="1" Content="{Binding MainViewNavigate.CurrentView}">
+            </ContentControl>
+        </Grid>
+
+        <!--<Grid Background="#100000FF" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <uc:LoadingUC/>
+        </Grid>-->
 
     </Grid>
 </Window>

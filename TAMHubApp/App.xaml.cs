@@ -10,6 +10,7 @@ using TAMHubApp.Infrastructures.Helpers;
 using TAMHubApp.ScheduleTasks;
 using TAMHubApp.Services;
 using TAMHubApp.ViewModels;
+using TAMHubApp.ViewModels.UserControls;
 using TAMHubApp.Views;
 
 namespace TAMHubApp
@@ -34,10 +35,13 @@ namespace TAMHubApp
         private void ConfigureServices(ServiceCollection services)
         {
             // DI ViewModel
-
             services.AddSingleton<MainViewModel>();
             services.AddSingleton<HomeViewModel>();
             services.AddSingleton<DeviceViewModel>();
+            services.AddSingleton<DataViewModel>();
+            services.AddSingleton<ScheduleViewModel>();
+            services.AddSingleton<SettingViewModel>();
+            services.AddSingleton<Device_CreateOrUpdateUCViewModel>();
 
             // Schedule task DI Register
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
@@ -46,7 +50,8 @@ namespace TAMHubApp
             services.AddHostedService(provider => provider.GetService<QuartzHostedService>());
 
             // Navigate Service
-            services.AddSingleton<INavigationService, NavigationService>();
+            services.AddSingleton<ITabNavigationService, TabNavigationService>();
+            services.AddSingleton<IDeviceNavigationService, DeviceNavigationService>();
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider => viewModelType => (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
 
             // DB DI Register
@@ -74,7 +79,7 @@ namespace TAMHubApp
             mainWindows = serviceProvider.GetRequiredService<MainWindow>();
             mainWindows.Show();
 
-            TrayBarService.CreateTrayIcon(notifyIcon);
+            //TrayBarService.CreateTrayIcon(notifyIcon);
             AutoUpdaterService.CheckForUpdate();
             InitializeScheduler().GetAwaiter().GetResult();
             DataBaseService.EnsureUpdateDatabase(serviceProvider);

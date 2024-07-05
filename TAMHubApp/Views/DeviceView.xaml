@@ -3,10 +3,83 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:TAMHubApp.Views"
+             xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
+             xmlns:converter="clr-namespace:TAMHubApp.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <TextBlock>Device Page</TextBlock>
+    <UserControl.Resources>
+        <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+    </UserControl.Resources>
+    <Grid Background="#EFF3FF">
+        <Grid Grid.ColumnSpan="2">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="0,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <uc:ButtonUC 
+                    Title="{StaticResource LANG_DEV_AddDevice}"
+                    Icon="{StaticResource Icon_Plus}"
+                    ClickCommand="{Binding AddDeviceCommand}"
+                    ButtonBackground="#B5C9FF"
+                    IconBackground="#0066FF"
+                    TextFontSize="16"
+                    Margin="8,0"
+                    />
+
+                <uc:ButtonUC Grid.Column="1"
+                    Title="{StaticResource LANG_DEV_ConnectAll}"
+                    Icon="{StaticResource Icon_Link}"
+                    ButtonBackground="#B6FFB5"
+                    IconBackground="#1BBB48"
+                    TextFontSize="16"
+                    Margin="8,0"
+                    />
+
+                <uc:ButtonUC Grid.Column="2"
+                     Title="{StaticResource LANG_DEV_DisconnectAll}"
+                     Icon="{StaticResource Icon_Power}"
+                     ButtonBackground="#FFB5B9"
+                     IconBackground="#FF3C3C"
+                     TextFontSize="16"
+                     Margin="8,0"
+                     /> 
+
+            </Grid>
+
+            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                <ItemsControl ItemsSource="{Binding DeviceItems}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <uc:DeviceCardItemUC FontSize="14"/>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>
+            
+
+        </Grid>
+
+        <!--<Grid x:Name="DevicePageOverlay" Background="#50CECECE"
+              Visibility="{Binding IsCreateOrUpdatePopupOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <ContentControl VerticalAlignment="Center" HorizontalAlignment="Center" 
+                            Width="400"
+                            Height="300"
+                            Content="{Binding OverlayNavigate.CurrentView}">
+            </ContentControl>
+        </Grid>-->
+
     </Grid>
 </UserControl>

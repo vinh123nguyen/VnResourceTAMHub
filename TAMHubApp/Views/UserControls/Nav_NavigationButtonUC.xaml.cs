@@ -39,6 +39,13 @@ namespace TAMHubApp.Views.UserControls
         }
         public static readonly DependencyProperty TabActiveProperty = DependencyProperty.Register("TabActive", typeof(string), typeof(Nav_NavigationButtonUC));
 
+        public string NameTab
+        {
+            get { return (string)GetValue(NameTabProperty); }
+            set { SetValue(NameTabProperty, value); }
+        }
+        public static readonly DependencyProperty NameTabProperty = DependencyProperty.Register("NameTab", typeof(string), typeof(Nav_NavigationButtonUC));
+
 
         public PathGeometry Icon
         {

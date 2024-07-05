@@ -54,8 +54,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Resource Include="Resources\Images\logovnr.png" />
+	  <Resource Include="Resources\Images\logovnr.png" />
   </ItemGroup>
+	<ItemGroup>
+		<Resource Include="Resources\Images\windowicon.png" />
+	</ItemGroup>
+	<ItemGroup>
+		<Resource Include="Resources\Images\loading.gif" />
+	</ItemGroup>
 
   <ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
@@ -66,10 +72,10 @@
   </ItemGroup>
 
     <ItemGroup>
-	    <None Update="Resources\Images\icon.ico">
-		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	    </None>
-    </ItemGroup>
+		<None Update="Resources\Images\icon.ico">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
 
 	<!--<ItemGroup>
 	    <None Update="Resources\Images\*">
