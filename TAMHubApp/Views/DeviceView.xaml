@@ -63,7 +63,8 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <uc:DeviceCardItemUC FontSize="14"/>
+                            <!--<uc:DeviceCardItemUC FontSize="14" TongleOnOffCommand="{Binding TongleOnOffCommand}"/>-->
+                            <uc:DeviceCardItemUC FontSize="14" TongleOnOffCommand="{Binding DataContext.TongleOnOffCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

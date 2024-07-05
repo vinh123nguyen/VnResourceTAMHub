@@ -3,10 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
+using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Forms;
 using TAMHubApp.Data;
 using TAMHubApp.Infrastructures.Helpers;
+using TAMHubApp.Models;
 using TAMHubApp.ScheduleTasks;
 using TAMHubApp.Services;
 using TAMHubApp.ViewModels;
@@ -41,7 +43,7 @@ namespace TAMHubApp
             services.AddSingleton<DataViewModel>();
             services.AddSingleton<ScheduleViewModel>();
             services.AddSingleton<SettingViewModel>();
-            services.AddSingleton<Device_CreateOrUpdateUCViewModel>();
+            services.AddSingleton<DeviceItemInfoUCViewModel>();
 
             // Schedule task DI Register
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
@@ -64,7 +66,9 @@ namespace TAMHubApp
             {
                 DataContext = provider.GetRequiredService<MainViewModel>()
             });
-            //services.AddSingleton<MainWindow>();
+
+
+            services.AddSingleton<ObservableCollection<DeviceModel>>();
 
         }
         private async Task InitializeScheduler()

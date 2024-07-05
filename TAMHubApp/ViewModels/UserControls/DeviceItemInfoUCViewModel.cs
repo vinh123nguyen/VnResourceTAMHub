@@ -2,11 +2,11 @@
 
 namespace TAMHubApp.ViewModels.UserControls
 {
-    class Device_CreateOrUpdateUCViewModel : BaseViewModel
+    class DeviceItemInfoUCViewModel : BaseViewModel
     {
         private DeviceViewModel _deviceViewModel;
 
-        public Device_CreateOrUpdateUCViewModel(DeviceViewModel deviceViewModel)
+        public DeviceItemInfoUCViewModel(DeviceViewModel deviceViewModel)
         {
             _deviceViewModel = deviceViewModel;
             CloseOverlayCommand = new RelayCommand<object>(x => { return true; }, CloseOverlayCommandExcute);

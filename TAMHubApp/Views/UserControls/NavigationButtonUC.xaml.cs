@@ -19,9 +19,9 @@ namespace TAMHubApp.Views.UserControls
     /// <summary>
     /// Interaction logic for Nav_NavigationButtonUC.xaml
     /// </summary>
-    public partial class Nav_NavigationButtonUC : UserControl
+    public partial class NavigationButtonUC : UserControl
     {
-        public Nav_NavigationButtonUC()
+        public NavigationButtonUC()
         {
             InitializeComponent();
         }
@@ -30,21 +30,21 @@ namespace TAMHubApp.Views.UserControls
             get { return (string)GetValue(TitleProperty); }
             set { SetValue(TitleProperty, value); }
         }
-        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register("Title", typeof(string), typeof(Nav_NavigationButtonUC));
+        public static readonly DependencyProperty TitleProperty = DependencyProperty.Register("Title", typeof(string), typeof(NavigationButtonUC));
 
         public string TabActive
         {
             get { return (string)GetValue(TabActiveProperty); }
             set { SetValue(TabActiveProperty, value); }
         }
-        public static readonly DependencyProperty TabActiveProperty = DependencyProperty.Register("TabActive", typeof(string), typeof(Nav_NavigationButtonUC));
+        public static readonly DependencyProperty TabActiveProperty = DependencyProperty.Register("TabActive", typeof(string), typeof(NavigationButtonUC));
 
         public string NameTab
         {
             get { return (string)GetValue(NameTabProperty); }
             set { SetValue(NameTabProperty, value); }
         }
-        public static readonly DependencyProperty NameTabProperty = DependencyProperty.Register("NameTab", typeof(string), typeof(Nav_NavigationButtonUC));
+        public static readonly DependencyProperty NameTabProperty = DependencyProperty.Register("NameTab", typeof(string), typeof(NavigationButtonUC));
 
 
         public PathGeometry Icon
@@ -53,7 +53,7 @@ namespace TAMHubApp.Views.UserControls
             set { SetValue(IconProperty, value); }
         }
 
-        public static readonly DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(PathGeometry), typeof(Nav_NavigationButtonUC));
+        public static readonly DependencyProperty IconProperty = DependencyProperty.Register("Icon", typeof(PathGeometry), typeof(NavigationButtonUC));
 
 
         public ICommand NavigateCommand
@@ -61,6 +61,6 @@ namespace TAMHubApp.Views.UserControls
             get { return (ICommand)GetValue(NavigateCommandProperty); }
             set { SetValue(NavigateCommandProperty, value); }
         }
-        public static readonly DependencyProperty NavigateCommandProperty = DependencyProperty.Register("NavigateCommand", typeof(ICommand), typeof(Nav_NavigationButtonUC));
+        public static readonly DependencyProperty NavigateCommandProperty = DependencyProperty.Register("NavigateCommand", typeof(ICommand), typeof(NavigationButtonUC));
     }
 }

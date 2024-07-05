@@ -28,8 +28,8 @@
                 <view:SettingView/>
             </DataTemplate>
 
-            <DataTemplate DataType="{x:Type TypeName=deviceUCVM:Device_CreateOrUpdateUCViewModel}">
-                <viewUC:Device_CreateOrUpdateUC/>
+            <DataTemplate DataType="{x:Type TypeName=deviceUCVM:DeviceItemInfoUCViewModel}">
+                <viewUC:DeviceItemInfoUC/>
             </DataTemplate>
         </ResourceDictionary>
     </Application.Resources>

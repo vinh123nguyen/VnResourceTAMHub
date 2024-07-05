@@ -21,6 +21,13 @@ namespace TAMHubApp.Views.UserControls
         }
         public static readonly DependencyProperty IsConnectedProperty = DependencyProperty.Register("IsConnected", typeof(bool), typeof(DeviceCardItemUC));
 
+        public bool IsConnectLoading
+        {
+            get { return (bool)GetValue(IsConnectLoadingProperty); }
+            set { SetValue(IsConnectLoadingProperty, value); }
+        }
+        public static readonly DependencyProperty IsConnectLoadingProperty = DependencyProperty.Register("IsConnectLoading", typeof(bool), typeof(DeviceCardItemUC));
+
         public ICommand TongleOnOffCommand
         {
             get { return (ICommand)GetValue(TongleOnOffCommandProperty); }

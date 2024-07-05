@@ -3,11 +3,11 @@
 namespace TAMHubApp.Views.UserControls
 {
     /// <summary>
-    /// Interaction logic for Device_CreateOrUpdateUC.xaml
+    /// Interaction logic for DeviceItemInfoUC.xaml
     /// </summary>
-    public partial class Device_CreateOrUpdateUC : UserControl
+    public partial class DeviceItemInfoUC : UserControl
     {
-        public Device_CreateOrUpdateUC()
+        public DeviceItemInfoUC()
         {
             InitializeComponent();
         }

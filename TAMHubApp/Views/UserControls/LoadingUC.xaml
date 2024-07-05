@@ -42,7 +42,7 @@
                 <Ellipse.RenderTransform>
                     <TransformGroup>
                         <ScaleTransform x:Name="scaleTransform4" />
-                        <RotateTransform x:Name="rotateTransform4" />
+                        <RotateTransform x:Name="rotateTransform4"  />
                     </TransformGroup>
                 </Ellipse.RenderTransform>
             </Ellipse>

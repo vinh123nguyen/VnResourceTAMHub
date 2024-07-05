@@ -8,7 +8,8 @@ namespace TAMHubApp.ViewModels
 {
     public class DeviceViewModel : BaseViewModel
     {
-        public DeviceViewModel(IDeviceNavigationService navigationService)
+        public DeviceViewModel(IDeviceNavigationService navigationService,
+            ObservableCollection<DeviceModel> listDevice)
         {
             _navigationService = navigationService;
             AddDeviceCommand = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateDevice);
@@ -23,6 +24,7 @@ namespace TAMHubApp.ViewModels
                     Name = "Máy chấm công 1",
                     IPAddress = "10.0.0.231",
                     Port = 4370,
+                    IsConnectLoading=true,
                     MachineNo = 103
                 },
                 new DeviceModel()
@@ -114,7 +116,7 @@ namespace TAMHubApp.ViewModels
             if(parameter == null)
             {
                 IsCreateOrUpdatePopupOpen = true;
-                OverlayNavigate.NavigateTo<Device_CreateOrUpdateUCViewModel>();
+                OverlayNavigate.NavigateTo<DeviceItemInfoUCViewModel>();
 
                 var daw = OverlayNavigate.CurrentView;
 
@@ -129,7 +131,31 @@ namespace TAMHubApp.ViewModels
 
         private void Action_TongleOnOffDevice(object obj)
         {
-            
+            if (obj != null && obj is Guid)
+            {
+                var dwa = DeviceItems.FirstOrDefault(x => x.Id == (Guid)obj);
+                if (dwa != null)
+                {
+                    dwa.IsConnectLoading = true;
+                    //DeviceItems.Remove(dwa);
+
+                    //ThreadPool.QueueUserWorkItem((state) =>
+                    //{
+                    //    // Simulate a long-running task
+                    //    Thread.Sleep(3000);
+
+                    //    dwa.IsConnectLoading = false;
+                    //});
+                    Task.Run(() =>
+                    {
+                        // Simulate a long-running task
+                        Thread.Sleep(3000); // Replace with your actual time-consuming task
+                        dwa.IsConnectLoading = false;
+                        // Optionally return a result if needed
+                    });
+
+                }
+            }
         }
     }
 }

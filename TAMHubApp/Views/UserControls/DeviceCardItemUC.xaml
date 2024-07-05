@@ -49,6 +49,49 @@
                 <DataTrigger Binding="{Binding IsConnected}" Value="True">
                     <Setter Property="Background" Value="#1BBB48"/>
                 </DataTrigger>
+                <DataTrigger Binding="{Binding IsConnectLoading}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsConnectLoading}" Value="False">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="style_btnLoading" TargetType="Button">
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Background" Value="Orange"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsConnectLoading}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsConnectLoading}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="style_PathLoading" TargetType="Path">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation Storyboard.TargetProperty="(Path.RenderTransform).(RotateTransform.Angle)"
+                                     From="0" To="360"
+                                     Duration="0:0:2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
             </Style.Triggers>
         </Style>
 
@@ -70,9 +113,38 @@
                     <Path Margin="8" Data="{StaticResource Icon_Device}" Stroke="Black" StrokeThickness="0.7" Height="16" Width="16" Stretch="Fill" />
                     <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="{Binding Name}"/>
                 </StackPanel>
-                <Button Grid.Column="1" Style="{StaticResource style_btnOnOff}">
+                <Button Grid.Column="1" Style="{StaticResource style_btnOnOff}" Command="{Binding ElementName=DeviceCardUC,Path=TongleOnOffCommand}" CommandParameter="{Binding Id}">
                     <Path Data="{StaticResource Icon_Power}" Stroke="White" StrokeThickness="1" Height="12" Width="12" Stretch="Fill"/>
                 </Button>
+                <Button Grid.Column="1" Style="{StaticResource style_btnLoading}">
+                    <Path Data="{StaticResource Icon_Reload}" 
+          Stroke="White"
+          StrokeThickness="1"
+          Height="12"
+          Width="12"
+          Stretch="Fill">   
+                        <Path.RenderTransform>
+                            <RotateTransform x:Name="PathRotateTransform" CenterX="6" CenterY="6"/>
+                        </Path.RenderTransform>
+                        <Path.Style>
+                            <Style TargetType="Path">
+                                <Style.Triggers>
+                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Storyboard.TargetProperty="(Path.RenderTransform).(RotateTransform.Angle)"
+                             From="0" To="360"
+                             Duration="0:0:2" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Path.Style>
+                    </Path>
+                </Button>
+                
+
             </Grid>
             <Grid Grid.Row="1" Margin="0,4">
                 <Grid.RowDefinitions>
@@ -115,8 +187,6 @@
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
-                    <!--<ColumnDefinition></ColumnDefinition>
-                    <ColumnDefinition></ColumnDefinition>-->
                 </Grid.ColumnDefinitions>
 
                 <uc:ButtonUC FontSize="10" Title="Tải Dữ liệu" Icon="{StaticResource Icon_Download}" IconBackground="#0066FF" ButtonBackground="#B5C9FF" Padding="1"/>
