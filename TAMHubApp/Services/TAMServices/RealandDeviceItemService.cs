@@ -1,30 +1,27 @@
-﻿using Microsoft.VisualBasic.Logging;
-using Riss.Devices;
-using System.Windows.Forms;
+﻿using Riss.Devices;
 using TAMHubApp.Infrastructures.TAMUtilities;
-using TAMHubApp.Models;
 
 namespace TAMHubApp.Services.TAMServices
 {
-    public class RealandDeviceItemService
+    public class RealandDeviceItemService : BaseTAMService
     {
-        public bool IsConnected { get; set; }
+        //public bool IsConnected { get; set; }
         private Device _device;
         private DeviceConnection _deviceConnection;
 
-        public RealandDeviceItemService(TAMConnectInfoModel deviceInfo)
+        public RealandDeviceItemService()
         {
-            IsConnected = false;
-            _device = new Device();
-            _device.DN = deviceInfo.MachineNo;
+            //IsConnected = false;
+            //_device = new Device();
+            //_device.DN = deviceInfo.MachineNo;
 
-            if (deviceInfo.CommPassword != null)
-                _device.Password = deviceInfo.CommPassword.ToString();
-            _device.Model = "ZDC2911";
-            _device.ConnectionModel = 5;
-            _device.IpAddress = deviceInfo.IPAddress;
-            _device.IpPort = deviceInfo.MachineNo;
-            _device.CommunicationType = CommunicationType.Tcp;
+            //if (deviceInfo.CommPassword != null)
+            //    _device.Password = deviceInfo.CommPassword.ToString();
+            //_device.Model = "ZDC2911";
+            //_device.ConnectionModel = 5;
+            //_device.IpAddress = deviceInfo.IPAddress;
+            //_device.IpPort = deviceInfo.MachineNo;
+            //_device.CommunicationType = CommunicationType.Tcp;
         }
 
         public bool Action_Connect(ref string message)
@@ -44,15 +41,15 @@ namespace TAMHubApp.Services.TAMServices
             return IsConnected;
         }
 
-        public void Action_Disconnect()
-        {
-            if(_deviceConnection != null)
-            {
-                _deviceConnection.Close();
-                _deviceConnection = null;
-                IsConnected = false;
-            }
-        }
+        //public void Action_Disconnect()
+        //{
+        //    if(_deviceConnection != null)
+        //    {
+        //        _deviceConnection.Close();
+        //        _deviceConnection = null;
+        //        IsConnected = false;
+        //    }
+        //}
 
         private bool Action_SetDeviceStatus(object status)
         {
@@ -181,6 +178,16 @@ namespace TAMHubApp.Services.TAMServices
             {
                 Action_SetDeviceStatus(RealandStatusGlobal.DeviceIdle);
             }
+        }
+
+        public override Task<bool> Action_Connect()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override Task<bool> Action_Disconnect()
+        {
+            throw new NotImplementedException();
         }
     }
 }

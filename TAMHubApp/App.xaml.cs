@@ -3,14 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
-using System.Collections.ObjectModel;
 using System.Windows;
 using System.Windows.Forms;
 using TAMHubApp.Data;
-using TAMHubApp.Infrastructures.Helpers;
-using TAMHubApp.Models;
 using TAMHubApp.ScheduleTasks;
 using TAMHubApp.Services;
+using TAMHubApp.Services.TAMServices;
 using TAMHubApp.ViewModels;
 using TAMHubApp.ViewModels.UserControls;
 using TAMHubApp.Views;
@@ -67,8 +65,10 @@ namespace TAMHubApp
                 DataContext = provider.GetRequiredService<MainViewModel>()
             });
 
+            //services.AddTransient<IUnitOfWork, UnitOfWork>();
 
-            services.AddSingleton<ObservableCollection<DeviceModel>>();
+            services.AddSingleton<SingletonTAMInstance>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         }
         private async Task InitializeScheduler()
@@ -95,8 +95,10 @@ namespace TAMHubApp
         {
             TrayBarService.ShowBalloonTipTest(notifyIcon);
 
+            //var unitofwork = serviceProvider.GetRequiredService<IUnitOfWork>();
+            //unitofwork.DisposeAsync();
             notifyIcon.Dispose();
-            serviceProvider.Dispose();
+            //serviceProvider.Dispose();
 
             base.OnExit(e);
         }

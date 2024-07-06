@@ -1,4 +1,6 @@
-﻿namespace TAMHubApp.Data.Entities
+﻿using TAMHubApp.Infrastructures.Enums;
+
+namespace TAMHubApp.Data.Entities
 {
     public class Device
     {
@@ -8,6 +10,14 @@
         public string IPAddress { get; set; }
         public int Port { get; set; }
         public int? CommPassword { get; set; }
+        public TAMSDKTypes DeviceSDKType { get; set; }
+        public int AllLogCount { get; set; }
+        public int NewLogCount { get; set; }
+        public DateTime LastTimeConnected { get; set; }
+
+
+        //ZKTeco prop
+        public bool ZKTeco_IsCanGetLogByTime { get; set; }
 
 
         public List<TAMScanLog> TAMScanLogs { get; set; }
