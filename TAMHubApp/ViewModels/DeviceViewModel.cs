@@ -2,6 +2,7 @@
 using TAMHubApp.Commands;
 using TAMHubApp.Models;
 using TAMHubApp.Services;
+using TAMHubApp.Services.TAMServices;
 using TAMHubApp.ViewModels.UserControls;
 
 namespace TAMHubApp.ViewModels
@@ -9,73 +10,14 @@ namespace TAMHubApp.ViewModels
     public class DeviceViewModel : BaseViewModel
     {
         public DeviceViewModel(IDeviceNavigationService navigationService,
-            ObservableCollection<DeviceModel> listDevice)
+            SingletonTAMInstance singletonTAMInstance)
         {
             _navigationService = navigationService;
             AddDeviceCommand = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateDevice);
-            //GetDataCommand = new RelayCommand<object>(x => )
             TongleOnOffCommand = new RelayCommand<object>(x => { return true; }, Action_TongleOnOffDevice);
 
-            DeviceItems = new ObservableCollection<DeviceModel>
-            {
-                new DeviceModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Máy chấm công 1",
-                    IPAddress = "10.0.0.231",
-                    Port = 4370,
-                    IsConnectLoading=true,
-                    MachineNo = 103
-                },
-                new DeviceModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Máy chấm công 1",
-                    IPAddress = "10.0.0.231",
-                    Port = 4370,
-                    MachineNo = 103,
-                    IsConnected = true
-                },
-                new DeviceModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Máy chấm công 1",
-                    IPAddress = "10.0.0.231",
-                    Port = 4370,
-                    MachineNo = 103
-                },
-                new DeviceModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Máy chấm công 1",
-                    IPAddress = "10.0.0.231",
-                    Port = 4370,
-                    MachineNo = 103
-                },
-                new DeviceModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Máy chấm công 1",
-                    IPAddress = "10.0.0.231",
-                    Port = 4370,
-                    MachineNo = 103
-                },
-                new DeviceModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Máy chấm công 1",
-                    IPAddress = "10.0.0.231",
-                    Port = 4370,
-                    MachineNo = 103
-                },new DeviceModel()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = "Máy chấm công 1",
-                    IPAddress = "10.0.0.231",
-                    Port = 4370,
-                    MachineNo = 103
-                }
-            };
+            DeviceItems = singletonTAMInstance.TAMs;
+            _singletonTAMInstance = singletonTAMInstance;
         }
 
 
@@ -99,8 +41,8 @@ namespace TAMHubApp.ViewModels
         public RelayCommand<object> TongleOnOffCommand { get; set; }
 
 
-        private ObservableCollection<DeviceModel> _deviceItems;
-        public ObservableCollection<DeviceModel> DeviceItems
+        private ObservableCollection<BaseTAMService> _deviceItems;
+        public ObservableCollection<BaseTAMService> DeviceItems
         {
             get => _deviceItems;
             set
@@ -110,6 +52,7 @@ namespace TAMHubApp.ViewModels
             }
         }
 
+        private SingletonTAMInstance _singletonTAMInstance;
 
         private void Action_OpenPopupAddOrUpdateDevice(object parameter)
         {
@@ -133,26 +76,53 @@ namespace TAMHubApp.ViewModels
         {
             if (obj != null && obj is Guid)
             {
-                var dwa = DeviceItems.FirstOrDefault(x => x.Id == (Guid)obj);
-                if (dwa != null)
+                var itemdeviceAction = DeviceItems.FirstOrDefault(x => x.Id == (Guid)obj);
+                if (itemdeviceAction != null)
                 {
-                    dwa.IsConnectLoading = true;
-                    //DeviceItems.Remove(dwa);
+                    itemdeviceAction.IsConnectLoading = true;
+                    Task.Run(() =>
+                    {
+                        if (itemdeviceAction.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_ZKTECO)
+                        {
+                            Thread.Sleep(2000);
+                            var exactlyDeviceInstance = (ZKTecoDeviceItemService)itemdeviceAction;
+                            if (!itemdeviceAction.IsConnected)
+                            {
+                                itemdeviceAction.Action_Connect();
+                            }
+                            else
+                            {
+                                itemdeviceAction.Action_Disconnect();
+                            }
+                        }
+                        else if (itemdeviceAction.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_REALAND)
+                        {
+
+                        }
+                        itemdeviceAction.IsConnectLoading = false;
+                    });
 
                     //ThreadPool.QueueUserWorkItem((state) =>
                     //{
-                    //    // Simulate a long-running task
-                    //    Thread.Sleep(3000);
+                    //    if (itemdeviceAction.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_ZKTECO)
+                    //    {
+                    //        Thread.Sleep(2000);
+                    //        var exactlyDeviceInstance = (ZKTecoDeviceItemService)itemdeviceAction;
+                    //        if (!itemdeviceAction.IsConnected)
+                    //        {
+                    //            itemdeviceAction.Action_Connect();
+                    //        }
+                    //        else
+                    //        {
+                    //            itemdeviceAction.Action_Disconnect();
+                    //        }
+                    //    }
+                    //    else if (itemdeviceAction.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_REALAND)
+                    //    {
 
-                    //    dwa.IsConnectLoading = false;
+                    //    }
+                    //    itemdeviceAction.IsConnectLoading = false;
                     //});
-                    Task.Run(() =>
-                    {
-                        // Simulate a long-running task
-                        Thread.Sleep(3000); // Replace with your actual time-consuming task
-                        dwa.IsConnectLoading = false;
-                        // Optionally return a result if needed
-                    });
 
                 }
             }

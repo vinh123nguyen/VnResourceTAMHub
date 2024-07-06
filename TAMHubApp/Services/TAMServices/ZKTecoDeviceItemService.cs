@@ -5,57 +5,63 @@ using zkemkeeper;
 
 namespace TAMHubApp.Services.TAMServices
 {
-    public class ZKTecoDeviceItemService
+    public class ZKTecoDeviceItemService : BaseTAMService
     {
-        public bool IsConnected { get; set; }
         private CZKEM _zkemClient { get; set; }
-        private TAMConnectInfoModel _deviceInfo { get; set; }
+
+
+        public bool ZKTeco_IsCanGetLogByTime { get; set; }
         private bool _isNewFirmwareMachine { get; set; }
         private bool _isTFTMachine { get; set; }
 
-        
-
-        public ZKTecoDeviceItemService(TAMConnectInfoModel deviceInfo)
+        public ZKTecoDeviceItemService()
         {
             IsConnected = false;
-            _deviceInfo = deviceInfo;
             _zkemClient = new CZKEM();
             _isNewFirmwareMachine = _isTFTMachine = false;
         }
 
-        public bool Action_Connect(ref string message)
+
+        public override async Task<bool> Action_Connect()
         {
-            message = "Success";
             try
             {
-                if (IsConnected)
-                    return IsConnected;
-
-                if (_deviceInfo.CommPassword != null)
-                    IsConnected = _zkemClient.SetCommPassword(_deviceInfo.CommPassword.Value);
-
-                IsConnected = _zkemClient.Connect_Net(_deviceInfo.IPAddress, _deviceInfo.Port);
-
+                IsConnected = _zkemClient.Connect_Net(IPAddress, Port);
                 if (IsConnected)
                 {
-                    _isNewFirmwareMachine = _zkemClient.IsNewFirmwareMachine(_deviceInfo.MachineNo);
-                    _isTFTMachine = _zkemClient.IsTFTMachine(_deviceInfo.MachineNo);
-                    if(_zkemClient.RegEvent(1, 32767))
+                    _isNewFirmwareMachine = _zkemClient.IsNewFirmwareMachine(MachineNo);
+                    _isTFTMachine = _zkemClient.IsTFTMachine(MachineNo);
+                    if (_zkemClient.RegEvent(1, 32767))
                     {
                         _zkemClient.OnConnected += Event_OnConnected;
                         _zkemClient.OnDisConnected += Event_OnDisconnected;
                     }
-                }
-                else
-                {
-                    var errcode = 0;
-                    _zkemClient.GetLastError(ref errcode);
+                    else
+                    {
+                        //var errcode = 0;
+                        //_zkemClient.GetLastError(ref errcode);
+                    }
                 }
                 return IsConnected;
             }
+            catch (Exception ex)
+            {
+                IsConnected = false;
+                return false;
+            }
+        }
+        public override async Task<bool> Action_Disconnect()
+        {
+            try
+            {
+                _zkemClient.OnConnected -= Event_OnConnected;
+                _zkemClient.OnDisConnected -= Event_OnDisconnected;
+                IsConnected = false;
+                _zkemClient.Disconnect();
+                return true;
+            }
             catch(Exception ex)
             {
-                message = "Error|" + ex.Message;
                 return false;
             }
         }
@@ -70,63 +76,67 @@ namespace TAMHubApp.Services.TAMServices
             IsConnected = true;
         }
 
-        public void Action_Disconnect()
-        {
-            _zkemClient.OnConnected -= Event_OnConnected;
-            _zkemClient.OnDisConnected -= Event_OnDisconnected;
-            IsConnected = false;
-            _zkemClient.Disconnect();
-        }
+        //public void Action_Disconnect()
+        //{
+        //    _zkemClient.OnConnected -= Event_OnConnected;
+        //    _zkemClient.OnDisConnected -= Event_OnDisconnected;
+        //    IsConnected = false;
+        //    _zkemClient.Disconnect();
+        //}
 
 
-        public void Action_GetAllGlog()
-        {
-            var listAttRecord = new List<ZKTecoGLogModel>();
-            if (_zkemClient.ReadAllGLogData(_deviceInfo.MachineNo))
-            {
-                if (_isTFTMachine)
-                {
-                    int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
-                    string enrollNumber;
-                    while (_zkemClient.SSR_GetGeneralLogData(_deviceInfo.MachineNo,
-                        out enrollNumber, out tVerifyMode,
-                        out tInOutMode, out year, out month, out day, out hour, out minute, out second, ref workCode))
-                    {
-                        listAttRecord.Add(new ZKTecoGLogModel()
-                        {
-                            ID = Guid.NewGuid(),
-                            MachineNo = _deviceInfo.MachineNo,
-                            EnrollNumber = enrollNumber,
-                            VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
-                            InOutMode = ((ZKTecoINOUTMode)tInOutMode).ToString(),
-                            TimeLog = new DateTime(year, month, day, hour, minute, second),
-                            WorkCode = workCode
-                        });
+        //public void Action_GetAllGlog()
+        //{
+        //    var listAttRecord = new List<ZKTecoGLogModel>();
+        //    if (_zkemClient.ReadAllGLogData(_deviceInfo.MachineNo))
+        //    {
+        //        if (_isTFTMachine)
+        //        {
+        //            int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
+        //            string enrollNumber;
+        //            while (_zkemClient.SSR_GetGeneralLogData(_deviceInfo.MachineNo,
+        //                out enrollNumber, out tVerifyMode,
+        //                out tInOutMode, out year, out month, out day, out hour, out minute, out second, ref workCode))
+        //            {
+        //                listAttRecord.Add(new ZKTecoGLogModel()
+        //                {
+        //                    ID = Guid.NewGuid(),
+        //                    MachineNo = _deviceInfo.MachineNo,
+        //                    EnrollNumber = enrollNumber,
+        //                    VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+        //                    InOutMode = ((ZKTecoINOUTMode)tInOutMode).ToString(),
+        //                    TimeLog = new DateTime(year, month, day, hour, minute, second),
+        //                    WorkCode = workCode
+        //                });
 
-                    }
-                }
-                else
-                {
-                    int tVerifyMode = 0, tInOutMode = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, workCode = 0;
-                    int enrollNumber = 0;
-                    while (_zkemClient.GetAllGLogData(_deviceInfo.MachineNo,
-                        ref enrollNumber, ref tVerifyMode,
-                        ref tInOutMode, ref year, ref month, ref day, ref hour, ref minute, ref second, ref workCode))
-                    {
-                        listAttRecord.Add(new ZKTecoGLogModel()
-                        {
-                            ID = Guid.NewGuid(),
-                            MachineNo = _deviceInfo.MachineNo,
-                            EnrollNumber = enrollNumber.ToString(),
-                            VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
-                            InOutMode = ((ZKTecoINOUTMode)tInOutMode).ToString(),
-                            TimeLog = new DateTime(year, month, day, hour, minute, second),
-                            WorkCode = workCode
-                        });
+        //            }
+        //        }
+        //        else
+        //        {
+        //            int tVerifyMode = 0, tInOutMode = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, workCode = 0;
+        //            int enrollNumber = 0;
+        //            while (_zkemClient.GetAllGLogData(_deviceInfo.MachineNo,
+        //                ref enrollNumber, ref tVerifyMode,
+        //                ref tInOutMode, ref year, ref month, ref day, ref hour, ref minute, ref second, ref workCode))
+        //            {
+        //                listAttRecord.Add(new ZKTecoGLogModel()
+        //                {
+        //                    ID = Guid.NewGuid(),
+        //                    MachineNo = _deviceInfo.MachineNo,
+        //                    EnrollNumber = enrollNumber.ToString(),
+        //                    VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+        //                    InOutMode = ((ZKTecoINOUTMode)tInOutMode).ToString(),
+        //                    TimeLog = new DateTime(year, month, day, hour, minute, second),
+        //                    WorkCode = workCode
+        //                });
 
-                    }
-                }
-            }
-        }
+        //            }
+        //        }
+        //    }
+        //}
+
+       
+
+        
     }
 }
