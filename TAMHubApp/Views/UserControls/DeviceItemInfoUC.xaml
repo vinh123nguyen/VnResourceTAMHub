@@ -42,7 +42,16 @@
                     </Button>
                 </Grid>
             </Border>
-            
+            <Grid Grid.Row="1">
+
+                <ComboBox Width="200" Height="30" Margin="10" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}"/>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>

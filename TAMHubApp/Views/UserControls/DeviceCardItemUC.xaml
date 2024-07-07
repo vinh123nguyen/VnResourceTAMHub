@@ -118,11 +118,11 @@
                 </Button>
                 <Button Grid.Column="1" Style="{StaticResource style_btnLoading}">
                     <Path Data="{StaticResource Icon_Reload}" 
-          Stroke="White"
-          StrokeThickness="1"
-          Height="12"
-          Width="12"
-          Stretch="Fill">   
+                        Stroke="White"
+                        StrokeThickness="1"
+                        Height="12"
+                        Width="12"
+                        Stretch="Fill">   
                         <Path.RenderTransform>
                             <RotateTransform x:Name="PathRotateTransform" CenterX="6" CenterY="6"/>
                         </Path.RenderTransform>
@@ -133,8 +133,8 @@
                                         <BeginStoryboard>
                                             <Storyboard RepeatBehavior="Forever">
                                                 <DoubleAnimation Storyboard.TargetProperty="(Path.RenderTransform).(RotateTransform.Angle)"
-                             From="0" To="360"
-                             Duration="0:0:2" />
+                                                    From="0" To="360"
+                                                    Duration="0:0:2" />
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </EventTrigger>
@@ -185,7 +185,7 @@
             </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 

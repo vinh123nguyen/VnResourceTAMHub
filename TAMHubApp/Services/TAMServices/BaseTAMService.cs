@@ -63,8 +63,8 @@ namespace TAMHubApp.Services.TAMServices
         }
 
 
-        public abstract Task<bool> Action_Connect();
-        public abstract Task<bool> Action_Disconnect();
+        public abstract bool Action_Connect();
+        public abstract bool Action_Disconnect();
 
 
 

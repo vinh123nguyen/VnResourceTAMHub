@@ -73,14 +73,14 @@
 
         </Grid>
 
-        <!--<Grid x:Name="DevicePageOverlay" Background="#50CECECE"
+        <Grid x:Name="DevicePageOverlay" Background="#50CECECE"
               Visibility="{Binding IsCreateOrUpdatePopupOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ContentControl VerticalAlignment="Center" HorizontalAlignment="Center" 
                             Width="400"
                             Height="300"
                             Content="{Binding OverlayNavigate.CurrentView}">
             </ContentControl>
-        </Grid>-->
+        </Grid>
 
     </Grid>
 </UserControl>

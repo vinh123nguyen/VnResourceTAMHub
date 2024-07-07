@@ -1,9 +1,12 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using TAMHubApp.Commands;
 using TAMHubApp.Models;
 using TAMHubApp.Services;
 using TAMHubApp.Services.TAMServices;
 using TAMHubApp.ViewModels.UserControls;
+using zkemkeeper;
 
 namespace TAMHubApp.ViewModels
 {
@@ -61,8 +64,8 @@ namespace TAMHubApp.ViewModels
                 IsCreateOrUpdatePopupOpen = true;
                 OverlayNavigate.NavigateTo<DeviceItemInfoUCViewModel>();
 
-                var daw = OverlayNavigate.CurrentView;
-
+                var daw = (DeviceItemInfoUCViewModel)OverlayNavigate.CurrentView;
+                daw.Id = Guid.NewGuid().ToString();
                 //Task.Delay(3000).Wait();
                 //IsCreateOrUpdatePopupOpen = false;
             }
@@ -88,7 +91,7 @@ namespace TAMHubApp.ViewModels
                             var exactlyDeviceInstance = (ZKTecoDeviceItemService)itemdeviceAction;
                             if (!itemdeviceAction.IsConnected)
                             {
-                                itemdeviceAction.Action_Connect();
+                                Task.Run(() => itemdeviceAction.Action_Connect());
                             }
                             else
                             {
@@ -102,30 +105,10 @@ namespace TAMHubApp.ViewModels
                         itemdeviceAction.IsConnectLoading = false;
                     });
 
-                    //ThreadPool.QueueUserWorkItem((state) =>
-                    //{
-                    //    if (itemdeviceAction.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_ZKTECO)
-                    //    {
-                    //        Thread.Sleep(2000);
-                    //        var exactlyDeviceInstance = (ZKTecoDeviceItemService)itemdeviceAction;
-                    //        if (!itemdeviceAction.IsConnected)
-                    //        {
-                    //            itemdeviceAction.Action_Connect();
-                    //        }
-                    //        else
-                    //        {
-                    //            itemdeviceAction.Action_Disconnect();
-                    //        }
-                    //    }
-                    //    else if (itemdeviceAction.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_REALAND)
-                    //    {
-
-                    //    }
-                    //    itemdeviceAction.IsConnectLoading = false;
-                    //});
-
                 }
             }
         }
+
+
     }
 }

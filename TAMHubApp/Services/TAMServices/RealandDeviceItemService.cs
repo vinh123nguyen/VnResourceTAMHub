@@ -180,12 +180,12 @@ namespace TAMHubApp.Services.TAMServices
             }
         }
 
-        public override Task<bool> Action_Connect()
+        public override bool Action_Connect()
         {
             throw new NotImplementedException();
         }
 
-        public override Task<bool> Action_Disconnect()
+        public override bool Action_Disconnect()
         {
             throw new NotImplementedException();
         }

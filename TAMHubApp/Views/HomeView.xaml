@@ -4,13 +4,22 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TAMHubApp.Views"
+             xmlns:converter="clr-namespace:TAMHubApp.Converters"
              mc:Ignorable="d" 
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              d:DesignHeight="484" d:DesignWidth="960">
+    <UserControl.Resources>
+        
+    </UserControl.Resources>
     <Grid Background="#EFF3FF">
-        <TextBlock>Home Page</TextBlock>
+        <!--<TextBlock>Home Page</TextBlock>
         <TextBlock Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='HH:mm:ss'}"
            FontSize="36" FontWeight="Bold"
-           HorizontalAlignment="Center" VerticalAlignment="Center"/>
+           HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
+        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32">
+            <TextBlock.Text>
+                <converter:CurrentTimeExtension />
+            </TextBlock.Text>
+        </TextBlock>
     </Grid>
 </UserControl>

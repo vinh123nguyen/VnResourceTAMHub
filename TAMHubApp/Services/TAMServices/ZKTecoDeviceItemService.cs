@@ -22,7 +22,36 @@ namespace TAMHubApp.Services.TAMServices
         }
 
 
-        public override async Task<bool> Action_Connect()
+        //public override async Task<bool> Action_Connect()
+        //{
+        //    try
+        //    {
+        //        IsConnected = _zkemClient.Connect_Net(IPAddress, Port);
+        //        if (IsConnected)
+        //        {
+        //            _isNewFirmwareMachine = _zkemClient.IsNewFirmwareMachine(MachineNo);
+        //            _isTFTMachine = _zkemClient.IsTFTMachine(MachineNo);
+        //            if (_zkemClient.RegEvent(1, 32767))
+        //            {
+        //                _zkemClient.OnConnected += Event_OnConnected;
+        //                _zkemClient.OnDisConnected += Event_OnDisconnected;
+        //            }
+        //            else
+        //            {
+        //                //var errcode = 0;
+        //                //_zkemClient.GetLastError(ref errcode);
+        //            }
+        //        }
+        //        return IsConnected;
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        IsConnected = false;
+        //        return false;
+        //    }
+        //}
+
+        public override bool Action_Connect()
         {
             try
             {
@@ -50,7 +79,8 @@ namespace TAMHubApp.Services.TAMServices
                 return false;
             }
         }
-        public override async Task<bool> Action_Disconnect()
+
+        public override bool Action_Disconnect()
         {
             try
             {
