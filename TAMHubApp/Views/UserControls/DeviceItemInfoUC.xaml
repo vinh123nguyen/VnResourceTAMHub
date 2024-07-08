@@ -4,10 +4,12 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
+             xmlns:converter="clr-namespace:TAMHubApp.Converters"
+             xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="400" d:DesignWidth="400
-             ">
+             d:DesignHeight="320" d:DesignWidth="400">
     <UserControl.Resources>
+        <converter:StringEmptyToVisibilityConverter x:Key="StringEmptyToVisibilityConverter" />
         <Style x:Key="style_masterBoder" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -20,12 +22,27 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="Transparent" />
         </Style>
+        <Style x:Key="style_IsCanGetLogByTime" TargetType="CheckBox">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SDKType}" Value="E_ZKTECO">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="style_RequiredMark" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Text" Value="*"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
     </UserControl.Resources>
     <Border Style="{StaticResource style_masterBoder}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             <Border Grid.Row="0" Style="{StaticResource style_HeaderBoder}">
                 <Grid >
@@ -44,13 +61,106 @@
             </Border>
             <Grid Grid.Row="1">
 
-                <ComboBox Width="200" Height="30" Margin="10" ItemsSource="{Binding Options}" SelectedItem="{Binding SelectedOption, Mode=TwoWay}">
-                    <ComboBox.ItemTemplate>
-                        <DataTemplate>
-                            <TextBlock Text="{Binding Name}"/>
-                        </DataTemplate>
-                    </ComboBox.ItemTemplate>
-                </ComboBox>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" Margin="8"
+                               HorizontalAlignment="Center" VerticalAlignment="Center" 
+                               FontSize="10" Foreground="Red" 
+                               Text="{Binding ValidateMessage}"/>
+
+                    <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                        <TextBlock Text="{StaticResource LANG_DEV_SKDType}" Margin="8,8,0,8" />
+                        <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                    </StackPanel>
+                    <ComboBox HorizontalAlignment="Left" Grid.Column="2" Grid.Row="1" 
+                              Width="200" Height="25" 
+                              ItemsSource="{Binding SDKsOptions}" 
+                              SelectedItem="{Binding SDKSelected, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+                        <TextBlock Text="{StaticResource LANG_DEV_DeviceName}" Margin="8,8,0,8" />
+                        <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                    </StackPanel>
+                    <TextBox Grid.Column="2" Grid.Row="2"
+                        Width="200" Height="25"
+                        Text="{Binding DeviceName}"/>
+
+                    <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
+                        <TextBlock Text="{StaticResource LANG_DEV_DeviceNumber}" Margin="8,8,0,8"/>
+                        <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                    </StackPanel>
+                    <TextBox Grid.Column="2" Grid.Row="3"
+                        Width="200" Height="25" 
+                        Text="{Binding DeviceNumber}"/>
+
+                    <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+                        <TextBlock Text="{StaticResource LANG_DEV_IPAddress}" Margin="8,8,0,8"/>
+                        <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                    </StackPanel>
+                    <TextBox Grid.Column="2" Grid.Row="4"
+                        Width="200" Height="25"
+                        Text="{Binding IPAddress}"/>
+
+                    <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal">
+                        <TextBlock Text="{StaticResource LANG_DEV_Port}" Margin="8,8,0,8"/>
+                        <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                    </StackPanel>
+                    <TextBox Grid.Column="2" Grid.Row="5"
+                        Width="200" Height="25"
+                        Text="{Binding Port}"/>
+
+                    <TextBlock Grid.Column="1" Grid.Row="6" Text="{StaticResource LANG_DEV_Password}" Margin="8"/>
+                    <TextBox Grid.Column="2" Grid.Row="6"
+                        Width="200" Height="25"
+                        Text="{Binding Password}"/>
+
+                    <!--<TextBox Grid.Column="2" Grid.Row="6"
+                        Width="200" Height="25"/>-->
+                    <CheckBox Style="{StaticResource style_IsCanGetLogByTime}" Grid.Column="2" Grid.Row="7"
+                              Content="{StaticResource LANG_DEV_SupportGetDataByDate}"
+                              IsChecked="{Binding SupportGetDataByDate, Mode=TwoWay}"/>
+                    
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="2" Margin="8">
+                <uc:ButtonUC Visibility="{Binding Id, Converter={StaticResource StringEmptyToVisibilityConverter}}"
+                    HorizontalAlignment="Left" Width="Auto" 
+                             FontSize="10" Title="{StaticResource LANG_GLO_Remove}" 
+                             Icon="{StaticResource Icon_Trash}" 
+                             IconBackground="#FF3C3C" 
+                             ButtonBackground="#FFB5B9" Padding="1"
+                             ClickCommand="{Binding RemmoveDeviceCommand}"
+                             ClickCommandParameter="{Binding Id}" Height="24" VerticalAlignment="Top"/> 
+                <uc:ButtonUC HorizontalAlignment="Right" Width="Auto" 
+                             FontSize="10" Title="{StaticResource LANG_GLO_Save}" 
+                             Icon="{StaticResource Icon_Download}" 
+                             IconBackground="#1BBB48" 
+                             ButtonBackground="#B6FFB5" Padding="1"
+                             ClickCommand="{Binding SavePopupCommand}"
+                             ClickCommandParameter="{Binding Id}"/>
+
             </Grid>
         </Grid>
     </Border>

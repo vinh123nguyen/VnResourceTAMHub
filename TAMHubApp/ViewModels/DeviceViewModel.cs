@@ -16,7 +16,7 @@ namespace TAMHubApp.ViewModels
             SingletonTAMInstance singletonTAMInstance)
         {
             _navigationService = navigationService;
-            AddDeviceCommand = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateDevice);
+            OpenInfoPopup = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateDevice);
             TongleOnOffCommand = new RelayCommand<object>(x => { return true; }, Action_TongleOnOffDevice);
 
             DeviceItems = singletonTAMInstance.TAMs;
@@ -38,7 +38,7 @@ namespace TAMHubApp.ViewModels
         }
 
 
-        public RelayCommand<object> AddDeviceCommand { get; set; }
+        public RelayCommand<object> OpenInfoPopup { get; set; }
 
         public RelayCommand<object> GetDataCommand { get; set; }
         public RelayCommand<object> TongleOnOffCommand { get; set; }
@@ -65,13 +65,15 @@ namespace TAMHubApp.ViewModels
                 OverlayNavigate.NavigateTo<DeviceItemInfoUCViewModel>();
 
                 var daw = (DeviceItemInfoUCViewModel)OverlayNavigate.CurrentView;
-                daw.Id = Guid.NewGuid().ToString();
-                //Task.Delay(3000).Wait();
-                //IsCreateOrUpdatePopupOpen = false;
+                daw.Id = null;
             }
             else
             {
+                IsCreateOrUpdatePopupOpen = true;
+                OverlayNavigate.NavigateTo<DeviceItemInfoUCViewModel>();
 
+                var daw = (DeviceItemInfoUCViewModel)OverlayNavigate.CurrentView;
+                daw.Id = parameter.ToString();
             }
         }
 

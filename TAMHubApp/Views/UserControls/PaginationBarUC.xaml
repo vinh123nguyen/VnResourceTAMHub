@@ -1,0 +1,108 @@
+﻿<UserControl x:Class="TAMHubApp.Views.UserControls.PaginationBarUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
+             mc:Ignorable="d" 
+             x:Name="PaginationvBar"
+             d:DesignHeight="30" d:DesignWidth="800">
+
+    <UserControl.Resources>
+        <Style x:Key="style_BtnPagination" TargetType="Button">
+            <Setter Property="Width" Value="20"/>
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="16"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Gray"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=style_navButton, Path=IsActive}" Value="True">
+                    <Setter Property="Background" Value="#F8F7FC" />
+                    <Setter Property="Foreground" Value="#6F53F3" />
+                    <Setter Property="Tag" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="style_BtnPageNum" TargetType="Button">
+            <Setter Property="Height" Value="20"/>
+            <Setter Property="FontSize" Value="10"/>
+            <Setter Property="Margin" Value="2"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="4"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <!--<Setter Property="Background" Value="Gray"/>
+                                <Setter Property="Cursor" Value="Hand"/>-->
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=style_navButton, Path=IsActive}" Value="True">
+                    <Setter Property="Background" Value="#F8F7FC" />
+                    <Setter Property="Foreground" Value="#6F53F3" />
+                    <Setter Property="Tag" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Grid Background="White">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Grid Grid.ColumnSpan="2">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <Button Grid.Column="0" Style="{StaticResource style_BtnPagination}"
+                Command="{Binding ElementName=PaginationvBar,Path=PaginationBackCommand}" CommandParameter="True">
+                <Path Data="{StaticResource Icon_ChevronDoubleLeft}" Stroke="Gray" StrokeThickness="1" Height="10" Width="8" Stretch="Fill"/>
+            </Button>
+            <Button Grid.Column="1" Style="{StaticResource style_BtnPagination}"
+                Command="{Binding ElementName=PaginationvBar,Path=PaginationBackCommand}" CommandParameter="False">
+                <Path Data="{StaticResource Icon_ChevronLeft}" Stroke="Gray" StrokeThickness="1" Height="10" Width="5" Stretch="Fill"/>
+            </Button>
+            <Button Grid.Column="2" Style="{StaticResource style_BtnPageNum}">
+                <TextBlock Margin="4,0" Text="1/23" Foreground="Gray"/>
+            </Button>
+            <Button Grid.Column="3" Style="{StaticResource style_BtnPagination}"
+                    Command="{Binding ElementName=PaginationvBar,Path=PaginationForwardCommand}" CommandParameter="False">
+                <Path Data="{StaticResource Icon_ChevronRight}" Stroke="Gray" StrokeThickness="1" Height="10" Width="5" Stretch="Fill"/>
+            </Button>
+            <Button Grid.Column="4" Style="{StaticResource style_BtnPagination}"
+                    Command="{Binding ElementName=PaginationvBar,Path=PaginationForwardCommand}" CommandParameter="True">
+                <Path Data="{StaticResource Icon_ChevronDoubleRight}" Stroke="Gray" StrokeThickness="1" Height="10" Width="8" Stretch="Fill"/>
+            </Button>
+
+        </Grid>
+        <Grid VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,8,0" Grid.Column="1">
+            <TextBlock FontSize="10" Text="51 - 100 of 4667 items"/>
+        </Grid>
+    </Grid>
+</UserControl>

@@ -35,5 +35,12 @@ namespace TAMHubApp.Views.UserControls
         }
         public static readonly DependencyProperty TongleOnOffCommandProperty = DependencyProperty.Register("TongleOnOffCommand", typeof(ICommand), typeof(DeviceCardItemUC));
 
+        public ICommand OpenEditPopupCommand
+        {
+            get { return (ICommand)GetValue(OpenEditPopupCommandProperty); }
+            set { SetValue(OpenEditPopupCommandProperty, value); }
+        }
+        public static readonly DependencyProperty OpenEditPopupCommandProperty = DependencyProperty.Register("OpenEditPopupCommand", typeof(ICommand), typeof(DeviceCardItemUC));
+
     }
 }

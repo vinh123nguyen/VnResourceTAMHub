@@ -4,9 +4,123 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TAMHubApp.Views"
+             xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-            
+    <Grid Background="#EFF3FF">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        
+        
+        <Grid Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0" Margin="8">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition Width="1.5*"/>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                        <RowDefinition/>
+                    </Grid.RowDefinitions>
+
+                    <TextBlock Grid.Column="0" Grid.Row="0" FontSize="16" Text="Mã chấm công" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="0" Height="26" Margin="4"/>
+
+                    <TextBlock Grid.Column="2" Grid.Row="0" FontSize="16" Text="Máy chấm công" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="3" Grid.Row="0"
+                        Height="26" 
+                        Margin="4"
+                        ItemsSource="{Binding ListOptionsTAMs}" 
+                        SelectedItem="{Binding TAMSelected, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                    <TextBlock Grid.Column="0" Grid.Row="1" FontSize="16" Text="Máy chấm công" VerticalAlignment="Center"/>
+                    <ComboBox Grid.Column="1" Grid.Row="1"
+                        Height="26" 
+                        Margin="4"
+                        ItemsSource="{Binding SDKsOptions}" 
+                        SelectedItem="{Binding SDKSelected, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <TextBlock Text="{Binding Name}"/>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>
+
+                </Grid>
+            </Grid>
+            <Grid Grid.Row="1" Margin="8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition/>
+                </Grid.ColumnDefinitions>
+                <uc:ButtonUC 
+                    Grid.Column="0"
+                    Title="{StaticResource LANG_GLO_Search}"
+                    Icon="{StaticResource Icon_Search}"
+                    ClickCommand="{Binding OpenInfoPopup}"
+                    ButtonBackground="#fcefcc"
+                    IconBackground="#c49000"
+                    TextFontSize="16"
+                    Margin="4,0"
+                    />
+                <uc:ButtonUC 
+                    Grid.Column="1"
+                    Title="{StaticResource LANG_DEV_AddDevice}"
+                    Icon="{StaticResource Icon_Plus}"
+                    ClickCommand="{Binding OpenInfoPopup}"
+                    ButtonBackground="#B5C9FF"
+                    IconBackground="#0066FF"
+                    TextFontSize="16"
+                    Margin="0,0"
+                    />
+            </Grid>
+        </Grid>
+        <Grid Grid.Row="1">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
+                    <ListView ItemsSource="{Binding List}" SelectedItem="{Binding SelectedItem, Mode=OneWayToSource}">
+                        <ListView.View>
+                            <GridView>
+                                <GridViewColumn Header="Id" DisplayMemberBinding="{Binding Id}"></GridViewColumn>
+                                <GridViewColumn Header="Tên vật tư" DisplayMemberBinding="{Binding DisplayName}"></GridViewColumn>
+                                <GridViewColumn Header="Đơn vị đo" DisplayMemberBinding="{Binding Unit.DisplayName}"></GridViewColumn>
+                                <GridViewColumn Header="Nhà cung cấp" DisplayMemberBinding="{Binding Suplier.DisplayName}"></GridViewColumn>
+                                <GridViewColumn Header="QRCode" DisplayMemberBinding="{Binding QRCode}"></GridViewColumn>
+                                <GridViewColumn Header="BarCode" DisplayMemberBinding="{Binding BarCode}"></GridViewColumn>
+                            </GridView>
+                        </ListView.View>
+                    </ListView>
+                </ScrollViewer>
+                <uc:PaginationBarUC 
+                    PaginationBackCommand="{Binding PaginationBackCommand}"
+                    PaginationForwardCommand="{Binding PaginationForwardCommand}"
+                    
+                    Grid.Row="1"/>
+            </Grid>
+        </Grid>
     </Grid>
 </UserControl>
