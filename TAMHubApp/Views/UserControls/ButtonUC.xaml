@@ -25,11 +25,18 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding ElementName=style_navButton, Path=IsActive}" Value="True">
+                    <Setter Property="Background" Value="#F8F7FC" />
+                    <Setter Property="Foreground" Value="#6F53F3" />
+                    <Setter Property="Tag" Value="Visible" />
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </UserControl.Resources>
     <Button Grid.Column="1" Style="{StaticResource style_ActionButton}" 
             Width="Auto" Background="{Binding ElementName=buttonUC,Path=ButtonBackground}"
-             Command="{Binding ElementName=buttonUC,Path=ClickCommand}">
+             Command="{Binding ElementName=buttonUC,Path=ClickCommand}" CommandParameter="{Binding ElementName=buttonUC, Path=ClickCommandParameter}">
         <StackPanel Orientation="Horizontal" Margin="4,2,2,2" Width="Auto">
             <Border Background="{Binding ElementName=buttonUC,Path=IconBackground}" Height="18" Width="18" CornerRadius="4">
                 <Path Data="{Binding ElementName=buttonUC,Path=Icon}" Stroke="White" StrokeThickness="1" Height="14" Width="14" Stretch="Fill"/>

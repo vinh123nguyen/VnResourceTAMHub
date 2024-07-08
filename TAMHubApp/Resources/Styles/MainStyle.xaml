@@ -81,12 +81,12 @@
             </Grid.ColumnDefinitions>
             <Border x:Name="Border"
                 Grid.ColumnSpan="2"
-                CornerRadius="2"
+                CornerRadius="4"
                 Background="{StaticResource ControlBackgroundBrush}"
                 BorderBrush="{StaticResource SolidBorderBrush}"
                 BorderThickness="1"/>
             <Border Grid.Column="1"
-                CornerRadius="0,2,2,0"
+                CornerRadius="0,4,4,0"
                 Background="{StaticResource ControlBackgroundBrush}"
                 BorderBrush="{StaticResource SolidBorderBrush}"
                 BorderThickness="0,1,1,1">
@@ -186,6 +186,35 @@
                 </ControlTemplate>
             </Setter.Value>
         </Setter>
+    </Style>
+
+    <Style TargetType="TextBox">
+        <Setter Property="Template">
+            <Setter.Value>
+                <ControlTemplate TargetType="TextBox">
+                    <Border x:Name="border" 
+                                Background="{TemplateBinding Background}" 
+                                BorderBrush="{TemplateBinding BorderBrush}" 
+                                BorderThickness="1" 
+                                CornerRadius="4">
+                        <ScrollViewer Margin="0" 
+                                          x:Name="PART_ContentHost" 
+                                          VerticalAlignment="Center"/>
+                    </Border>
+                    <ControlTemplate.Triggers>
+                        <Trigger Property="IsEnabled" Value="False">
+                            <Setter TargetName="border" Property="Background" Value="{DynamicResource {x:Static SystemColors.ControlBrushKey}}"/>
+                            <Setter TargetName="border" Property="BorderBrush" Value="{DynamicResource {x:Static SystemColors.ControlDarkBrushKey}}"/>
+                        </Trigger>
+                        <Trigger Property="IsMouseOver" Value="True">
+                            <Setter TargetName="border" Property="BorderBrush" Value="Gray"/>
+                        </Trigger>
+                    </ControlTemplate.Triggers>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="BorderBrush" Value="Gray"/>
+        <Setter Property="Background" Value="White"/>
     </Style>
 
 

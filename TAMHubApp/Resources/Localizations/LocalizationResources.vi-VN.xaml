@@ -9,4 +9,18 @@
     <system:String x:Key="LANG_DEV_AddDevice">Thêm thiết bị</system:String>
     <system:String x:Key="LANG_DEV_ConnectAll">Kết nối tất cả</system:String>
     <system:String x:Key="LANG_DEV_DisconnectAll">Ngắt kết nối tất cả</system:String>
+    <system:String x:Key="LANG_DEV_SKDType">Loại SDK</system:String>
+    <system:String x:Key="LANG_DEV_DeviceName">Tên thiết bị</system:String>
+    <system:String x:Key="LANG_DEV_DeviceNumber">Số máy</system:String>
+    <system:String x:Key="LANG_DEV_IPAddress">Địa chỉ IP</system:String>
+    <system:String x:Key="LANG_DEV_Port">Port</system:String>
+    <system:String x:Key="LANG_DEV_Password">Password</system:String>
+    <system:String x:Key="LANG_DEV_SupportGetDataByDate">Hỗ trợ lấy dữ liệu theo ngày</system:String>
+    <system:String x:Key="LANG_GLO_Save">Lưu</system:String>
+    <system:String x:Key="E_ZKTECO">ZKTeco</system:String>
+    <system:String x:Key="E_REALAND">Realand</system:String>
+    <system:String x:Key="LANG_GLO_CanNotBeBlank">không thể bỏ trống!</system:String>
+    <system:String x:Key="LANG_GLO_NotMatchDataType">không đúng định dạng!</system:String>
+    <system:String x:Key="LANG_GLO_Remove">Xóa</system:String>
+    <system:String x:Key="LANG_GLO_Search">Tìm kiếm</system:String>
 </ResourceDictionary>

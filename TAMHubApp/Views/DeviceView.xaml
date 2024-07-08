@@ -27,7 +27,7 @@
                 <uc:ButtonUC 
                     Title="{StaticResource LANG_DEV_AddDevice}"
                     Icon="{StaticResource Icon_Plus}"
-                    ClickCommand="{Binding AddDeviceCommand}"
+                    ClickCommand="{Binding OpenInfoPopup}"
                     ButtonBackground="#B5C9FF"
                     IconBackground="#0066FF"
                     TextFontSize="16"
@@ -64,7 +64,9 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <!--<uc:DeviceCardItemUC FontSize="14" TongleOnOffCommand="{Binding TongleOnOffCommand}"/>-->
-                            <uc:DeviceCardItemUC FontSize="14" TongleOnOffCommand="{Binding DataContext.TongleOnOffCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
+                            <uc:DeviceCardItemUC FontSize="14" 
+                                                 TongleOnOffCommand="{Binding DataContext.TongleOnOffCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                 OpenEditPopupCommand = "{Binding DataContext.OpenInfoPopup, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
@@ -77,7 +79,7 @@
               Visibility="{Binding IsCreateOrUpdatePopupOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ContentControl VerticalAlignment="Center" HorizontalAlignment="Center" 
                             Width="400"
-                            Height="300"
+                            Height="Auto"
                             Content="{Binding OverlayNavigate.CurrentView}">
             </ContentControl>
         </Grid>
