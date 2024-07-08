@@ -7,6 +7,20 @@
              xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="style_getNewData" TargetType="CheckBox">
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="14" />
+            
+            <!--<Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding SDKType}" Value="E_ZKTECO">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>-->
+        </Style>
+    </UserControl.Resources>
     <Grid Background="#EFF3FF">
 
         <Grid.RowDefinitions>
@@ -27,8 +41,7 @@
                         <ColumnDefinition Width="1.5*"/>
                         <ColumnDefinition/>
                         <ColumnDefinition Width="1.5*"/>
-                        <ColumnDefinition/>
-                        <ColumnDefinition/>
+                        <ColumnDefinition Width="2*"/>
                     </Grid.ColumnDefinitions>
                     <Grid.RowDefinitions>
                         <RowDefinition/>
@@ -36,10 +49,10 @@
                         <RowDefinition/>
                     </Grid.RowDefinitions>
 
-                    <TextBlock Grid.Column="0" Grid.Row="0" FontSize="16" Text="Mã chấm công" VerticalAlignment="Center"/>
-                    <TextBox Grid.Column="1" Grid.Row="0" Height="26" Margin="4"/>
+                    <TextBlock Grid.Column="0" Grid.Row="0" FontSize="16" Text="{StaticResource LANG_DAT_EnrollNumber}" VerticalAlignment="Center"/>
+                    <TextBox Grid.Column="1" Grid.Row="0" Height="26" Margin="4" Text="{Binding EnrollNumber}"/>
 
-                    <TextBlock Grid.Column="2" Grid.Row="0" FontSize="16" Text="Máy chấm công" VerticalAlignment="Center"/>
+                    <TextBlock Grid.Column="2" Grid.Row="0" FontSize="16" Text="{StaticResource LANG_DAT_TAMDevice}" VerticalAlignment="Center"/>
                     <ComboBox Grid.Column="3" Grid.Row="0"
                         Height="26" 
                         Margin="4"
@@ -52,18 +65,19 @@
                         </ComboBox.ItemTemplate>
                     </ComboBox>
 
-                    <TextBlock Grid.Column="0" Grid.Row="1" FontSize="16" Text="Máy chấm công" VerticalAlignment="Center"/>
-                    <ComboBox Grid.Column="1" Grid.Row="1"
-                        Height="26" 
-                        Margin="4"
-                        ItemsSource="{Binding SDKsOptions}" 
-                        SelectedItem="{Binding SDKSelected, Mode=TwoWay}">
-                        <ComboBox.ItemTemplate>
-                            <DataTemplate>
-                                <TextBlock Text="{Binding Name}"/>
-                            </DataTemplate>
-                        </ComboBox.ItemTemplate>
-                    </ComboBox>
+                    <TextBlock Grid.Column="0" Grid.Row="1" FontSize="16" 
+                               Text="{StaticResource LANG_DAT_DateFrom}" VerticalAlignment="Center"/>
+                    <DatePicker Grid.Column="1" Grid.Row="1" Height="26" 
+                                Margin="4" Background="White" 
+                                SelectedDate="{Binding DateFrom}"/>
+                    <TextBlock Grid.Column="2" Grid.Row="1" FontSize="16" 
+                               Text="{StaticResource LANG_DAT_DateTo}" VerticalAlignment="Center"/>
+                    <DatePicker Grid.Column="3" Grid.Row="1" Height="26" Margin="4" Background="White" 
+                                SelectedDate="{Binding DateTo}"/>
+
+                    <CheckBox Grid.Column="4" Grid.Row="0" Style="{StaticResource style_getNewData}"
+                        Content="{StaticResource LANG_DAT_AlreadySyncData}"
+                        IsChecked="{Binding IsAlreadySyncData, Mode=TwoWay}"/> 
 
                 </Grid>
             </Grid>
@@ -73,17 +87,17 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
-                <uc:ButtonUC 
+                <uc:ButtonUC
                     Grid.Column="0"
                     Title="{StaticResource LANG_GLO_Search}"
                     Icon="{StaticResource Icon_Search}"
-                    ClickCommand="{Binding OpenInfoPopup}"
+                    ClickCommand="{Binding SearchCommand}"
                     ButtonBackground="#fcefcc"
                     IconBackground="#c49000"
                     TextFontSize="16"
                     Margin="4,0"
                     />
-                <uc:ButtonUC 
+                <uc:ButtonUC
                     Grid.Column="1"
                     Title="{StaticResource LANG_DEV_AddDevice}"
                     Icon="{StaticResource Icon_Plus}"

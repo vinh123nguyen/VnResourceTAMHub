@@ -19,6 +19,7 @@ namespace TAMHubApp.ViewModels
             _mainViewModel = mainViewModel;
             PaginationBackCommand = new RelayCommand<object>(x=> { return CurrentPage != 1; }, x => { GetDataChangePaging(x, false); });
             PaginationForwardCommand = new RelayCommand<object>(x=> { return CurrentPage != TotalPages && TotalPages != 0; }, x => { GetDataChangePaging(x, true); });
+            SearchCommand = new RelayCommand<object>(x=> { return true; }, x => { GetDataPaging(); });
 
             InitData();
         }
@@ -27,6 +28,7 @@ namespace TAMHubApp.ViewModels
 
         public RelayCommand<object> PaginationBackCommand { get; set; }
         public RelayCommand<object> PaginationForwardCommand { get; set; }
+        public RelayCommand<object> SearchCommand { get; set; }
         #endregion
 
         #region Properties
@@ -44,6 +46,18 @@ namespace TAMHubApp.ViewModels
             get { return _TAMSelected; }
             set { _TAMSelected = value; OnPropertyChanged(); }
         }
+
+        private string _enrollNumber { get; set; }
+        public string EnrollNumber { get => _enrollNumber; set { _enrollNumber = value; OnPropertyChanged(); } }
+
+        private bool _isAlreadySyncData { get; set; }
+        public bool IsAlreadySyncData { get => _isAlreadySyncData; set {  _isAlreadySyncData = value; OnPropertyChanged(); } }
+
+        private DateTime? _dateFrom { get; set; }
+        public DateTime? DateFrom { get => _dateFrom; set { _dateFrom = value; OnPropertyChanged(); } }
+
+        private DateTime? _dateTo { get; set; }
+        public DateTime? DateTo { get => _dateTo; set { _dateTo = value; OnPropertyChanged(); } }
 
         #endregion
 
@@ -90,8 +104,55 @@ namespace TAMHubApp.ViewModels
                 CurrentPage = 1;
             }
 
-            Task.Run(() =>
+            Task.Run(async () =>
             {
+                var lstlog = new List<TAMScanLogModel>();
+                if (!IsAlreadySyncData)
+                {
+                    var lstQuery = await _unitOfWork.TAMScanLogRepository.GetAllAsync();
+                    lstlog = lstQuery.Select(x => new TAMScanLogModel()
+                    {
+                        Id = x.Id,
+                        DeviceID = x.DeviceID,
+                        EnrollNumber = x.EnrollNumber,
+                        VerifyMode = x.VerifyMode,
+                        InOutMode = x.InOutMode,
+                        TimeLog = x.TimeLog,
+                    }).ToList();
+                }
+                else
+                {
+                    var lstQuery = await _unitOfWork.TAMScanLogHistoryRepository.GetAllAsync();
+                    lstlog = lstQuery.Select(x => new TAMScanLogModel()
+                    {
+                        Id = x.Id,
+                        DeviceID = x.DeviceID,
+                        EnrollNumber = x.EnrollNumber,
+                        VerifyMode = x.VerifyMode,
+                        InOutMode = x.InOutMode,
+                        TimeLog = x.TimeLog,
+                    }).ToList();
+                }
+
+                if (!string.IsNullOrEmpty(EnrollNumber))
+                {
+                    lstlog = lstlog.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                }
+                if (!string.IsNullOrEmpty(TAMSelected.Key))
+                {
+                    lstlog = lstlog.Where(x => x.DeviceID.ToString() == TAMSelected.Key).ToList();
+                }
+                if(DateFrom != null)
+                {
+                    lstlog = lstlog.Where(x => x.TimeLog >= DateFrom.Value).ToList();
+                }
+                if (DateTo != null)
+                {
+                    lstlog = lstlog.Where(x => x.TimeLog <= DateTo.Value).ToList();
+                }
+                lstlog = lstlog.OrderByDescending(x => x.TimeLog).ToList();
+
+                lstlog = lstlog.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
 
             });
         }

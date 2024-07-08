@@ -5,6 +5,8 @@ namespace TAMHubApp.Data
     public interface IUnitOfWork : IAsyncDisposable
     {
         DeviceRepository DeviceRepository { get; }
+        TAMScanLogRepository TAMScanLogRepository { get; }
+        TAMScanLogHistoryRepository TAMScanLogHistoryRepository { get; }
 
 
         Task<int> SaveChanageAsync();
@@ -23,7 +25,11 @@ namespace TAMHubApp.Data
         #endregion
 
         private DeviceRepository _deviceRepository;
+        private TAMScanLogRepository _TAMScanLogRepository;
+        private TAMScanLogHistoryRepository _TAMScanLogHistoryRepository;
         public DeviceRepository DeviceRepository => _deviceRepository ?? (_deviceRepository = new DeviceRepository(_dbContext));
+        public TAMScanLogRepository TAMScanLogRepository => _TAMScanLogRepository ?? (_TAMScanLogRepository = new TAMScanLogRepository(_dbContext));
+        public TAMScanLogHistoryRepository TAMScanLogHistoryRepository => _TAMScanLogHistoryRepository ?? (_TAMScanLogHistoryRepository = new TAMScanLogHistoryRepository(_dbContext));
 
 
         public UnitOfWork(AppDbContext dbContext)

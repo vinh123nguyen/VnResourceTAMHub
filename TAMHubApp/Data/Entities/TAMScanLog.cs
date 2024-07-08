@@ -7,7 +7,7 @@
         public int EnrollNumber { get; set; }
         public string VerifyMode { get; set; }
         public string InOutMode { get; set; }
-        public string TimeLog { get; set; }
+        public DateTime TimeLog { get; set; }
 
         public Device Device { get; set; }
     }

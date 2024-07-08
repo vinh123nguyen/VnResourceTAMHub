@@ -23,4 +23,9 @@
     <system:String x:Key="LANG_GLO_NotMatchDataType">không đúng định dạng!</system:String>
     <system:String x:Key="LANG_GLO_Remove">Xóa</system:String>
     <system:String x:Key="LANG_GLO_Search">Tìm kiếm</system:String>
+    <system:String x:Key="LANG_DAT_EnrollNumber">Mã chấm công</system:String>
+    <system:String x:Key="LANG_DAT_TAMDevice">Máy chấm công</system:String>
+    <system:String x:Key="LANG_DAT_DateFrom">Từ ngày</system:String>
+    <system:String x:Key="LANG_DAT_DateTo">Đến ngày</system:String>
+    <system:String x:Key="LANG_DAT_AlreadySyncData">Dữ liệu đã đồng bộ</system:String>
 </ResourceDictionary>
