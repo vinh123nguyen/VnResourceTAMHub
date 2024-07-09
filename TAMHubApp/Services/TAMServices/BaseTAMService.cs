@@ -65,6 +65,7 @@ namespace TAMHubApp.Services.TAMServices
 
         public abstract bool Action_Connect();
         public abstract bool Action_Disconnect();
+        public abstract void Action_GetAllGlog();
 
 
 

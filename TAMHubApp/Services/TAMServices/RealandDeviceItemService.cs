@@ -189,5 +189,10 @@ namespace TAMHubApp.Services.TAMServices
         {
             throw new NotImplementedException();
         }
+
+        public override void Action_GetAllGlog()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

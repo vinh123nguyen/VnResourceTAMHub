@@ -12,6 +12,7 @@ namespace TAMHubApp.Views.UserControls
     {
         public ButtonUC()
         {
+            TextFontSize = "12";
             InitializeComponent();
         }
 
@@ -59,11 +60,11 @@ namespace TAMHubApp.Views.UserControls
         }
         public static readonly DependencyProperty ClickCommandParameterProperty = DependencyProperty.Register("ClickCommandParameter", typeof(object), typeof(ButtonUC));
 
-        public int TextFontSize
+        public string TextFontSize
         {
-            get { return (int)GetValue(TextFontSizeProperty); }
+            get { return (string)GetValue(TextFontSizeProperty); }
             set { SetValue(TextFontSizeProperty, value); }
         }
-        public static readonly DependencyProperty TextFontSizeProperty = DependencyProperty.Register("TextFontSize", typeof(int), typeof(ButtonUC));
+        public static readonly DependencyProperty TextFontSizeProperty = DependencyProperty.Register("TextFontSize", typeof(string), typeof(ButtonUC));
     }
 }

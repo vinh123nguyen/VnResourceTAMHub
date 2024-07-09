@@ -25,13 +25,13 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
-            <Style.Triggers>
+            <!--<Style.Triggers>
                 <DataTrigger Binding="{Binding ElementName=style_navButton, Path=IsActive}" Value="True">
                     <Setter Property="Background" Value="#F8F7FC" />
                     <Setter Property="Foreground" Value="#6F53F3" />
                     <Setter Property="Tag" Value="Visible" />
                 </DataTrigger>
-            </Style.Triggers>
+            </Style.Triggers>-->
         </Style>
     </UserControl.Resources>
     <Button Grid.Column="1" Style="{StaticResource style_ActionButton}" 

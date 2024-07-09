@@ -16,6 +16,11 @@
     <system:String x:Key="LANG_DEV_Port">Port</system:String>
     <system:String x:Key="LANG_DEV_Password">Password</system:String>
     <system:String x:Key="LANG_DEV_SupportGetDataByDate">Hỗ trợ lấy dữ liệu theo ngày</system:String>
+    <system:String x:Key="LANG_DEV_FromDate">Từ ngày</system:String>
+    <system:String x:Key="LANG_DEV_ToDate">Đến ngày</system:String>
+    <system:String x:Key="LANG_DEV_DownByDate">Tải theo ngày</system:String>
+    <system:String x:Key="LANG_DEV_DownAll">Tải tất cả</system:String>
+    <system:String x:Key="LANG_DEV_DownloadData">Tải dữ liệu</system:String>
     <system:String x:Key="LANG_GLO_Save">Lưu</system:String>
     <system:String x:Key="E_ZKTECO">ZKTeco</system:String>
     <system:String x:Key="E_REALAND">Realand</system:String>
@@ -28,4 +33,9 @@
     <system:String x:Key="LANG_DAT_DateFrom">Từ ngày</system:String>
     <system:String x:Key="LANG_DAT_DateTo">Đến ngày</system:String>
     <system:String x:Key="LANG_DAT_AlreadySyncData">Dữ liệu đã đồng bộ</system:String>
+    <system:String x:Key="LANG_DAT_GRID_EnrollNumber">Mã chấm công</system:String>
+    <system:String x:Key="LANG_DAT_GRID_TimeLog">Thời gian</system:String>
+    <system:String x:Key="LANG_DAT_GRID_VerifyMode">Loại xác thực</system:String>
+    <system:String x:Key="LANG_DAT_GRID_InOutMode">Loại xác thực</system:String>
+    <system:String x:Key="LANG_DAT_GRID_TAMDevice">Máy chấm công</system:String>
 </ResourceDictionary>
