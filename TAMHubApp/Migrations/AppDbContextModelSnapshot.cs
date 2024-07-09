@@ -81,12 +81,12 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("b1a43496-d9eb-43b3-a929-82f9d4a5127a"),
+                            Id = new Guid("cb749181-0b78-4027-a3ac-69f19ff14c92"),
                             AllLogCount = 140000,
                             CommPassword = 0,
                             DeviceSDKType = 0,
                             IPAddress = "10.0.0.231",
-                            LastTimeConnected = new DateTime(2024, 7, 6, 10, 2, 41, 738, DateTimeKind.Local).AddTicks(2590),
+                            LastTimeConnected = new DateTime(2024, 7, 9, 9, 3, 50, 521, DateTimeKind.Local).AddTicks(6390),
                             MachineNo = 103,
                             Name = "Máy chấm công 1",
                             NewLogCount = 0,
@@ -95,12 +95,12 @@ namespace TAMHubApp.Migrations
                         },
                         new
                         {
-                            Id = new Guid("58c8b357-2063-489c-808f-d69d8c0188dc"),
+                            Id = new Guid("71f154bd-624f-4c2e-a15e-072f861485bd"),
                             AllLogCount = 140000,
                             CommPassword = 0,
                             DeviceSDKType = 0,
                             IPAddress = "10.0.0.13",
-                            LastTimeConnected = new DateTime(2024, 7, 6, 10, 2, 41, 738, DateTimeKind.Local).AddTicks(2606),
+                            LastTimeConnected = new DateTime(2024, 7, 9, 9, 3, 50, 521, DateTimeKind.Local).AddTicks(6411),
                             MachineNo = 103,
                             Name = "Máy chấm công 2",
                             NewLogCount = 0,
@@ -109,12 +109,12 @@ namespace TAMHubApp.Migrations
                         },
                         new
                         {
-                            Id = new Guid("6f1e1b27-e5de-433f-b7f1-0d2f8f1170e8"),
+                            Id = new Guid("124cd477-d7e6-4b10-9e2f-15f1a674e64c"),
                             AllLogCount = 140000,
                             CommPassword = 0,
                             DeviceSDKType = 1,
                             IPAddress = "10.20.5.85",
-                            LastTimeConnected = new DateTime(2024, 7, 6, 10, 2, 41, 738, DateTimeKind.Local).AddTicks(2609),
+                            LastTimeConnected = new DateTime(2024, 7, 9, 9, 3, 50, 521, DateTimeKind.Local).AddTicks(6414),
                             MachineNo = 103,
                             Name = "Máy chấm công 2",
                             NewLogCount = 0,
@@ -166,12 +166,15 @@ namespace TAMHubApp.Migrations
                     b.Property<int>("EnrollNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("InOutMode")
+                    b.Property<string>("InOutModeOrigin")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TimeLog")
+                    b.Property<string>("InOutModeView")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("TimeLog")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("VerifyMode")
@@ -197,12 +200,15 @@ namespace TAMHubApp.Migrations
                     b.Property<int>("EnrollNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("InOutMode")
+                    b.Property<string>("InOutModeOrigin")
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("TimeLog")
+                    b.Property<string>("InOutModeView")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime>("TimeLog")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("VerifyMode")

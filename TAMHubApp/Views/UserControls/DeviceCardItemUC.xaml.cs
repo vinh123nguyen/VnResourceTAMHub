@@ -42,5 +42,12 @@ namespace TAMHubApp.Views.UserControls
         }
         public static readonly DependencyProperty OpenEditPopupCommandProperty = DependencyProperty.Register("OpenEditPopupCommand", typeof(ICommand), typeof(DeviceCardItemUC));
 
+        public ICommand OpenSelectDatePopupCommand
+        {
+            get { return (ICommand)GetValue(OpenSelectDatePopupCommandProperty); }
+            set { SetValue(OpenSelectDatePopupCommandProperty, value); }
+        }
+        public static readonly DependencyProperty OpenSelectDatePopupCommandProperty = DependencyProperty.Register("OpenSelectDatePopupCommand", typeof(ICommand), typeof(DeviceCardItemUC));
+
     }
 }

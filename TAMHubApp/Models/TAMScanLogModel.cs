@@ -6,7 +6,9 @@
         public Guid DeviceID { get; set; }
         public int EnrollNumber { get; set; }
         public string VerifyMode { get; set; }
-        public string InOutMode { get; set; }
+        public string InOutModeView { get; set; }
+        public string TimeLogView { get; set; }
+        public string DeviceName { get; set; }
         public DateTime TimeLog { get; set; }
     }
 }

@@ -15,6 +15,7 @@ namespace TAMHubApp.ViewModels
         {
             CurrentPage = 1;
             TotalRow = 0;
+            CurrentPageView = "0/0";
             _unitOfWork = unitOfWork;
             _mainViewModel = mainViewModel;
             PaginationBackCommand = new RelayCommand<object>(x=> { return CurrentPage != 1; }, x => { GetDataChangePaging(x, false); });
@@ -35,10 +36,12 @@ namespace TAMHubApp.ViewModels
         private int _currentPage { get; set; }
         public int CurrentPage { get => _currentPage; set { _currentPage = value; OnPropertyChanged(); Event_UpdateCurrentPage(value); } }
         private int _totalRow { get; set; }
-        public int TotalRow { get => _totalRow; set { _totalRow = value; OnPropertyChanged(); TotalPages = (int)Math.Ceiling((double)TotalRow / PageSize); } }
+        public int TotalRow { get => _totalRow; set { _totalRow = value; OnPropertyChanged(); TotalPages = (int)Math.Ceiling((double)TotalRow / PageSize); Event_UpdateCurrentPage(CurrentPage); } }
         private int PageSize = 50;
         private int TotalPages = 0;
         
+        private ObservableCollection<TAMScanLogModel> _listTAMScanLogs { get; set; }
+        public ObservableCollection<TAMScanLogModel> ListTAMScanLogs { get => _listTAMScanLogs; set { _listTAMScanLogs = value; OnPropertyChanged(); } }
         public ObservableCollection<Option> ListOptionsTAMs { get; set; }
         private Option _TAMSelected;
         public Option TAMSelected
@@ -46,6 +49,12 @@ namespace TAMHubApp.ViewModels
             get { return _TAMSelected; }
             set { _TAMSelected = value; OnPropertyChanged(); }
         }
+
+        private string _currentPageView { get; set; }
+        public string CurrentPageView { get => _currentPageView; set { _currentPageView = value; OnPropertyChanged(); } }
+
+        private string _dataRowInfo { get; set; }
+        public string DataRowInfo { get => _dataRowInfo; set { _dataRowInfo = value; OnPropertyChanged(); } }
 
         private string _enrollNumber { get; set; }
         public string EnrollNumber { get => _enrollNumber; set { _enrollNumber = value; OnPropertyChanged(); } }
@@ -80,7 +89,10 @@ namespace TAMHubApp.ViewModels
         }
         public void Event_UpdateCurrentPage(int currentpage)
         {
-
+            CurrentPageView = $"{currentpage}/{TotalPages}";
+            var startitemcount = TotalRow != 0 ? (((CurrentPage - 1) * PageSize) + 1): 0;
+            var enditemcount = TotalRow != 0 ? ((CurrentPage-1) * PageSize + ListTAMScanLogs.Count) : 0;
+            DataRowInfo = $"{startitemcount} - {enditemcount} of {TotalRow} items";
         }
         public void GetDataChangePaging(object parameter, bool isForward)
         {
@@ -116,8 +128,10 @@ namespace TAMHubApp.ViewModels
                         DeviceID = x.DeviceID,
                         EnrollNumber = x.EnrollNumber,
                         VerifyMode = x.VerifyMode,
-                        InOutMode = x.InOutMode,
+                        InOutModeView = x.InOutModeView,
                         TimeLog = x.TimeLog,
+                        TimeLogView = x.TimeLog.ToString("dd/MM/yyyy HH:mm:ss"),
+                        DeviceName = x.Device.Name
                     }).ToList();
                 }
                 else
@@ -129,8 +143,10 @@ namespace TAMHubApp.ViewModels
                         DeviceID = x.DeviceID,
                         EnrollNumber = x.EnrollNumber,
                         VerifyMode = x.VerifyMode,
-                        InOutMode = x.InOutMode,
+                        InOutModeView = x.InOutModeView,
                         TimeLog = x.TimeLog,
+                        TimeLogView = x.TimeLog.ToString("dd/MM/yyyy HH:mm:ss"),
+                        DeviceName = x.Device.Name
                     }).ToList();
                 }
 
@@ -150,10 +166,16 @@ namespace TAMHubApp.ViewModels
                 {
                     lstlog = lstlog.Where(x => x.TimeLog <= DateTo.Value).ToList();
                 }
+                TotalRow = lstlog.Count;
                 lstlog = lstlog.OrderByDescending(x => x.TimeLog).ToList();
 
                 lstlog = lstlog.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
 
+                ListTAMScanLogs = new ObservableCollection<TAMScanLogModel>(lstlog);
+
+                //OnPropertyChanged(nameof(CurrentPage));
+
+                _mainViewModel.IsLoading = false;
             });
         }
 

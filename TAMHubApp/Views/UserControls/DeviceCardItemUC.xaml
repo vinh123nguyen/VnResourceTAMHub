@@ -194,6 +194,7 @@
                              ButtonBackground="#fff" Padding="1"/>
                 <uc:ButtonUC Grid.Column="1" FontSize="10" Title="Tải Dữ liệu" 
                              Icon="{StaticResource Icon_Download}" IconBackground="#0066FF" 
+                             ClickCommand="{Binding ElementName=DeviceCardUC,Path=OpenSelectDatePopupCommand}" ClickCommandParameter="{Binding Id}"
                              ButtonBackground="#B5C9FF" Padding="1"/>
 
             </Grid>

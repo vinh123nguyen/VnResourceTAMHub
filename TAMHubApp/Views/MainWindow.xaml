@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:TAMHubApp"
         xmlns:converter="clr-namespace:TAMHubApp.Converters"
         xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
-        mc:Ignorable="d"
+        mc:Ignorable="d"    
         Title="VnResource TAM Hub" Height="540" Width="960">
     <Window.Icon>
         <BitmapImage UriSource="/Resources/Images/windowicon.png"/>

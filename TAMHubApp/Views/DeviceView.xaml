@@ -66,6 +66,7 @@
                             <!--<uc:DeviceCardItemUC FontSize="14" TongleOnOffCommand="{Binding TongleOnOffCommand}"/>-->
                             <uc:DeviceCardItemUC FontSize="14" 
                                                  TongleOnOffCommand="{Binding DataContext.TongleOnOffCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                 OpenSelectDatePopupCommand="{Binding DataContext.OpenSelectDatePopupCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                  OpenEditPopupCommand = "{Binding DataContext.OpenInfoPopup, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>

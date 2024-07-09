@@ -42,7 +42,7 @@ namespace TAMHubApp.Views.UserControls
             set { SetValue(CurrentPageProperty, value); }
         }
         public static readonly DependencyProperty CurrentPageProperty = DependencyProperty.Register("CurrentPage", typeof(string), typeof(PaginationBarUC));
-        public string TotalPagePages
+        public string TotalPagePage
         {
             get { return (string)GetValue(TotalPagePageProperty); }
             set { SetValue(TotalPagePageProperty, value); }

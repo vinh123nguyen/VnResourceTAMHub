@@ -42,6 +42,7 @@ namespace TAMHubApp
             services.AddSingleton<ScheduleViewModel>();
             services.AddSingleton<SettingViewModel>();
             services.AddTransient<DeviceItemInfoUCViewModel>();
+            services.AddTransient<SelectDateRangeGetDataUCViewModel>();
 
             // Schedule task DI Register
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
