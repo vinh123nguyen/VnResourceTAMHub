@@ -78,12 +78,14 @@
                     IconBackground="#1BBB48" 
                     ButtonBackground="#B6FFB5" Padding="8"
                     Icon="{StaticResource Icon_Download}" 
+                    ClickCommand="{Binding DownloadDataByDateCommand}"
                     Title="{StaticResource LANG_DEV_DownByDate}"/>
                 <uc:ButtonUC
                     Grid.Column="2"
                     IconBackground="#1BBB48" 
                     ButtonBackground="#B6FFB5" Padding="8"
                     Icon="{StaticResource Icon_Download}" 
+                    ClickCommand="{Binding DownloadAllDateCommand}"
                     Title="{StaticResource LANG_DEV_DownAll}"/>
             </Grid>
 

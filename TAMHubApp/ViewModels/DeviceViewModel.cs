@@ -189,7 +189,17 @@ namespace TAMHubApp.ViewModels
                     //    {
                     //        // Update UI with result
                     //    });
+                    //ManualResetEvent evnt = new ManualResetEvent(false);
 
+                    //Thread thread = new Thread(delegate ()
+                    //{
+                    //    itemdeviceAction.Action_Connect();
+                    //    evnt.Set();
+                    //});
+
+                    //thread.SetApartmentState(ApartmentState.MTA);
+                    //thread.Start();
+                    //evnt.WaitOne();
                 }
             }
         }

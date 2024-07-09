@@ -1,19 +1,28 @@
 ﻿using TAMHubApp.Commands;
+using TAMHubApp.Services.TAMServices;
 
 namespace TAMHubApp.ViewModels.UserControls
 {
     class SelectDateRangeGetDataUCViewModel : BaseViewModel
     {
         private DeviceViewModel _deviceViewModel;
-        public SelectDateRangeGetDataUCViewModel(DeviceViewModel deviceViewModel)
+        private SingletonTAMInstance _singletonTAMInstance;
+
+        public SelectDateRangeGetDataUCViewModel(DeviceViewModel deviceViewModel, SingletonTAMInstance singletonTAMInstance)
         {
             _deviceViewModel = deviceViewModel;
-
+            _singletonTAMInstance = singletonTAMInstance;
+            DateFrom = DateTime.Now.Date;
+            DateTo = DateTime.Now.Date;
             CloseOverlayCommand = new RelayCommand<object>(x => { return true; }, CloseOverlayCommandExcute);
+            DownloadDataByDateCommand = new RelayCommand<object>(x => { return DateFrom <= DateTo; }, x => { DownLoadLogData(false); });
+            DownloadAllDateCommand = new RelayCommand<object>(x => { return true; }, x => { DownLoadLogData(true); });
         }
 
         #region Command
         public RelayCommand<object> CloseOverlayCommand { get; set; }
+        public RelayCommand<object> DownloadDataByDateCommand { get; set; }
+        public RelayCommand<object> DownloadAllDateCommand { get; set; }
 
         #endregion
 
@@ -26,7 +35,8 @@ namespace TAMHubApp.ViewModels.UserControls
             {
                 _id = value;
                 OnPropertyChanged();
-                //Action_SetDataInfoPopup(value);
+                if (string.IsNullOrEmpty(value))
+                    CloseOverlayCommandExcute(true);
             }
         }
 
@@ -43,6 +53,21 @@ namespace TAMHubApp.ViewModels.UserControls
         private void CloseOverlayCommandExcute(object parameter)
         {
             _deviceViewModel.IsCreateOrUpdatePopupOpen = false;
+        }
+
+        public void DownLoadLogData(bool isGetAll = true)
+        {
+            var device = _singletonTAMInstance.TAMs.FirstOrDefault(x => x.Id.ToString() == Id);
+
+            if (device != null)
+            {
+                if (device.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_ZKTECO)
+                {
+                    var actualydevicve = (ZKTecoDeviceItemService)device;
+                    var fesf = actualydevicve.ZKTeco_IsCanGetLogByTime;
+                }
+            }
+
         }
 
     }
