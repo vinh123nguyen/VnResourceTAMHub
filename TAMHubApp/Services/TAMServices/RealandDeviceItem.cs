@@ -3,13 +3,13 @@ using TAMHubApp.Infrastructures.TAMUtilities;
 
 namespace TAMHubApp.Services.TAMServices
 {
-    public class RealandDeviceItemService : BaseTAMService
+    public class RealandDeviceItem : BaseTAMService
     {
         //public bool IsConnected { get; set; }
         private Device _device;
         private DeviceConnection _deviceConnection;
 
-        public RealandDeviceItemService()
+        public RealandDeviceItem()
         {
             //IsConnected = false;
             //_device = new Device();
@@ -178,21 +178,6 @@ namespace TAMHubApp.Services.TAMServices
             {
                 Action_SetDeviceStatus(RealandStatusGlobal.DeviceIdle);
             }
-        }
-
-        public override bool Action_Connect()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override bool Action_Disconnect()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override void Action_GetAllGlog()
-        {
-            throw new NotImplementedException();
         }
     }
 }

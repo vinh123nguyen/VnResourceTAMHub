@@ -8,7 +8,7 @@ namespace TAMHubApp.ScheduleTasks
     {
         private readonly IServiceProvider _serviceProvider;
 
-        public SingletonJobFactory(IServiceProvider serviceProvider)
+        public SingletonJobFactory(IServiceProvider serviceProvider) 
         {
             _serviceProvider = serviceProvider;
         }

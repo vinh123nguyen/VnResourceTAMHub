@@ -11,13 +11,17 @@ namespace TAMHubApp.Data.Entities
         public int Port { get; set; }
         public int? CommPassword { get; set; }
         public TAMSDKTypes DeviceSDKType { get; set; }
-        public int AllLogCount { get; set; }
-        public int NewLogCount { get; set; }
-        public DateTime LastTimeConnected { get; set; }
+        public int? AllLogCount { get; set; }
+        public int? NewLogCount { get; set; }
+        public DateTime? LastTimeConnected { get; set; }
+        public string? SerialNumber { get; set; }
+        public string? ProductName { get; set; }
 
 
         //ZKTeco prop
         public bool ZKTeco_IsCanGetLogByTime { get; set; }
+        public bool? ZKTeco_IsTFTMachine { get; set; }
+        public bool? ZKTeco_IsNewFirmwareMachine { get; set; }
 
 
         public List<TAMScanLog> TAMScanLogs { get; set; }

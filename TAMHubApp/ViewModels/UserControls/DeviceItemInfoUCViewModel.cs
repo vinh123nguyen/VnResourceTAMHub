@@ -127,7 +127,7 @@ namespace TAMHubApp.ViewModels.UserControls
 
             if(currentDevice.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
             {
-                SupportGetDataByDate = ((ZKTecoDeviceItemService)currentDevice).ZKTeco_IsCanGetLogByTime;
+                SupportGetDataByDate = ((ZKTecoDeviceItem)currentDevice).ZKTeco_IsCanGetLogByTime;
             }
         }
         private void Event_ChangeSDKType(Option option)
