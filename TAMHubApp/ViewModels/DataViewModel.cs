@@ -91,7 +91,7 @@ namespace TAMHubApp.ViewModels
         {
             CurrentPageView = $"{currentpage}/{TotalPages}";
             var startitemcount = TotalRow != 0 ? (((CurrentPage - 1) * PageSize) + 1): 0;
-            var enditemcount = TotalRow != 0 ? ((CurrentPage-1) * PageSize + ListTAMScanLogs.Count) : 0;
+            var enditemcount = TotalRow != 0 ? ((CurrentPage-1) * PageSize + (ListTAMScanLogs != null ? ListTAMScanLogs.Count : 0)) : 0;
             DataRowInfo = $"{startitemcount} - {enditemcount} of {TotalRow} items";
         }
         public void GetDataChangePaging(object parameter, bool isForward)

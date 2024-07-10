@@ -1,15 +1,20 @@
 ﻿using TAMHubApp.Commands;
 using TAMHubApp.Services.TAMServices;
+using TAMHubApp.Views;
 
 namespace TAMHubApp.ViewModels.UserControls
 {
     class SelectDateRangeGetDataUCViewModel : BaseViewModel
     {
+        private MainViewModel _mainWindow;
         private DeviceViewModel _deviceViewModel;
         private SingletonTAMInstance _singletonTAMInstance;
 
-        public SelectDateRangeGetDataUCViewModel(DeviceViewModel deviceViewModel, SingletonTAMInstance singletonTAMInstance)
+        public SelectDateRangeGetDataUCViewModel(DeviceViewModel deviceViewModel, 
+            SingletonTAMInstance singletonTAMInstance,
+            MainViewModel mainWindow)
         {
+            _mainWindow = mainWindow;
             _deviceViewModel = deviceViewModel;
             _singletonTAMInstance = singletonTAMInstance;
             DateFrom = DateTime.Now.Date;
@@ -58,14 +63,30 @@ namespace TAMHubApp.ViewModels.UserControls
         public void DownLoadLogData(bool isGetAll = true)
         {
             var device = _singletonTAMInstance.TAMs.FirstOrDefault(x => x.Id.ToString() == Id);
+            
 
             if (device != null)
             {
-                if (device.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_ZKTECO)
+                _mainWindow.IsLoading = true;
+                Task.Run(async() =>
                 {
-                    var actualydevicve = (ZKTecoDeviceItemService)device;
-                    var fesf = actualydevicve.ZKTeco_IsCanGetLogByTime;
-                }
+                    var service = new TAMCommonService();
+                    var result = false;
+                    if (isGetAll)
+                    {
+                        result = await service.Action_GetAllData(device);
+                    }
+                    else
+                    {
+                        result = await service.Action_GetDataByDate(device, DateFrom, DateTo);
+                    }
+                    _mainWindow.IsLoading = false;
+                });
+
+
+
+
+
             }
 
         }

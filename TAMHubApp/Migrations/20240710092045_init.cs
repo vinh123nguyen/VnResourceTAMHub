@@ -37,10 +37,14 @@ namespace TAMHubApp.Migrations
                     Port = table.Column<int>(type: "INTEGER", nullable: false),
                     CommPassword = table.Column<int>(type: "INTEGER", nullable: true),
                     DeviceSDKType = table.Column<int>(type: "INTEGER", nullable: false),
-                    AllLogCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    NewLogCount = table.Column<int>(type: "INTEGER", nullable: false),
-                    LastTimeConnected = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    ZKTeco_IsCanGetLogByTime = table.Column<bool>(type: "INTEGER", nullable: false)
+                    AllLogCount = table.Column<int>(type: "INTEGER", nullable: true),
+                    NewLogCount = table.Column<int>(type: "INTEGER", nullable: true),
+                    LastTimeConnected = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    SerialNumber = table.Column<string>(type: "TEXT", nullable: true),
+                    ProductName = table.Column<string>(type: "TEXT", nullable: true),
+                    ZKTeco_IsCanGetLogByTime = table.Column<bool>(type: "INTEGER", nullable: false),
+                    ZKTeco_IsTFTMachine = table.Column<bool>(type: "INTEGER", nullable: true),
+                    ZKTeco_IsNewFirmwareMachine = table.Column<bool>(type: "INTEGER", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -101,7 +105,7 @@ namespace TAMHubApp.Migrations
                     EnrollNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     VerifyMode = table.Column<string>(type: "TEXT", nullable: false),
                     InOutModeView = table.Column<string>(type: "TEXT", nullable: false),
-                    InOutModeOrigin = table.Column<string>(type: "TEXT", nullable: false),
+                    InOutModeOrigin = table.Column<int>(type: "INTEGER", nullable: false),
                     TimeLog = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -117,12 +121,12 @@ namespace TAMHubApp.Migrations
 
             migrationBuilder.InsertData(
                 table: "Devices",
-                columns: new[] { "Id", "AllLogCount", "CommPassword", "DeviceSDKType", "IPAddress", "LastTimeConnected", "MachineNo", "Name", "NewLogCount", "Port", "ZKTeco_IsCanGetLogByTime" },
+                columns: new[] { "Id", "AllLogCount", "CommPassword", "DeviceSDKType", "IPAddress", "LastTimeConnected", "MachineNo", "Name", "NewLogCount", "Port", "ProductName", "SerialNumber", "ZKTeco_IsCanGetLogByTime", "ZKTeco_IsNewFirmwareMachine", "ZKTeco_IsTFTMachine" },
                 values: new object[,]
                 {
-                    { new Guid("124cd477-d7e6-4b10-9e2f-15f1a674e64c"), 140000, 0, 1, "10.20.5.85", new DateTime(2024, 7, 9, 9, 3, 50, 521, DateTimeKind.Local).AddTicks(6414), 103, "Máy chấm công 2", 0, 5500, false },
-                    { new Guid("71f154bd-624f-4c2e-a15e-072f861485bd"), 140000, 0, 0, "10.0.0.13", new DateTime(2024, 7, 9, 9, 3, 50, 521, DateTimeKind.Local).AddTicks(6411), 103, "Máy chấm công 2", 0, 4370, false },
-                    { new Guid("cb749181-0b78-4027-a3ac-69f19ff14c92"), 140000, 0, 0, "10.0.0.231", new DateTime(2024, 7, 9, 9, 3, 50, 521, DateTimeKind.Local).AddTicks(6390), 103, "Máy chấm công 1", 0, 4370, true }
+                    { new Guid("905f48d0-e427-4a74-9462-bd3fe063b495"), 140000, 0, 1, "10.20.5.85", new DateTime(2024, 7, 10, 15, 20, 45, 164, DateTimeKind.Local).AddTicks(2521), 103, "Máy chấm công 2", null, 5500, null, null, false, null, null },
+                    { new Guid("a0eae0da-51c3-48c7-8f40-cd724e9641b6"), 140000, 0, 0, "10.0.0.231", new DateTime(2024, 7, 10, 15, 20, 45, 164, DateTimeKind.Local).AddTicks(2499), 103, "Máy chấm công 1", null, 4370, null, null, true, null, null },
+                    { new Guid("ce22e5b6-bf70-418a-a736-4756a287c18e"), 140000, 0, 0, "10.0.0.13", new DateTime(2024, 7, 10, 15, 20, 45, 164, DateTimeKind.Local).AddTicks(2517), 103, "Máy chấm công 2", null, 4370, null, null, false, null, null }
                 });
 
             migrationBuilder.CreateIndex(

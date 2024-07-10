@@ -11,7 +11,7 @@ using TAMHubApp.Data;
 namespace TAMHubApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240709030351_init")]
+    [Migration("20240710092045_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -45,7 +45,7 @@ namespace TAMHubApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("AllLogCount")
+                    b.Property<int?>("AllLogCount")
                         .HasColumnType("INTEGER");
 
                     b.Property<int?>("CommPassword")
@@ -58,7 +58,7 @@ namespace TAMHubApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<DateTime>("LastTimeConnected")
+                    b.Property<DateTime?>("LastTimeConnected")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("MachineNo")
@@ -68,13 +68,25 @@ namespace TAMHubApp.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("NewLogCount")
+                    b.Property<int?>("NewLogCount")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("Port")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ProductName")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("SerialNumber")
+                        .HasColumnType("TEXT");
+
                     b.Property<bool>("ZKTeco_IsCanGetLogByTime")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("ZKTeco_IsNewFirmwareMachine")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool?>("ZKTeco_IsTFTMachine")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -84,43 +96,40 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("cb749181-0b78-4027-a3ac-69f19ff14c92"),
+                            Id = new Guid("a0eae0da-51c3-48c7-8f40-cd724e9641b6"),
                             AllLogCount = 140000,
                             CommPassword = 0,
                             DeviceSDKType = 0,
                             IPAddress = "10.0.0.231",
-                            LastTimeConnected = new DateTime(2024, 7, 9, 9, 3, 50, 521, DateTimeKind.Local).AddTicks(6390),
+                            LastTimeConnected = new DateTime(2024, 7, 10, 15, 20, 45, 164, DateTimeKind.Local).AddTicks(2499),
                             MachineNo = 103,
                             Name = "Máy chấm công 1",
-                            NewLogCount = 0,
                             Port = 4370,
                             ZKTeco_IsCanGetLogByTime = true
                         },
                         new
                         {
-                            Id = new Guid("71f154bd-624f-4c2e-a15e-072f861485bd"),
+                            Id = new Guid("ce22e5b6-bf70-418a-a736-4756a287c18e"),
                             AllLogCount = 140000,
                             CommPassword = 0,
                             DeviceSDKType = 0,
                             IPAddress = "10.0.0.13",
-                            LastTimeConnected = new DateTime(2024, 7, 9, 9, 3, 50, 521, DateTimeKind.Local).AddTicks(6411),
+                            LastTimeConnected = new DateTime(2024, 7, 10, 15, 20, 45, 164, DateTimeKind.Local).AddTicks(2517),
                             MachineNo = 103,
                             Name = "Máy chấm công 2",
-                            NewLogCount = 0,
                             Port = 4370,
                             ZKTeco_IsCanGetLogByTime = false
                         },
                         new
                         {
-                            Id = new Guid("124cd477-d7e6-4b10-9e2f-15f1a674e64c"),
+                            Id = new Guid("905f48d0-e427-4a74-9462-bd3fe063b495"),
                             AllLogCount = 140000,
                             CommPassword = 0,
                             DeviceSDKType = 1,
                             IPAddress = "10.20.5.85",
-                            LastTimeConnected = new DateTime(2024, 7, 9, 9, 3, 50, 521, DateTimeKind.Local).AddTicks(6414),
+                            LastTimeConnected = new DateTime(2024, 7, 10, 15, 20, 45, 164, DateTimeKind.Local).AddTicks(2521),
                             MachineNo = 103,
                             Name = "Máy chấm công 2",
-                            NewLogCount = 0,
                             Port = 5500,
                             ZKTeco_IsCanGetLogByTime = false
                         });
@@ -169,9 +178,8 @@ namespace TAMHubApp.Migrations
                     b.Property<int>("EnrollNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("InOutModeOrigin")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("InOutModeOrigin")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("InOutModeView")
                         .IsRequired()

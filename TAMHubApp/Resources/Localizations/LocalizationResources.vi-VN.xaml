@@ -36,6 +36,6 @@
     <system:String x:Key="LANG_DAT_GRID_EnrollNumber">Mã chấm công</system:String>
     <system:String x:Key="LANG_DAT_GRID_TimeLog">Thời gian</system:String>
     <system:String x:Key="LANG_DAT_GRID_VerifyMode">Loại xác thực</system:String>
-    <system:String x:Key="LANG_DAT_GRID_InOutMode">Loại xác thực</system:String>
+    <system:String x:Key="LANG_DAT_GRID_InOutMode">Loại vào ra</system:String>
     <system:String x:Key="LANG_DAT_GRID_TAMDevice">Máy chấm công</system:String>
 </ResourceDictionary>

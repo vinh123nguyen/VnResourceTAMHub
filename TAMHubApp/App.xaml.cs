@@ -3,10 +3,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
+using Serilog;
 using System.Windows;
 using System.Windows.Forms;
 using TAMHubApp.Data;
 using TAMHubApp.ScheduleTasks;
+using TAMHubApp.ScheduleTasks.Jobs;
 using TAMHubApp.Services;
 using TAMHubApp.Services.TAMServices;
 using TAMHubApp.ViewModels;
@@ -29,6 +31,7 @@ namespace TAMHubApp
             ServiceCollection services = new ServiceCollection();
             ConfigureServices(services);
             serviceProvider = services.BuildServiceProvider();
+            ServiceLocator.Init(serviceProvider);
             notifyIcon = new NotifyIcon();
         }
 
@@ -49,6 +52,11 @@ namespace TAMHubApp
             services.AddSingleton<ISchedulerFactory, StdSchedulerFactory>();
             services.AddSingleton<QuartzHostedService>();
             services.AddHostedService(provider => provider.GetService<QuartzHostedService>());
+            services.AddSingleton<ScheduleTaskService>();
+
+
+            services.AddTransient<TestJob>();
+
 
             // Navigate Service
             services.AddSingleton<ITabNavigationService, TabNavigationService>();
@@ -81,12 +89,18 @@ namespace TAMHubApp
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Information()
+            .WriteTo.File("logs\\myapp.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+            InitializeScheduler().GetAwaiter().GetResult();
+
             mainWindows = serviceProvider.GetRequiredService<MainWindow>();
             mainWindows.Show();
 
             //TrayBarService.CreateTrayIcon(notifyIcon);
             AutoUpdaterService.CheckForUpdate();
-            InitializeScheduler().GetAwaiter().GetResult();
             DataBaseService.EnsureUpdateDatabase(serviceProvider);
             //LocalizationHelper.SetLanguage("vi-VN");
 

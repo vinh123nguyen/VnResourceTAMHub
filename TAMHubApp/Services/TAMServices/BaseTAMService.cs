@@ -35,14 +35,14 @@ namespace TAMHubApp.Services.TAMServices
         }
         public int? CommPassword { get; set; }
 
-        private int _allLogCount { get; set; }
-        public int AllLogCount
+        private int? _allLogCount { get; set; }
+        public int? AllLogCount
         {
             get => _allLogCount;
             set { _allLogCount = value; OnPropertyChanged(); }
         }
-        public int _newLogCount { get; set; }
-        public int NewLogCount
+        public int? _newLogCount { get; set; }
+        public int? NewLogCount
         {
             get => _newLogCount;
             set { _newLogCount = value; OnPropertyChanged(); }
@@ -62,11 +62,9 @@ namespace TAMHubApp.Services.TAMServices
             set { _isConnected = value; OnPropertyChanged(); }
         }
 
-
-        public abstract bool Action_Connect();
-        public abstract bool Action_Disconnect();
-        public abstract void Action_GetAllGlog();
-
+        public string SerialNumber { get; set; }
+        private string _productName { get; set; }
+        public string ProductName { get => _productName; set { _productName = value; OnPropertyChanged(); } }
 
 
         #region Prop change
