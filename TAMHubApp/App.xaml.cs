@@ -14,6 +14,7 @@ using TAMHubApp.Services.TAMServices;
 using TAMHubApp.ViewModels;
 using TAMHubApp.ViewModels.UserControls;
 using TAMHubApp.Views;
+using TAMHubApp.Views.UserControls;
 
 namespace TAMHubApp
 {
@@ -46,6 +47,7 @@ namespace TAMHubApp
             services.AddSingleton<SettingViewModel>();
             services.AddTransient<DeviceItemInfoUCViewModel>();
             services.AddTransient<SelectDateRangeGetDataUCViewModel>();
+            services.AddTransient<ScheduleTaskItemInfoUCViewModel>();
 
             // Schedule task DI Register
             services.AddSingleton<IJobFactory, SingletonJobFactory>();
@@ -59,6 +61,7 @@ namespace TAMHubApp
             // Navigate Service
             services.AddSingleton<ITabNavigationService, TabNavigationService>();
             services.AddSingleton<IDeviceNavigationService, DeviceNavigationService>();
+            services.AddSingleton<IScheduleNavigationService, ScheduleNavigationService>();
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider => viewModelType => (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
 
             // DB DI Register

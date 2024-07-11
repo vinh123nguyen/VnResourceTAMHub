@@ -1,0 +1,182 @@
+﻿<UserControl x:Class="TAMHubApp.Views.UserControls.ScheduleCardItemUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
+             mc:Ignorable="d" 
+             xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
+             d:DesignHeight="200" d:DesignWidth="300">
+    <UserControl.Resources>
+        <Style x:Key="style_DeviceCardItemGrid" TargetType="Grid">
+            <Setter Property="Margin" Value="8"/>
+
+        </Style>
+
+        <Style x:Key="style_DeviceCardItem" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="16"/>
+            <Setter Property="Margin" Value="8"/>
+        </Style>
+
+        <Style x:Key="style_btnOnOff" TargetType="Button">
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="Gray"/>
+                    <Setter Property="Cursor" Value="Hand"/>
+                </Trigger>
+
+                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                    <Setter Property="Background" Value="#FF3C3C"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                    <Setter Property="Background" Value="#1BBB48"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsConnectLoading}" Value="True">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsConnectLoading}" Value="False">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="style_btnLoading" TargetType="Button">
+            <Setter Property="Width" Value="24"/>
+            <Setter Property="Height" Value="24"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="Background" Value="Orange"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsConnectLoading}" Value="False">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+                <DataTrigger Binding="{Binding IsConnectLoading}" Value="True">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="style_PathLoading" TargetType="Path">
+            <Style.Triggers>
+                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                    <BeginStoryboard>
+                        <Storyboard RepeatBehavior="Forever">
+                            <DoubleAnimation Storyboard.TargetProperty="(Path.RenderTransform).(RotateTransform.Angle)"
+                                 From="0" To="360"
+                                 Duration="0:0:2" />
+                        </Storyboard>
+                    </BeginStoryboard>
+                </EventTrigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    <Border Style="{StaticResource style_DeviceCardItem}">
+        <Grid Style="{StaticResource style_DeviceCardItemGrid}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"></RowDefinition>
+                <RowDefinition></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+            </Grid.RowDefinitions>
+
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                    <ColumnDefinition Width="32"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Path Margin="8" Data="{StaticResource Icon_Calendar}" Stroke="Black" StrokeThickness="0.7" Height="16" Width="16" Stretch="Fill" />
+                    <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="{Binding Name}"/>
+                </StackPanel>
+                <Button Grid.Column="1" Style="{StaticResource style_btnOnOff}" Command="{Binding ElementName=DeviceCardUC,Path=TongleOnOffCommand}" CommandParameter="{Binding Id}">
+                    <Path Data="{StaticResource Icon_Power}" Stroke="White" StrokeThickness="1" Height="12" Width="12" Stretch="Fill"/>
+                </Button>
+                <Button Grid.Column="1" Style="{StaticResource style_btnLoading}">
+                    <Path Data="{StaticResource Icon_Reload}" 
+                    Stroke="White"
+                    StrokeThickness="1"
+                    Height="12"
+                    Width="12"
+                    Stretch="Fill">
+                        <Path.RenderTransform>
+                            <RotateTransform x:Name="PathRotateTransform" CenterX="6" CenterY="6"/>
+                        </Path.RenderTransform>
+                        <Path.Style>
+                            <Style TargetType="Path">
+                                <Style.Triggers>
+                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                        <BeginStoryboard>
+                                            <Storyboard RepeatBehavior="Forever">
+                                                <DoubleAnimation Storyboard.TargetProperty="(Path.RenderTransform).(RotateTransform.Angle)"
+                                                From="0" To="360"
+                                                Duration="0:0:2" />
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </EventTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Path.Style>
+                    </Path>
+                </Button>
+
+
+            </Grid>
+            <Grid Grid.Row="1" Margin="0,4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Text="IP:" Padding="4,0" FontSize="10"/>
+                    <TextBlock Text="{Binding IPAddress}" FontSize="10"/>
+                </StackPanel>
+
+
+            </Grid>
+            <Grid Grid.Row="2">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <uc:ButtonUC Grid.Column="0" FontSize="10" 
+                         Icon="{StaticResource Icon_Edit}" IconBackground="#7DDA58" 
+                         ClickCommand="{Binding ElementName=DeviceCardUC,Path=OpenEditPopupCommand}" ClickCommandParameter="{Binding Id}"
+                         ButtonBackground="#fff" Padding="1"/>
+                <uc:ButtonUC Grid.Column="1" FontSize="10" Title="Tải Dữ liệu" 
+                         Icon="{StaticResource Icon_Download}" IconBackground="#0066FF" 
+                         ClickCommand="{Binding ElementName=DeviceCardUC,Path=OpenSelectDatePopupCommand}" ClickCommandParameter="{Binding Id}"
+                         ButtonBackground="#B5C9FF" Padding="1"/>
+
+            </Grid>
+        </Grid>
+    </Border>
+</UserControl>

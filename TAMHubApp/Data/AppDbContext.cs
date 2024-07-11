@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore.Design;
 using System.IO;
 using TAMHubApp.Data.Configurations;
 using TAMHubApp.Data.Entities;
+using TAMHubApp.Infrastructures.Enums;
 
 namespace TAMHubApp.Data
 {
@@ -22,6 +23,7 @@ namespace TAMHubApp.Data
             builder.ApplyConfiguration(new DeviceActionLogConfiguration());
             builder.ApplyConfiguration(new TAMScanLogConfiguration());
             builder.ApplyConfiguration(new TAMScanLogHistoryConfiguration());
+            builder.ApplyConfiguration(new ScheduleTaskConfiguration());
 
 
             builder.Entity<Device>().HasData([new Device()
@@ -54,7 +56,7 @@ namespace TAMHubApp.Data
             new Device()
             {
                 Id = Guid.NewGuid(),
-                Name = "Máy chấm công 2",
+                Name = "Máy chấm công 3",
                 MachineNo = 103,
                 IPAddress = "10.20.5.85",
                 Port = 5500,
@@ -64,6 +66,39 @@ namespace TAMHubApp.Data
                 LastTimeConnected = DateTime.Now.AddHours(-1),
             }
             ]);
+
+            builder.Entity<ScheduleTask>().HasData([new ScheduleTask()
+            {
+                Id = Guid.NewGuid(),
+                Name = "Schedule 1",
+                LastTimeRun = DateTime.Now,
+                CycleType = ScheduleCycleType.Daily,
+                Hour = 10,
+                Minute = 30
+            },
+                new ScheduleTask()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Schedule 1",
+                    LastTimeRun = DateTime.Now,
+                    CycleType = ScheduleCycleType.Weekly,
+                    Hour = 10,
+                    Minute = 30,
+                    DayOfWeek = DayOfWeek.Monday
+                },
+                new ScheduleTask()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Schedule 1",
+                    LastTimeRun = DateTime.Now,
+                    CycleType = ScheduleCycleType.Monthly,
+                    Hour = 10,
+                    Minute = 30,
+                    DayInMonth = 15
+                },
+            ]);
+
+            
         }
 
         public virtual DbSet<AppSetting> AppSettings { get; set; }
@@ -71,6 +106,7 @@ namespace TAMHubApp.Data
         public virtual DbSet<DeviceActionLog> DeviceActionLogs { get; set; }  
         public virtual DbSet<TAMScanLog> TAMScanLogs { get; set; }  
         public virtual DbSet<TAMScanLogHistory> TAMScanLogHistories { get; set; }  
+        public virtual DbSet<ScheduleTask> ScheduleTasks { get; set; }
 
     }
 

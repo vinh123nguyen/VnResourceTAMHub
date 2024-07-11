@@ -388,11 +388,15 @@ namespace TAMHubApp.Services.TAMServices
             var listdevice = _singletonTAMInstance.TAMs;
             foreach(var devive in listdevice)
             {
-                if (!devive.IsConnected)
+                if (devive.IsConnected)
                     continue;
+                devive.IsConnectLoading = true;
                 Task.Run(async () =>
                 {
-                   await Action_Connect(devive);
+                    var res = await Action_Connect(devive);
+
+                    devive.IsConnectLoading = false;
+                    devive.IsConnected = res;
                 });
             }
         }
@@ -406,6 +410,7 @@ namespace TAMHubApp.Services.TAMServices
                 Task.Run(() =>
                 {
                     Action_Dicconnect(devive);
+                    devive.IsConnected = false;
                 });
             }
         }

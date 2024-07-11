@@ -9,6 +9,7 @@ namespace TAMHubApp.Data
         TAMScanLogHistoryRepository TAMScanLogHistoryRepository { get; }
         DeviceActionLogRepository DeviceActionLogRepository { get; }
         AppSettingRepository AppSettingRepository { get; }
+        ScheduleTaskRepository ScheduleTaskRepository { get; }
 
 
         Task<int> SaveChanageAsync();
@@ -31,11 +32,13 @@ namespace TAMHubApp.Data
         private TAMScanLogHistoryRepository _TAMScanLogHistoryRepository;
         private DeviceActionLogRepository _deviceActionLogRepository;
         private AppSettingRepository _appSettingRepository;
+        private ScheduleTaskRepository _scheduleTaskRepository;
         public DeviceRepository DeviceRepository => _deviceRepository ?? (_deviceRepository = new DeviceRepository(_dbContext));
         public TAMScanLogRepository TAMScanLogRepository => _TAMScanLogRepository ?? (_TAMScanLogRepository = new TAMScanLogRepository(_dbContext));
         public TAMScanLogHistoryRepository TAMScanLogHistoryRepository => _TAMScanLogHistoryRepository ?? (_TAMScanLogHistoryRepository = new TAMScanLogHistoryRepository(_dbContext));
         public DeviceActionLogRepository DeviceActionLogRepository => _deviceActionLogRepository ?? (_deviceActionLogRepository = new DeviceActionLogRepository(_dbContext));
         public AppSettingRepository AppSettingRepository => _appSettingRepository ?? (_appSettingRepository = new AppSettingRepository(_dbContext));
+        public ScheduleTaskRepository ScheduleTaskRepository => _scheduleTaskRepository ?? (_scheduleTaskRepository = new ScheduleTaskRepository(_dbContext));
 
 
         public UnitOfWork(AppDbContext dbContext)

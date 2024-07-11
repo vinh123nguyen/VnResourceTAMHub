@@ -23,6 +23,7 @@
     <system:String x:Key="LANG_DEV_DownloadData">Tải dữ liệu</system:String>
     <system:String x:Key="LANG_DEV_DeviceNotConnected">Thiết bị chưa được kết nối</system:String>
     <system:String x:Key="LANG_DEV_GetDataSuccess">Tải {0} dòng dữ liệu mới thành công</system:String>
+    <system:String x:Key="LANG_DEV_CompanyCode">Mã công ty</system:String>
     <system:String x:Key="LANG_GLO_Save">Lưu</system:String>
     <system:String x:Key="E_ZKTECO">ZKTeco</system:String>
     <system:String x:Key="E_REALAND">Realand</system:String>
@@ -40,4 +41,22 @@
     <system:String x:Key="LANG_DAT_GRID_VerifyMode">Loại xác thực</system:String>
     <system:String x:Key="LANG_DAT_GRID_InOutMode">Loại vào ra</system:String>
     <system:String x:Key="LANG_DAT_GRID_TAMDevice">Máy chấm công</system:String>
+    <system:String x:Key="LANG_SCH_AddSchedule">Thêm schedule task</system:String>
+    <system:String x:Key="LANG_SCH_RunAllSchedule">Chạy tất cả</system:String>
+    <system:String x:Key="LANG_SCH_StopAllSchedule">Dừng tất cả</system:String>
+    <system:String x:Key="LANG_SCH_Name">Tên schedule</system:String>
+    <system:String x:Key="LANG_SCH_CycleType">Loại chu kỳ</system:String>
+    <system:String x:Key="LANG_SCH_DayInMonth">Ngày trong tháng</system:String>
+    <system:String x:Key="LANG_SCH_DayOfWeek">Thứ trong tuần</system:String>
+    <system:String x:Key="LANG_SCH_TimeRun">Thời gian chạy</system:String>
+    <system:String x:Key="LANG_CYCLE_Daily">Hàng ngày</system:String>
+    <system:String x:Key="LANG_CYCLE_Weekly">Hàng tuần</system:String>
+    <system:String x:Key="LANG_CYCLE_Monthly">Hàng tháng</system:String>
+    <system:String x:Key="LANG_GLO_Monday">Thứ 2</system:String>
+    <system:String x:Key="LANG_GLO_Tuesday">Thứ 3</system:String>
+    <system:String x:Key="LANG_GLO_Wednesday">Thứ 4</system:String>
+    <system:String x:Key="LANG_GLO_Thursday">Thứ 5</system:String>
+    <system:String x:Key="LANG_GLO_Friday">Thứ 6</system:String>
+    <system:String x:Key="LANG_GLO_Saturday">Thứ 7</system:String>
+    <system:String x:Key="LANG_GLO_Sunday">Chủ nhật</system:String>
 </ResourceDictionary>
