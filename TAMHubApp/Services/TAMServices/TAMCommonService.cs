@@ -1,11 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using Riss.Devices;
-using Serilog;
-using System.Reflection.PortableExecutable;
 using TAMHubApp.Data;
 using TAMHubApp.Data.Entities;
+using TAMHubApp.Infrastructures;
 using TAMHubApp.Infrastructures.Enums;
-using TAMHubApp.Models.TAMDataModel;
+using TAMHubApp.Infrastructures.Helpers;
+using TAMHubApp.ViewModels;
 using zkemkeeper;
 
 namespace TAMHubApp.Services.TAMServices
@@ -15,11 +14,13 @@ namespace TAMHubApp.Services.TAMServices
         private SingletonTAMInstance _singletonTAMInstance;
 
         private IUnitOfWork _unitOfWork;
+        private MainViewModel _mainWindow;
 
         public TAMCommonService()
         {
             _singletonTAMInstance = ServiceLocator.Instance.GetRequiredService<SingletonTAMInstance>();
             _unitOfWork = ServiceLocator.Instance.GetRequiredService<IUnitOfWork>();
+            _mainWindow = ServiceLocator.Instance.GetRequiredService<MainViewModel>();
         }
 
         public async Task<bool> Action_Connect(BaseTAMService device)
@@ -96,18 +97,52 @@ namespace TAMHubApp.Services.TAMServices
                 await _unitOfWork.SaveChanageAsync();
                 _singletonTAMInstance.UpdateDeviceFromDb(device.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                });
                 result = false;
             }
 
             return result;
         }
 
+        public bool Action_Dicconnect(BaseTAMService device)
+        {
+            try
+            {
+                if(device.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
+                {
+                    var zkdevice = (ZKTecoDeviceItem)device;
+                    zkdevice.IsConnected = false;
+                    zkdevice.DeviceIns.Disconnect();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                });
+                return true;
+            }
+        }
+
         public async Task<bool> Action_GetAllData(BaseTAMService device)
         {
             try
             {
+                if (!device.IsConnected)
+                {
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _mainWindow.Action_ShowToastNotify(ConstantDisplay.LANG_DEV_DeviceNotConnected.TranslateString(), ToastNotifyType.Warning);
+                    });
+                    return false;
+                }
                 var dbDevice = await _unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
 
                 var listAttRecord = new List<TAMScanLog>();
@@ -178,11 +213,19 @@ namespace TAMHubApp.Services.TAMServices
 
                     await _unitOfWork.SaveChanageAsync();
                 }
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DEV_GetDataSuccess.TranslateString(), listAttRecord.Count), ToastNotifyType.Success);
+                });
                 return true;
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                });
                 return false;
             }
         }
@@ -190,13 +233,19 @@ namespace TAMHubApp.Services.TAMServices
 
         public async Task<bool> Action_GetDataByDate(BaseTAMService device, DateTime datefrom, DateTime dateend)
         {
-            Log.Information("Start Get...");
             datefrom = datefrom.Date;
             dateend = dateend.Date.AddDays(1).AddMicroseconds(-1);
-            Log.Information($"Start time: {datefrom}");
-            Log.Information($"End time: {dateend}");
             try
             {
+                if (!device.IsConnected)
+                {
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _mainWindow.Action_ShowToastNotify(ConstantDisplay.LANG_DEV_DeviceNotConnected.TranslateString(), ToastNotifyType.Warning);
+                    });
+                    return false;
+                }
+
                 var dbDevice = await _unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
 
                 var listAttRecord = new List<TAMScanLog>();
@@ -204,13 +253,10 @@ namespace TAMHubApp.Services.TAMServices
                 {
                     var zkdevice = (ZKTecoDeviceItem)device;
                     var enumconvert = TAMEnumConverter.ZKTecoEnumConvert;
-                    Log.Information("ZKTecoDeviceItem: {@zkdevice}", zkdevice);
                     if (zkdevice.ZKTeco_IsCanGetLogByTime && zkdevice.ZKTeco_IsNewFirmwareMachine)
                     {
-                        Log.Information("Get by Date...");
                         if (zkdevice.DeviceIns.ReadTimeGLogData(zkdevice.MachineNo, datefrom.ToString("yyyy-MM-dd HH:mm:ss"), dateend.ToString("yyyy-MM-dd HH:mm:ss")))
                         {
-                            Log.Information("Get by Date done");
                             if (zkdevice.ZKTeco_IsTFTMachine)
                             {
                                 int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
@@ -278,7 +324,6 @@ namespace TAMHubApp.Services.TAMServices
                                         InOutModeView = enumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                     });
-
                                 }
                             }
                             else
@@ -306,7 +351,6 @@ namespace TAMHubApp.Services.TAMServices
                         listAttRecord = listAttRecordAll.Where(x => x.TimeLog >= datefrom && x.TimeLog <= dateend).ToList();
                     }
                 }
-                Log.Information("GetDone: " + listAttRecord.Count.ToString());
                 if (listAttRecord.Any())
                 {
                     var lstDbTAMScanLog = (await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id)).ToList();
@@ -323,13 +367,47 @@ namespace TAMHubApp.Services.TAMServices
 
                     await _unitOfWork.SaveChanageAsync();
                 }
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DEV_GetDataSuccess.TranslateString(), listAttRecord.Count), ToastNotifyType.Success);
+                });
                 return true;
             }
-            catch(Exception)
+            catch(Exception ex)
             {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                });
                 return false;
             }
         }
 
+        public void Action_ConnectAll()
+        {
+            var listdevice = _singletonTAMInstance.TAMs;
+            foreach(var devive in listdevice)
+            {
+                if (!devive.IsConnected)
+                    continue;
+                Task.Run(async () =>
+                {
+                   await Action_Connect(devive);
+                });
+            }
+        }
+        public void Action_DisconnectAll()
+        {
+            var listdevice = _singletonTAMInstance.TAMs;
+            foreach (var devive in listdevice)
+            {
+                if (devive.IsConnected)
+                    continue;
+                Task.Run(() =>
+                {
+                    Action_Dicconnect(devive);
+                });
+            }
+        }
     }
 }

@@ -21,6 +21,8 @@
     <system:String x:Key="LANG_DEV_DownByDate">Tải theo ngày</system:String>
     <system:String x:Key="LANG_DEV_DownAll">Tải tất cả</system:String>
     <system:String x:Key="LANG_DEV_DownloadData">Tải dữ liệu</system:String>
+    <system:String x:Key="LANG_DEV_DeviceNotConnected">Thiết bị chưa được kết nối</system:String>
+    <system:String x:Key="LANG_DEV_GetDataSuccess">Tải {0} dòng dữ liệu mới thành công</system:String>
     <system:String x:Key="LANG_GLO_Save">Lưu</system:String>
     <system:String x:Key="E_ZKTECO">ZKTeco</system:String>
     <system:String x:Key="E_REALAND">Realand</system:String>

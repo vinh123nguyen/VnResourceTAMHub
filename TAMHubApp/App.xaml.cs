@@ -55,8 +55,6 @@ namespace TAMHubApp
             services.AddSingleton<ScheduleTaskService>();
 
 
-            services.AddTransient<TestJob>();
-
 
             // Navigate Service
             services.AddSingleton<ITabNavigationService, TabNavigationService>();

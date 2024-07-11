@@ -1,6 +1,9 @@
 ﻿using TAMHubApp.Commands;
+using TAMHubApp.Infrastructures.Enums;
+using TAMHubApp.Infrastructures;
 using TAMHubApp.Services.TAMServices;
 using TAMHubApp.Views;
+using TAMHubApp.Infrastructures.Helpers;
 
 namespace TAMHubApp.ViewModels.UserControls
 {
@@ -64,7 +67,6 @@ namespace TAMHubApp.ViewModels.UserControls
         {
             var device = _singletonTAMInstance.TAMs.FirstOrDefault(x => x.Id.ToString() == Id);
             
-
             if (device != null)
             {
                 _mainWindow.IsLoading = true;
@@ -80,13 +82,9 @@ namespace TAMHubApp.ViewModels.UserControls
                     {
                         result = await service.Action_GetDataByDate(device, DateFrom, DateTo);
                     }
+                    _deviceViewModel.IsCreateOrUpdatePopupOpen = false;
                     _mainWindow.IsLoading = false;
                 });
-
-
-
-
-
             }
 
         }

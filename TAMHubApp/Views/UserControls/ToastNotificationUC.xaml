@@ -1,0 +1,46 @@
+﻿<UserControl x:Class="TAMHubApp.Views.UserControls.ToastNotificationUC"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
+             mc:Ignorable="d"
+             Name="_ToastNotificationUC"
+             d:DesignHeight="100" d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <Style x:Key="style_ToastNotification" TargetType="Border">
+            <Setter Property="Background" Value="{Binding ToastColor, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="10"/>
+            <Setter Property="Opacity" Value="0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding IsShowingToast, RelativeSource={RelativeSource AncestorType=UserControl}}" Value="True">
+                    <DataTrigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetProperty="Opacity" To="1" Duration="0:0:0.5"/>
+                                <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Duration="0">
+                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Visible}"/>
+                                </ObjectAnimationUsingKeyFrames>
+
+                                <DoubleAnimation BeginTime="0:0:2.5" Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.5"/>
+                                <ObjectAnimationUsingKeyFrames BeginTime="0:0:3" Storyboard.TargetProperty="Visibility" Duration="0" >
+                                    <DiscreteObjectKeyFrame KeyTime="0:0:0" Value="{x:Static Visibility.Collapsed}"/>
+                                </ObjectAnimationUsingKeyFrames>
+
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </DataTrigger.EnterActions>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+    </UserControl.Resources>
+    <Border x:Name="ToastNotification" Style="{StaticResource style_ToastNotification}">
+        <TextBlock x:Name="MessageTextBlock" Foreground="Black" FontSize="14" Text="{Binding Message, RelativeSource={RelativeSource AncestorType=UserControl}}"/>
+    </Border>
+</UserControl>
