@@ -11,7 +11,7 @@ using TAMHubApp.Data;
 namespace TAMHubApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240711095213_init")]
+    [Migration("20240711160814_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -99,12 +99,12 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("7e549b66-0f1f-4e10-9f89-6b9d48032c84"),
+                            Id = new Guid("039e91c3-6750-4320-be96-6f81f99598c2"),
                             AllLogCount = 140000,
                             CommPassword = 0,
                             DeviceSDKType = 0,
                             IPAddress = "10.0.0.231",
-                            LastTimeConnected = new DateTime(2024, 7, 11, 15, 52, 12, 974, DateTimeKind.Local).AddTicks(3490),
+                            LastTimeConnected = new DateTime(2024, 7, 11, 22, 8, 13, 697, DateTimeKind.Local).AddTicks(2924),
                             MachineNo = 103,
                             Name = "Máy chấm công 1",
                             Port = 4370,
@@ -112,12 +112,12 @@ namespace TAMHubApp.Migrations
                         },
                         new
                         {
-                            Id = new Guid("bf2bf4a8-6178-43cf-b5eb-f24fdabb8982"),
+                            Id = new Guid("70d4a8b5-5c0e-46c0-b6f7-1d5d2094dfc8"),
                             AllLogCount = 140000,
                             CommPassword = 0,
                             DeviceSDKType = 0,
                             IPAddress = "10.0.0.13",
-                            LastTimeConnected = new DateTime(2024, 7, 11, 15, 52, 12, 974, DateTimeKind.Local).AddTicks(3509),
+                            LastTimeConnected = new DateTime(2024, 7, 11, 22, 8, 13, 697, DateTimeKind.Local).AddTicks(2949),
                             MachineNo = 103,
                             Name = "Máy chấm công 2",
                             Port = 4370,
@@ -125,14 +125,14 @@ namespace TAMHubApp.Migrations
                         },
                         new
                         {
-                            Id = new Guid("cf7106ff-e6d2-4203-9b80-fcad23e4e2cb"),
+                            Id = new Guid("5a5dd7bc-556d-4819-8d5c-c8ffb0fd0792"),
                             AllLogCount = 140000,
                             CommPassword = 0,
                             DeviceSDKType = 1,
                             IPAddress = "10.20.5.85",
-                            LastTimeConnected = new DateTime(2024, 7, 11, 15, 52, 12, 974, DateTimeKind.Local).AddTicks(3512),
+                            LastTimeConnected = new DateTime(2024, 7, 11, 22, 8, 13, 697, DateTimeKind.Local).AddTicks(2952),
                             MachineNo = 103,
-                            Name = "Máy chấm công 2",
+                            Name = "Máy chấm công 3",
                             Port = 5500,
                             ZKTeco_IsCanGetLogByTime = false
                         });
@@ -179,9 +179,8 @@ namespace TAMHubApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("CycleType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("CycleType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int?>("DayInMonth")
                         .HasColumnType("INTEGER");
@@ -205,6 +204,37 @@ namespace TAMHubApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ScheduleTasks", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = new Guid("167efcd3-bbed-4563-ad25-3cd8332336a5"),
+                            CycleType = 0,
+                            Hour = 10,
+                            LastTimeRun = new DateTime(2024, 7, 11, 23, 8, 13, 697, DateTimeKind.Local).AddTicks(3069),
+                            Minute = 30,
+                            Name = "Schedule 1"
+                        },
+                        new
+                        {
+                            Id = new Guid("7210f2ea-f46b-4814-9df7-958b3b1b3308"),
+                            CycleType = 1,
+                            DayOfWeek = 1,
+                            Hour = 10,
+                            LastTimeRun = new DateTime(2024, 7, 11, 23, 8, 13, 697, DateTimeKind.Local).AddTicks(3073),
+                            Minute = 30,
+                            Name = "Schedule 1"
+                        },
+                        new
+                        {
+                            Id = new Guid("ec36f76a-6885-48f6-9d77-92d4cf83044b"),
+                            CycleType = 2,
+                            DayInMonth = 15,
+                            Hour = 10,
+                            LastTimeRun = new DateTime(2024, 7, 11, 23, 8, 13, 697, DateTimeKind.Local).AddTicks(3077),
+                            Minute = 30,
+                            Name = "Schedule 1"
+                        });
                 });
 
             modelBuilder.Entity("TAMHubApp.Data.Entities.TAMScanLog", b =>

@@ -12,5 +12,10 @@
         public const string LANG_DEV_Password = "LANG_DEV_Password";
         public const string LANG_DEV_DeviceNotConnected = "LANG_DEV_DeviceNotConnected";
         public const string LANG_DEV_GetDataSuccess = "LANG_DEV_GetDataSuccess";
+        public const string LANG_SCH_Name = "LANG_SCH_Name";
+        public const string LANG_SCH_DayOfWeek = "LANG_SCH_DayOfWeek";
+        public const string LANG_SCH_TimeRun = "LANG_SCH_TimeRun";
+        public const string LANG_SCH_CycleType = "LANG_SCH_CycleType";
+        public const string LANG_SCH_DayInMonth = "LANG_SCH_DayInMonth";
     }
 }

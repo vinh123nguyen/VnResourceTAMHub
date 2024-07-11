@@ -49,6 +49,7 @@
     <system:String x:Key="LANG_SCH_DayInMonth">Ngày trong tháng</system:String>
     <system:String x:Key="LANG_SCH_DayOfWeek">Thứ trong tuần</system:String>
     <system:String x:Key="LANG_SCH_TimeRun">Thời gian chạy</system:String>
+    <system:String x:Key="LANG_SCH_LastTimeRun">Lần chạy cuối</system:String>
     <system:String x:Key="LANG_CYCLE_Daily">Hàng ngày</system:String>
     <system:String x:Key="LANG_CYCLE_Weekly">Hàng tuần</system:String>
     <system:String x:Key="LANG_CYCLE_Monthly">Hàng tháng</system:String>

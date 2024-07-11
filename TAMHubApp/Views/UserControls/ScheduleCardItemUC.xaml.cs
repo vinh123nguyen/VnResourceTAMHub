@@ -1,17 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 
 namespace TAMHubApp.Views.UserControls
 {
@@ -24,5 +13,18 @@ namespace TAMHubApp.Views.UserControls
         {
             InitializeComponent();
         }
+        public ICommand TongleOnOffCommand
+        {
+            get { return (ICommand)GetValue(TongleOnOffCommandProperty); }
+            set { SetValue(TongleOnOffCommandProperty, value); }
+        }
+        public static readonly DependencyProperty TongleOnOffCommandProperty = DependencyProperty.Register("TongleOnOffCommand", typeof(ICommand), typeof(ScheduleCardItemUC));
+        public ICommand OpenEditPopupCommand
+        {
+            get { return (ICommand)GetValue(OpenEditPopupCommandProperty); }
+            set { SetValue(OpenEditPopupCommandProperty, value); }
+        }
+        public static readonly DependencyProperty OpenEditPopupCommandProperty = DependencyProperty.Register("OpenEditPopupCommand", typeof(ICommand), typeof(ScheduleCardItemUC));
+
     }
 }

@@ -209,7 +209,7 @@
                     </StackPanel>
                     <TextBox Grid.Column="2" Grid.Row="1"
                         Width="200" Height="25"
-                        Text="{Binding Name}"/>
+                        Text="{Binding ScheduleName}"/>
 
 
                     <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
@@ -249,7 +249,7 @@
                     <TextBox Grid.Column="2" Grid.Row="3"
                         Style="{StaticResource style_textboxDayInMonth}"
                         Width="200" Height="25"
-                        Text="{Binding Name}"/>
+                        Text="{Binding DayInMonth}"/>
 
                     <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
                         <TextBlock Text="{StaticResource LANG_SCH_TimeRun}" Margin="8,8,0,8" />
@@ -264,10 +264,10 @@
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0"
                             Height="25"
-                            Text="{Binding Name}"/>
+                            Text="{Binding CycleHour}"/>
                         <TextBox Grid.Column="2"
                             Height="25"
-                            Text="{Binding Name}"/>
+                            Text="{Binding CycleMinute}"/>
                     </Grid>
 
 
@@ -281,14 +281,14 @@
                          Icon="{StaticResource Icon_Trash}" 
                          IconBackground="#FF3C3C" 
                          ButtonBackground="#FFB5B9" Padding="1"
-                         ClickCommand="{Binding RemmoveDeviceCommand}"
+                         ClickCommand="{Binding RemmoveScheduleCommand}"
                          ClickCommandParameter="{Binding Id}" Height="24" VerticalAlignment="Top"/>
                 <uc:ButtonUC HorizontalAlignment="Right" Width="Auto" 
                          FontSize="10" Title="{StaticResource LANG_GLO_Save}" 
                          Icon="{StaticResource Icon_Download}" 
                          IconBackground="#1BBB48" 
                          ButtonBackground="#B6FFB5" Padding="1"
-                         ClickCommand="{Binding SavePopupCommand}"
+                         ClickCommand="{Binding SaveSchedulePopupInfoCommand}"
                          ClickCommandParameter="{Binding Id}"/>
 
             </Grid>

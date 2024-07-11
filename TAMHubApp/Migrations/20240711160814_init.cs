@@ -59,7 +59,7 @@ namespace TAMHubApp.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Name = table.Column<string>(type: "TEXT", nullable: false),
                     LastTimeRun = table.Column<DateTime>(type: "TEXT", nullable: true),
-                    CycleType = table.Column<string>(type: "TEXT", nullable: false),
+                    CycleType = table.Column<int>(type: "INTEGER", nullable: false),
                     Hour = table.Column<int>(type: "INTEGER", nullable: false),
                     Minute = table.Column<int>(type: "INTEGER", nullable: false),
                     DayInMonth = table.Column<int>(type: "INTEGER", nullable: true),
@@ -144,9 +144,19 @@ namespace TAMHubApp.Migrations
                 columns: new[] { "Id", "AllLogCount", "CommPassword", "CompanyCode", "DeviceSDKType", "IPAddress", "LastTimeConnected", "MachineNo", "Name", "NewLogCount", "Port", "ProductName", "SerialNumber", "ZKTeco_IsCanGetLogByTime", "ZKTeco_IsNewFirmwareMachine", "ZKTeco_IsTFTMachine" },
                 values: new object[,]
                 {
-                    { new Guid("7e549b66-0f1f-4e10-9f89-6b9d48032c84"), 140000, 0, null, 0, "10.0.0.231", new DateTime(2024, 7, 11, 15, 52, 12, 974, DateTimeKind.Local).AddTicks(3490), 103, "Máy chấm công 1", null, 4370, null, null, true, null, null },
-                    { new Guid("bf2bf4a8-6178-43cf-b5eb-f24fdabb8982"), 140000, 0, null, 0, "10.0.0.13", new DateTime(2024, 7, 11, 15, 52, 12, 974, DateTimeKind.Local).AddTicks(3509), 103, "Máy chấm công 2", null, 4370, null, null, false, null, null },
-                    { new Guid("cf7106ff-e6d2-4203-9b80-fcad23e4e2cb"), 140000, 0, null, 1, "10.20.5.85", new DateTime(2024, 7, 11, 15, 52, 12, 974, DateTimeKind.Local).AddTicks(3512), 103, "Máy chấm công 2", null, 5500, null, null, false, null, null }
+                    { new Guid("039e91c3-6750-4320-be96-6f81f99598c2"), 140000, 0, null, 0, "10.0.0.231", new DateTime(2024, 7, 11, 22, 8, 13, 697, DateTimeKind.Local).AddTicks(2924), 103, "Máy chấm công 1", null, 4370, null, null, true, null, null },
+                    { new Guid("5a5dd7bc-556d-4819-8d5c-c8ffb0fd0792"), 140000, 0, null, 1, "10.20.5.85", new DateTime(2024, 7, 11, 22, 8, 13, 697, DateTimeKind.Local).AddTicks(2952), 103, "Máy chấm công 3", null, 5500, null, null, false, null, null },
+                    { new Guid("70d4a8b5-5c0e-46c0-b6f7-1d5d2094dfc8"), 140000, 0, null, 0, "10.0.0.13", new DateTime(2024, 7, 11, 22, 8, 13, 697, DateTimeKind.Local).AddTicks(2949), 103, "Máy chấm công 2", null, 4370, null, null, false, null, null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "ScheduleTasks",
+                columns: new[] { "Id", "CycleType", "DayInMonth", "DayOfWeek", "Hour", "LastTimeRun", "Minute", "Name" },
+                values: new object[,]
+                {
+                    { new Guid("167efcd3-bbed-4563-ad25-3cd8332336a5"), 0, null, null, 10, new DateTime(2024, 7, 11, 23, 8, 13, 697, DateTimeKind.Local).AddTicks(3069), 30, "Schedule 1" },
+                    { new Guid("7210f2ea-f46b-4814-9df7-958b3b1b3308"), 1, null, 1, 10, new DateTime(2024, 7, 11, 23, 8, 13, 697, DateTimeKind.Local).AddTicks(3073), 30, "Schedule 1" },
+                    { new Guid("ec36f76a-6885-48f6-9d77-92d4cf83044b"), 2, 15, null, 10, new DateTime(2024, 7, 11, 23, 8, 13, 697, DateTimeKind.Local).AddTicks(3077), 30, "Schedule 1" }
                 });
 
             migrationBuilder.CreateIndex(

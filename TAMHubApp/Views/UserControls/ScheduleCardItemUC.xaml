@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
              mc:Ignorable="d" 
+             Name="ScheduleCardItem"
              xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
              d:DesignHeight="200" d:DesignWidth="300">
     <UserControl.Resources>
@@ -42,16 +43,16 @@
                     <Setter Property="Cursor" Value="Hand"/>
                 </Trigger>
 
-                <DataTrigger Binding="{Binding IsConnected}" Value="False">
+                <DataTrigger Binding="{Binding IsRuning}" Value="False">
                     <Setter Property="Background" Value="#FF3C3C"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                <DataTrigger Binding="{Binding IsRuning}" Value="True">
                     <Setter Property="Background" Value="#1BBB48"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding IsConnectLoading}" Value="True">
+                <DataTrigger Binding="{Binding IsLoading}" Value="True">
                     <Setter Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding IsConnectLoading}" Value="False">
+                <DataTrigger Binding="{Binding IsLoading}" Value="False">
                     <Setter Property="Visibility" Value="Visible"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -71,10 +72,10 @@
                 </Setter.Value>
             </Setter>
             <Style.Triggers>
-                <DataTrigger Binding="{Binding IsConnectLoading}" Value="False">
+                <DataTrigger Binding="{Binding IsLoading}" Value="False">
                     <Setter Property="Visibility" Value="Collapsed"/>
                 </DataTrigger>
-                <DataTrigger Binding="{Binding IsConnectLoading}" Value="True">
+                <DataTrigger Binding="{Binding IsLoading}" Value="True">
                     <Setter Property="Visibility" Value="Visible"/>
                 </DataTrigger>
             </Style.Triggers>
@@ -112,7 +113,7 @@
                     <Path Margin="8" Data="{StaticResource Icon_Calendar}" Stroke="Black" StrokeThickness="0.7" Height="16" Width="16" Stretch="Fill" />
                     <TextBlock FontWeight="Bold" VerticalAlignment="Center" Text="{Binding Name}"/>
                 </StackPanel>
-                <Button Grid.Column="1" Style="{StaticResource style_btnOnOff}" Command="{Binding ElementName=DeviceCardUC,Path=TongleOnOffCommand}" CommandParameter="{Binding Id}">
+                <Button Grid.Column="1" Style="{StaticResource style_btnOnOff}" Command="{Binding ElementName=ScheduleCardItem,Path=TongleOnOffCommand}" CommandParameter="{Binding Id}">
                     <Path Data="{StaticResource Icon_Power}" Stroke="White" StrokeThickness="1" Height="12" Width="12" Stretch="Fill"/>
                 </Button>
                 <Button Grid.Column="1" Style="{StaticResource style_btnLoading}">
@@ -149,6 +150,9 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -156,8 +160,35 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
-                    <TextBlock Text="IP:" Padding="4,0" FontSize="10"/>
-                    <TextBlock Text="{Binding IPAddress}" FontSize="10"/>
+                    <TextBlock Text="{StaticResource LANG_SCH_TimeRun}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
+                    <TextBlock Text="{Binding Hour}" FontSize="10"/>
+                    <TextBlock Text=":" FontSize="10"/>
+                    <TextBlock Text="{Binding Minute}" FontSize="10"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
+                    <TextBlock Text="{StaticResource LANG_SCH_CycleType}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
+                    <TextBlock Text="{Binding CycleTypeView}" FontSize="10"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal">
+                    <TextBlock Text="{StaticResource LANG_SCH_DayOfWeek}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
+                    <TextBlock Text="{Binding DayOfWeekView}" FontSize="10"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal">
+                    <TextBlock Text="{StaticResource LANG_SCH_DayInMonth}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
+                    <TextBlock Text="{Binding DayInMonth}" FontSize="10"/>
+                </StackPanel>
+
+                <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Horizontal">
+                    <TextBlock Text="{StaticResource LANG_SCH_LastTimeRun}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
+                    <TextBlock Text="{Binding LastTimeRunView}" FontSize="10"/>
                 </StackPanel>
 
 
@@ -169,12 +200,8 @@
                 </Grid.ColumnDefinitions>
                 <uc:ButtonUC Grid.Column="0" FontSize="10" 
                          Icon="{StaticResource Icon_Edit}" IconBackground="#7DDA58" 
-                         ClickCommand="{Binding ElementName=DeviceCardUC,Path=OpenEditPopupCommand}" ClickCommandParameter="{Binding Id}"
+                         ClickCommand="{Binding ElementName=ScheduleCardItem,Path=OpenEditPopupCommand}" ClickCommandParameter="{Binding Id}"
                          ButtonBackground="#fff" Padding="1"/>
-                <uc:ButtonUC Grid.Column="1" FontSize="10" Title="Tải Dữ liệu" 
-                         Icon="{StaticResource Icon_Download}" IconBackground="#0066FF" 
-                         ClickCommand="{Binding ElementName=DeviceCardUC,Path=OpenSelectDatePopupCommand}" ClickCommandParameter="{Binding Id}"
-                         ButtonBackground="#B5C9FF" Padding="1"/>
 
             </Grid>
         </Grid>

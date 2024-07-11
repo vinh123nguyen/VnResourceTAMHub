@@ -55,7 +55,7 @@
             </Grid>
 
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-                <ItemsControl >
+                <ItemsControl ItemsSource="{Binding ScheduleTasks}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
                             <WrapPanel Orientation="Horizontal" />
@@ -64,10 +64,16 @@
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
                             <!--<uc:DeviceCardItemUC FontSize="14" TongleOnOffCommand="{Binding TongleOnOffCommand}"/>-->
-                            <uc:DeviceCardItemUC FontSize="14" 
+                            <!--<uc:DeviceCardItemUC FontSize="14" 
                                          TongleOnOffCommand="{Binding DataContext.TongleOnOffCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                          OpenSelectDatePopupCommand="{Binding DataContext.OpenSelectDatePopupCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                         OpenEditPopupCommand = "{Binding DataContext.OpenInfoPopup, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
+                                         OpenEditPopupCommand = "{Binding DataContext.OpenInfoPopup, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>-->
+
+                            <uc:ScheduleCardItemUC 
+                                OpenEditPopupCommand="{Binding DataContext.OpenInfoPopupCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                TongleOnOffCommand="{Binding DataContext.TongleOnOffCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                />
+
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
