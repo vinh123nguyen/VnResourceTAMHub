@@ -7,7 +7,7 @@
              xmlns:converter="clr-namespace:TAMHubApp.Converters"
              xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
              mc:Ignorable="d" 
-             d:DesignHeight="320" d:DesignWidth="400">
+             d:DesignHeight="350" d:DesignWidth="400">
     <UserControl.Resources>
         <converter:StringEmptyToVisibilityConverter x:Key="StringEmptyToVisibilityConverter" />
         <Style x:Key="style_masterBoder" TargetType="Border">
@@ -77,6 +77,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" Margin="8"
@@ -136,9 +137,14 @@
                         Width="200" Height="25"
                         Text="{Binding Password}"/>
 
+                    <TextBlock Grid.Column="1" Grid.Row="7" Text="{StaticResource LANG_DEV_CompanyCode}" Margin="8"/>
+                    <TextBox Grid.Column="2" Grid.Row="7"
+                        Width="200" Height="25"
+                        Text="{Binding CompanyCode}"/>
+
                     <!--<TextBox Grid.Column="2" Grid.Row="6"
                         Width="200" Height="25"/>-->
-                    <CheckBox Style="{StaticResource style_IsCanGetLogByTime}" Grid.Column="2" Grid.Row="7"
+                    <CheckBox Style="{StaticResource style_IsCanGetLogByTime}" Grid.Column="2" Grid.Row="8"
                               Content="{StaticResource LANG_DEV_SupportGetDataByDate}"
                               IsChecked="{Binding SupportGetDataByDate, Mode=TwoWay}"/>
                     

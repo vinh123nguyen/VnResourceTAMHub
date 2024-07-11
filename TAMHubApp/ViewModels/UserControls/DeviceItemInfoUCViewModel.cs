@@ -109,6 +109,9 @@ namespace TAMHubApp.ViewModels.UserControls
         private string _sdkType { get; set; }
         public string SDKType { get => _sdkType; set { _sdkType = value; OnPropertyChanged(); } }
 
+        private string _companyCode { get; set; }
+        public string CompanyCode { get => _companyCode; set { _companyCode = value; OnPropertyChanged(); } }
+
         #endregion
 
         private void Action_SetDataInfoPopup(string Id)

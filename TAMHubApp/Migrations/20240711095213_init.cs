@@ -42,6 +42,7 @@ namespace TAMHubApp.Migrations
                     LastTimeConnected = table.Column<DateTime>(type: "TEXT", nullable: true),
                     SerialNumber = table.Column<string>(type: "TEXT", nullable: true),
                     ProductName = table.Column<string>(type: "TEXT", nullable: true),
+                    CompanyCode = table.Column<string>(type: "TEXT", nullable: true),
                     ZKTeco_IsCanGetLogByTime = table.Column<bool>(type: "INTEGER", nullable: false),
                     ZKTeco_IsTFTMachine = table.Column<bool>(type: "INTEGER", nullable: true),
                     ZKTeco_IsNewFirmwareMachine = table.Column<bool>(type: "INTEGER", nullable: true)
@@ -52,15 +53,34 @@ namespace TAMHubApp.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "ScheduleTasks",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: false),
+                    LastTimeRun = table.Column<DateTime>(type: "TEXT", nullable: true),
+                    CycleType = table.Column<string>(type: "TEXT", nullable: false),
+                    Hour = table.Column<int>(type: "INTEGER", nullable: false),
+                    Minute = table.Column<int>(type: "INTEGER", nullable: false),
+                    DayInMonth = table.Column<int>(type: "INTEGER", nullable: true),
+                    DayOfWeek = table.Column<int>(type: "INTEGER", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ScheduleTasks", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "DeviceActionLogs",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     ActionName = table.Column<string>(type: "TEXT", nullable: false),
                     ActionDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    DeviceID = table.Column<Guid>(type: "TEXT", nullable: false),
+                    DeviceID = table.Column<Guid>(type: "TEXT", nullable: true),
                     ResultStatus = table.Column<string>(type: "TEXT", nullable: false),
-                    Data = table.Column<string>(type: "TEXT", nullable: false)
+                    Data = table.Column<string>(type: "TEXT", nullable: false),
+                    ActionType = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -121,12 +141,12 @@ namespace TAMHubApp.Migrations
 
             migrationBuilder.InsertData(
                 table: "Devices",
-                columns: new[] { "Id", "AllLogCount", "CommPassword", "DeviceSDKType", "IPAddress", "LastTimeConnected", "MachineNo", "Name", "NewLogCount", "Port", "ProductName", "SerialNumber", "ZKTeco_IsCanGetLogByTime", "ZKTeco_IsNewFirmwareMachine", "ZKTeco_IsTFTMachine" },
+                columns: new[] { "Id", "AllLogCount", "CommPassword", "CompanyCode", "DeviceSDKType", "IPAddress", "LastTimeConnected", "MachineNo", "Name", "NewLogCount", "Port", "ProductName", "SerialNumber", "ZKTeco_IsCanGetLogByTime", "ZKTeco_IsNewFirmwareMachine", "ZKTeco_IsTFTMachine" },
                 values: new object[,]
                 {
-                    { new Guid("905f48d0-e427-4a74-9462-bd3fe063b495"), 140000, 0, 1, "10.20.5.85", new DateTime(2024, 7, 10, 15, 20, 45, 164, DateTimeKind.Local).AddTicks(2521), 103, "Máy chấm công 2", null, 5500, null, null, false, null, null },
-                    { new Guid("a0eae0da-51c3-48c7-8f40-cd724e9641b6"), 140000, 0, 0, "10.0.0.231", new DateTime(2024, 7, 10, 15, 20, 45, 164, DateTimeKind.Local).AddTicks(2499), 103, "Máy chấm công 1", null, 4370, null, null, true, null, null },
-                    { new Guid("ce22e5b6-bf70-418a-a736-4756a287c18e"), 140000, 0, 0, "10.0.0.13", new DateTime(2024, 7, 10, 15, 20, 45, 164, DateTimeKind.Local).AddTicks(2517), 103, "Máy chấm công 2", null, 4370, null, null, false, null, null }
+                    { new Guid("7e549b66-0f1f-4e10-9f89-6b9d48032c84"), 140000, 0, null, 0, "10.0.0.231", new DateTime(2024, 7, 11, 15, 52, 12, 974, DateTimeKind.Local).AddTicks(3490), 103, "Máy chấm công 1", null, 4370, null, null, true, null, null },
+                    { new Guid("bf2bf4a8-6178-43cf-b5eb-f24fdabb8982"), 140000, 0, null, 0, "10.0.0.13", new DateTime(2024, 7, 11, 15, 52, 12, 974, DateTimeKind.Local).AddTicks(3509), 103, "Máy chấm công 2", null, 4370, null, null, false, null, null },
+                    { new Guid("cf7106ff-e6d2-4203-9b80-fcad23e4e2cb"), 140000, 0, null, 1, "10.20.5.85", new DateTime(2024, 7, 11, 15, 52, 12, 974, DateTimeKind.Local).AddTicks(3512), 103, "Máy chấm công 2", null, 5500, null, null, false, null, null }
                 });
 
             migrationBuilder.CreateIndex(
@@ -153,6 +173,9 @@ namespace TAMHubApp.Migrations
 
             migrationBuilder.DropTable(
                 name: "DeviceActionLogs");
+
+            migrationBuilder.DropTable(
+                name: "ScheduleTasks");
 
             migrationBuilder.DropTable(
                 name: "TAMScanLogHistories");

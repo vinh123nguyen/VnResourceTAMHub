@@ -16,6 +16,7 @@ namespace TAMHubApp.Data.Entities
         public DateTime? LastTimeConnected { get; set; }
         public string? SerialNumber { get; set; }
         public string? ProductName { get; set; }
+        public string? CompanyCode { get; set; }
 
 
         //ZKTeco prop
