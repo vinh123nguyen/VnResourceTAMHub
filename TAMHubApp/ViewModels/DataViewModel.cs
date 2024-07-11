@@ -22,8 +22,6 @@ namespace TAMHubApp.ViewModels
             PaginationBackCommand = new RelayCommand<object>(x=> { return CurrentPage != 1; }, x => { GetDataChangePaging(x, false); });
             PaginationForwardCommand = new RelayCommand<object>(x=> { return CurrentPage != TotalPages && TotalPages != 0; }, x => { GetDataChangePaging(x, true); });
             SearchCommand = new RelayCommand<object>(x=> { return true; }, x => { GetDataPaging(); });
-            ConnectAllCommand = new RelayCommand<object>(x => { return true; }, x => { Action_ConnectDisconnectAllDevice(true); });
-            DisconnectAllCommand = new RelayCommand<object>(x => { return true; }, x => { Action_ConnectDisconnectAllDevice(false); });
 
             InitData();
         }
@@ -33,8 +31,6 @@ namespace TAMHubApp.ViewModels
         public RelayCommand<object> PaginationBackCommand { get; set; }
         public RelayCommand<object> PaginationForwardCommand { get; set; }
         public RelayCommand<object> SearchCommand { get; set; }
-        public RelayCommand<object> ConnectAllCommand { get; set; }
-        public RelayCommand<object> DisconnectAllCommand { get; set; }
         #endregion
 
         #region Properties
@@ -184,17 +180,5 @@ namespace TAMHubApp.ViewModels
             });
         }
 
-        public void Action_ConnectDisconnectAllDevice(bool isconnect = true)
-        {
-            var service = new TAMCommonService();
-            if (isconnect)
-            {
-                service.Action_ConnectAll();
-            }
-            else
-            {
-                service.Action_DisconnectAll();
-            }
-        }
     }
 }
