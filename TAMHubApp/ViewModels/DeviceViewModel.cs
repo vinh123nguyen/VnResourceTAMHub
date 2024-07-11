@@ -19,6 +19,8 @@ namespace TAMHubApp.ViewModels
             OpenInfoPopup = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateDevice);
             TongleOnOffCommand = new RelayCommand<object>(x => { return true; }, Action_TongleOnOffDevice);
             OpenSelectDatePopupCommand = new RelayCommand<object>(x => { return true; }, Action_OpenPopupSelectDateRange);
+            ConnectAllCommand = new RelayCommand<object>(x => { return true; }, x => { Action_ConnectDisconnectAllDevice(true); });
+            DisconnectAllCommand = new RelayCommand<object>(x => { return true; }, x => { Action_ConnectDisconnectAllDevice(false); });
 
             DeviceItems = singletonTAMInstance.TAMs;
             _singletonTAMInstance = singletonTAMInstance;
@@ -40,6 +42,8 @@ namespace TAMHubApp.ViewModels
             set { _isCreateOrUpdatePopupOpen = value; OnPropertyChanged(); }
         }
 
+        public RelayCommand<object> ConnectAllCommand { get; set; }
+        public RelayCommand<object> DisconnectAllCommand { get; set; }
         public RelayCommand<object> OpenSelectDatePopupCommand { get; set; }
         public RelayCommand<object> OpenInfoPopup { get; set; }
         public RelayCommand<object> GetDataCommand { get; set; }
@@ -105,7 +109,17 @@ namespace TAMHubApp.ViewModels
                 }
             }
         }
-
-
+        public void Action_ConnectDisconnectAllDevice(bool isconnect = true)
+        {
+            var service = new TAMCommonService();
+            if (isconnect)
+            {
+                service.Action_ConnectAll();
+            }
+            else
+            {
+                service.Action_DisconnectAll();
+            }
+        }
     }
 }
