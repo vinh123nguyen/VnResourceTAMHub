@@ -78,12 +78,10 @@
 
         <Grid Background="#100000FF" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <uc:LoadingUC/>
-            <!--<uc:ConnectingLoading/>-->
         </Grid>
-        <!--<Grid Background="#100000FF" Visibility="Visible">
-            <uc:LoadingUC/>
-            <uc:ConnectingLoading/>
-        </Grid>-->
-
+        <uc:ToastNotificationUC x:Name="ToastNotification" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10" 
+                                Message="{Binding ToastMessage}"
+                                IsShowingToast="{Binding IsShowingToast}"
+                                ToastColor ="{Binding ToastColor}"/>
     </Grid>
 </Window>

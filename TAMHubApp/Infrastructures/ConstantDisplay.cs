@@ -10,5 +10,7 @@
         public const string LANG_DEV_IPAddress = "LANG_DEV_IPAddress";
         public const string LANG_DEV_Port = "LANG_DEV_Port";
         public const string LANG_DEV_Password = "LANG_DEV_Password";
+        public const string LANG_DEV_DeviceNotConnected = "LANG_DEV_DeviceNotConnected";
+        public const string LANG_DEV_GetDataSuccess = "LANG_DEV_GetDataSuccess";
     }
 }

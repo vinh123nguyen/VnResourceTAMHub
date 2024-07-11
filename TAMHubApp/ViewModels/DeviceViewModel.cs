@@ -1,14 +1,10 @@
 ﻿using System.Collections.ObjectModel;
-using System.Reflection.PortableExecutable;
+using System.Windows.Media;
 using TAMHubApp.Commands;
 using TAMHubApp.Infrastructures.Enums;
-using TAMHubApp.Models.TAMDataModel;
-using TAMHubApp.ScheduleTasks.Jobs;
 using TAMHubApp.Services;
 using TAMHubApp.Services.TAMServices;
 using TAMHubApp.ViewModels.UserControls;
-using zkemkeeper;
-using Log = Serilog.Log;
 
 namespace TAMHubApp.ViewModels
 {
@@ -16,7 +12,8 @@ namespace TAMHubApp.ViewModels
     {
         public DeviceViewModel(IDeviceNavigationService navigationService,
             SingletonTAMInstance singletonTAMInstance,
-            ScheduleTaskService scheduleTaskService)
+            ScheduleTaskService scheduleTaskService,
+            MainViewModel mainViewModel)
         {
             _navigationService = navigationService;
             OpenInfoPopup = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateDevice);
@@ -26,6 +23,7 @@ namespace TAMHubApp.ViewModels
             DeviceItems = singletonTAMInstance.TAMs;
             _singletonTAMInstance = singletonTAMInstance;
             _scheduleTaskService = scheduleTaskService;
+            _mainViewModel = mainViewModel;
         }
 
 
@@ -61,6 +59,7 @@ namespace TAMHubApp.ViewModels
 
         private SingletonTAMInstance _singletonTAMInstance;
         private ScheduleTaskService _scheduleTaskService;
+        private MainViewModel _mainViewModel;
 
         private void Action_OpenPopupSelectDateRange(object parameter)
         {
@@ -77,7 +76,7 @@ namespace TAMHubApp.ViewModels
 
         private void Action_OpenPopupAddOrUpdateDevice(object parameter)
         {
-            _scheduleTaskService.GetRuningSchedule();
+
             IsCreateOrUpdatePopupOpen = true;
             OverlayNavigate.NavigateTo<DeviceItemInfoUCViewModel>();
 
