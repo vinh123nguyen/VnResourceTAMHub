@@ -1,6 +1,6 @@
 ﻿namespace TAMHubApp.Data.Entities
 {
-    public class DeviceActionLog
+    public class ActionLog
     {
         public Guid Id { get; set; }
         public string ActionName { get; set; }

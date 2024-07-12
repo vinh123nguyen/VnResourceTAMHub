@@ -1,18 +1,18 @@
-﻿using Quartz;
-using System.Collections.ObjectModel;
-using System.Reflection.Metadata;
-using System.Windows.Navigation;
+﻿using System.Collections.ObjectModel;
 using TAMHubApp.Commands;
 using TAMHubApp.Data;
+using TAMHubApp.Infrastructures;
+using TAMHubApp.Infrastructures.Helpers;
 using TAMHubApp.Models;
 using TAMHubApp.Services;
-using TAMHubApp.Services.TAMServices;
 using TAMHubApp.ViewModels.UserControls;
 
 namespace TAMHubApp.ViewModels
 {
     public class ScheduleViewModel : BaseViewModel
     {
+        private ScheduleTaskService _scheduleTaskService;
+        private MainViewModel _mainViewModel;
         private IUnitOfWork _unitOfWork;
         private IScheduleNavigationService _scheduleNavigationService;
 
@@ -27,19 +27,41 @@ namespace TAMHubApp.ViewModels
             }
         }
 
-        public ScheduleViewModel(IScheduleNavigationService scheduleNavigationService, IUnitOfWork unitOfWork)
+        public ScheduleViewModel(IScheduleNavigationService scheduleNavigationService
+            , IUnitOfWork unitOfWork, MainViewModel mainViewModel
+            , ScheduleTaskService scheduleTaskService)
         {
+            _scheduleTaskService = scheduleTaskService;
+            _mainViewModel = mainViewModel;
             _unitOfWork = unitOfWork;
             _scheduleNavigationService = scheduleNavigationService;
 
             OpenInfoPopupCommand = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateSchedule);
             TongleOnOffCommand = new RelayCommand<object>(x => { return true; }, Action_TongleOnOffScheduleCommandExcute);
-            InitScheduleTask().Wait();
+            ScheduleTasks = scheduleTaskService.ScheduleTasks;
         }
 
-        private void Action_TongleOnOffScheduleCommandExcute(object obj)
+        private async void Action_TongleOnOffScheduleCommandExcute(object obj)
         {
-            throw new NotImplementedException();
+            if (obj != null && obj is Guid)
+            {
+                var itemAction = ScheduleTasks.FirstOrDefault(x => x.Id == (Guid)obj);
+                if(itemAction != null)
+                {
+                    itemAction.IsLoading = true;
+                    if (!itemAction.IsRuning)
+                    {
+                        await _scheduleTaskService.New_AddJob(itemAction);
+                        await _scheduleTaskService.UpdateScheduleRuningStatus();
+                    }
+                    else
+                    {
+
+
+                    }
+                    itemAction.IsLoading = false;
+                }
+            }
         }
 
         public RelayCommand<object> OpenInfoPopupCommand { get; set; }
@@ -58,64 +80,16 @@ namespace TAMHubApp.ViewModels
             set { _isOverlayPopupOpen = value; OnPropertyChanged(); }
         }
 
-        public async Task InitScheduleTask()
-        {
-            var lstScheduleDb = await _unitOfWork.ScheduleTaskRepository.GetAllAsync();
-            var lstScheduleDone = new List<ScheduleTaskModel>();
-
-            if(lstScheduleDb != null && lstScheduleDb.Any())
-            {
-                foreach(var schedule in lstScheduleDb)
-                {
-                    var scheduleadd = new ScheduleTaskModel()
-                    {
-                        Id = schedule.Id,
-                        Name = schedule.Name,
-                        LastTimeRun = schedule.LastTimeRun,
-                        Hour = schedule.Hour,
-                        Minute = schedule.Minute,
-                        DayInMonth = schedule.DayInMonth,
-                        DayOfWeek = schedule.DayOfWeek,
-                        CycleType = schedule.CycleType,
-                        IsRuning = false,
-                        IsLoading = false
-                    };
-                    lstScheduleDone.Add(scheduleadd);
-                }
-            }
-            ScheduleTasks = new ObservableCollection<ScheduleTaskModel>(lstScheduleDone);
-        }
-
-        public async void UpdateScheduleTaskSingleton(Guid id)
-        {
-            var schedule = await _unitOfWork.ScheduleTaskRepository.GetByIdAsync(id);
-            if (schedule != null)
-            {
-                var scheduleadd = new ScheduleTaskModel()
-                {
-                    Id = schedule.Id,
-                    Name = schedule.Name,
-                    LastTimeRun = schedule.LastTimeRun,
-                    Hour = schedule.Hour,
-                    Minute = schedule.Minute,
-                    DayInMonth = schedule.DayInMonth,
-                    DayOfWeek = schedule.DayOfWeek,
-                    CycleType = schedule.CycleType,
-                    IsRuning = false,
-                    IsLoading = false
-                };
-                ScheduleTasks.Add(scheduleadd);
-            }
-        }
-
+        
         private void Action_OpenPopupAddOrUpdateSchedule(object parameter)
         {
             if(parameter != null)
             {
                 var check = ScheduleTasks.FirstOrDefault(x => x.Id.ToString() == parameter.ToString());
-                if(check != null && !check.IsRuning)
+                if(check != null && check.IsRuning)
                 {
-                    check.IsRuning = true;
+                    _mainViewModel.Action_ShowToastNotify(ConstantDisplay.LANG_SCH_ScheduleIsRuningCanNotDoAction.TranslateString(), Infrastructures.Enums.ToastNotifyType.Warning);
+                    return;
                 }
             }
 

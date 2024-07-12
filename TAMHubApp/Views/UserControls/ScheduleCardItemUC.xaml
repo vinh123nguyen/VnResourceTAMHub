@@ -153,9 +153,9 @@
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"></ColumnDefinition>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
@@ -189,6 +189,12 @@
                     <TextBlock Text="{StaticResource LANG_SCH_LastTimeRun}" Padding="4,0,0,0" FontSize="10"/>
                     <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
                     <TextBlock Text="{Binding LastTimeRunView}" FontSize="10"/>
+                </StackPanel>
+                
+                <StackPanel Grid.Column="0" Grid.Row="5" Orientation="Horizontal">
+                    <TextBlock Text="{StaticResource LANG_SCH_NextTimeRun}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
+                    <TextBlock Text="{Binding NextTimeRunView}" FontSize="10"/>
                 </StackPanel>
 
 

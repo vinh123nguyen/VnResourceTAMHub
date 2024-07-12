@@ -17,5 +17,6 @@
         public const string LANG_SCH_TimeRun = "LANG_SCH_TimeRun";
         public const string LANG_SCH_CycleType = "LANG_SCH_CycleType";
         public const string LANG_SCH_DayInMonth = "LANG_SCH_DayInMonth";
+        public const string LANG_SCH_ScheduleIsRuningCanNotDoAction = "LANG_SCH_ScheduleIsRuningCanNotDoAction";
     }
 }

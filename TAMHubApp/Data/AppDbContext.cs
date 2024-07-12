@@ -20,7 +20,7 @@ namespace TAMHubApp.Data
 
             builder.ApplyConfiguration(new AppSettingConfiguration());
             builder.ApplyConfiguration(new DeviceConfiguration());
-            builder.ApplyConfiguration(new DeviceActionLogConfiguration());
+            builder.ApplyConfiguration(new ActionLogConfiguration());
             builder.ApplyConfiguration(new TAMScanLogConfiguration());
             builder.ApplyConfiguration(new TAMScanLogHistoryConfiguration());
             builder.ApplyConfiguration(new ScheduleTaskConfiguration());
@@ -71,7 +71,6 @@ namespace TAMHubApp.Data
             {
                 Id = Guid.NewGuid(),
                 Name = "Schedule 1",
-                LastTimeRun = DateTime.Now,
                 CycleType = ScheduleCycleType.Daily,
                 Hour = 10,
                 Minute = 30
@@ -80,7 +79,6 @@ namespace TAMHubApp.Data
                 {
                     Id = Guid.NewGuid(),
                     Name = "Schedule 1",
-                    LastTimeRun = DateTime.Now,
                     CycleType = ScheduleCycleType.Weekly,
                     Hour = 10,
                     Minute = 30,
@@ -90,7 +88,6 @@ namespace TAMHubApp.Data
                 {
                     Id = Guid.NewGuid(),
                     Name = "Schedule 1",
-                    LastTimeRun = DateTime.Now,
                     CycleType = ScheduleCycleType.Monthly,
                     Hour = 10,
                     Minute = 30,
@@ -103,7 +100,7 @@ namespace TAMHubApp.Data
 
         public virtual DbSet<AppSetting> AppSettings { get; set; }
         public virtual DbSet<Device> Devices { get; set; }
-        public virtual DbSet<DeviceActionLog> DeviceActionLogs { get; set; }  
+        public virtual DbSet<ActionLog> ActionLogs { get; set; }  
         public virtual DbSet<TAMScanLog> TAMScanLogs { get; set; }  
         public virtual DbSet<TAMScanLogHistory> TAMScanLogHistories { get; set; }  
         public virtual DbSet<ScheduleTask> ScheduleTasks { get; set; }

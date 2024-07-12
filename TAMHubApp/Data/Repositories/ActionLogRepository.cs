@@ -7,9 +7,9 @@ using TAMHubApp.Data.Entities;
 
 namespace TAMHubApp.Data.Repositories
 {
-    public class DeviceActionLogRepository : GenericRepository<DeviceActionLog>
+    public class ActionLogRepository : GenericRepository<ActionLog>
     {
-        public DeviceActionLogRepository(AppDbContext dbContext) : base(dbContext)
+        public ActionLogRepository(AppDbContext dbContext) : base(dbContext)
         {
         }
     }

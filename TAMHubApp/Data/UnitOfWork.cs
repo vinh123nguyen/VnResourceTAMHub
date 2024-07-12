@@ -7,7 +7,7 @@ namespace TAMHubApp.Data
         DeviceRepository DeviceRepository { get; }
         TAMScanLogRepository TAMScanLogRepository { get; }
         TAMScanLogHistoryRepository TAMScanLogHistoryRepository { get; }
-        DeviceActionLogRepository DeviceActionLogRepository { get; }
+        ActionLogRepository ActionLogRepository { get; }
         AppSettingRepository AppSettingRepository { get; }
         ScheduleTaskRepository ScheduleTaskRepository { get; }
 
@@ -30,13 +30,13 @@ namespace TAMHubApp.Data
         private DeviceRepository _deviceRepository;
         private TAMScanLogRepository _TAMScanLogRepository;
         private TAMScanLogHistoryRepository _TAMScanLogHistoryRepository;
-        private DeviceActionLogRepository _deviceActionLogRepository;
+        private ActionLogRepository _actionLogRepository;
         private AppSettingRepository _appSettingRepository;
         private ScheduleTaskRepository _scheduleTaskRepository;
         public DeviceRepository DeviceRepository => _deviceRepository ?? (_deviceRepository = new DeviceRepository(_dbContext));
         public TAMScanLogRepository TAMScanLogRepository => _TAMScanLogRepository ?? (_TAMScanLogRepository = new TAMScanLogRepository(_dbContext));
         public TAMScanLogHistoryRepository TAMScanLogHistoryRepository => _TAMScanLogHistoryRepository ?? (_TAMScanLogHistoryRepository = new TAMScanLogHistoryRepository(_dbContext));
-        public DeviceActionLogRepository DeviceActionLogRepository => _deviceActionLogRepository ?? (_deviceActionLogRepository = new DeviceActionLogRepository(_dbContext));
+        public ActionLogRepository ActionLogRepository => _actionLogRepository ?? (_actionLogRepository = new ActionLogRepository(_dbContext));
         public AppSettingRepository AppSettingRepository => _appSettingRepository ?? (_appSettingRepository = new AppSettingRepository(_dbContext));
         public ScheduleTaskRepository ScheduleTaskRepository => _scheduleTaskRepository ?? (_scheduleTaskRepository = new ScheduleTaskRepository(_dbContext));
 

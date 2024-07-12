@@ -45,6 +45,12 @@ namespace TAMHubApp.Models
         private string _lasttimerunView { get; set; }
         public string LastTimeRunView { get => _lasttimerunView; set { _lasttimerunView = value; OnPropertyChanged(); } }
 
+        private string _nexttimerunView { get; set; }
+        public string NextTimeRunView { get => _nexttimerunView; set { _nexttimerunView = value; OnPropertyChanged(); } }
+
+        private DateTime? _nexttimerun { get; set; }
+        public DateTime? NextTimeRun { get => _nexttimerun; set { _nexttimerun = value; OnPropertyChanged(); NextTimeRunView = value != null ? ((DateTime)value).ToString("dd/MM/yyyy HH:mm") : null; } }
+
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
         {
