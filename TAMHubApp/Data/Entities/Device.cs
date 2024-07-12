@@ -27,6 +27,6 @@ namespace TAMHubApp.Data.Entities
 
         public List<TAMScanLog> TAMScanLogs { get; set; }
         public List<TAMScanLogHistory> TAMScanLogHistories { get; set; }
-        public List<DeviceActionLog> DeviceActionLogs { get; set; }
+        public List<ActionLog> ActionLogs { get; set; }
     }
 }

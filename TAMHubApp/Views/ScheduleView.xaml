@@ -28,7 +28,7 @@
                 <uc:ButtonUC 
                     Title="{StaticResource LANG_SCH_AddSchedule}"
                     Icon="{StaticResource Icon_Plus}"
-                    ClickCommand="{Binding OpenInfoPopup}"
+                    ClickCommand="{Binding OpenInfoPopupCommand}"
                     ButtonBackground="#B5C9FF"
                     IconBackground="#0066FF"
                     TextFontSize="16"

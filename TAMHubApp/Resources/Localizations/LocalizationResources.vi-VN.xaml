@@ -50,6 +50,8 @@
     <system:String x:Key="LANG_SCH_DayOfWeek">Thứ trong tuần</system:String>
     <system:String x:Key="LANG_SCH_TimeRun">Thời gian chạy</system:String>
     <system:String x:Key="LANG_SCH_LastTimeRun">Lần chạy cuối</system:String>
+    <system:String x:Key="LANG_SCH_NextTimeRun">Lần chạy tiếp theo</system:String>
+    <system:String x:Key="LANG_SCH_ScheduleIsRuningCanNotDoAction">Schedule đang chạy không thể thao tác</system:String>
     <system:String x:Key="LANG_CYCLE_Daily">Hàng ngày</system:String>
     <system:String x:Key="LANG_CYCLE_Weekly">Hàng tuần</system:String>
     <system:String x:Key="LANG_CYCLE_Monthly">Hàng tháng</system:String>
