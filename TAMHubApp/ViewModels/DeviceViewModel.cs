@@ -11,9 +11,7 @@ namespace TAMHubApp.ViewModels
     public class DeviceViewModel : BaseViewModel
     {
         public DeviceViewModel(IDeviceNavigationService navigationService,
-            SingletonTAMInstance singletonTAMInstance,
-            ScheduleTaskService scheduleTaskService,
-            MainViewModel mainViewModel)
+            SingletonTAMInstance singletonTAMInstance)
         {
             _navigationService = navigationService;
             OpenInfoPopup = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateDevice);
@@ -23,9 +21,6 @@ namespace TAMHubApp.ViewModels
             DisconnectAllCommand = new RelayCommand<object>(x => { return true; }, x => { Action_ConnectDisconnectAllDevice(false); });
 
             DeviceItems = singletonTAMInstance.TAMs;
-            _singletonTAMInstance = singletonTAMInstance;
-            _scheduleTaskService = scheduleTaskService;
-            _mainViewModel = mainViewModel;
         }
 
 
@@ -60,10 +55,6 @@ namespace TAMHubApp.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        private SingletonTAMInstance _singletonTAMInstance;
-        private ScheduleTaskService _scheduleTaskService;
-        private MainViewModel _mainViewModel;
 
         private void Action_OpenPopupSelectDateRange(object parameter)
         {

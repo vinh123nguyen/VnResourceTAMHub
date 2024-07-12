@@ -10,10 +10,14 @@ namespace TAMHubApp.ScheduleTasks.Jobs
         public async Task Execute(IJobExecutionContext context)
         {
             var dw = context.JobDetail.Key.Name;  // job__idjob
-            var dawd = ServiceLocator.Instance.GetRequiredService<ScheduleTaskService>();
-            await dawd.UpdateScheduleRuningStatus();
+            var scheduletaskService = ServiceLocator.Instance.GetRequiredService<ScheduleTaskService>();
+            var TAMSInstance = ServiceLocator.Instance.GetRequiredService<SingletonTAMInstance>();
+            await scheduletaskService.UpdateScheduleRuningStatus();
 
-            
+            //TAMSInstance.TAMs
+
+
+
         }
     }
 }

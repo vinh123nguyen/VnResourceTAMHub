@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using Riss.Devices;
+using System.Text;
+using System.Text.RegularExpressions;
 
 namespace TAMHubApp.Infrastructures.TAMUtilities
 {
@@ -20,6 +22,33 @@ namespace TAMHubApp.Infrastructures.TAMUtilities
                 }
             }
             return result;
+        }
+
+        public static string VerifyType(int opertationType)
+        {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < 4; i++)
+            {
+                if (0 != Zd2911Utils.BitCheck(opertationType, i))
+                {
+                    switch (i)
+                    {
+                        case 0:
+                            sb.Append("F ");
+                            break;
+                        case 1:
+                            sb.Append("P ");
+                            break;
+                        case 2:
+                            sb.Append("C ");
+                            break;
+                        case 3:
+                            sb.Append("I ");
+                            break;
+                    }
+                }
+            }
+            return sb.ToString();
         }
     }
 }

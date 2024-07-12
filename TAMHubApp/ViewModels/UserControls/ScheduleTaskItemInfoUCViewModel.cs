@@ -274,7 +274,9 @@ namespace TAMHubApp.ViewModels.UserControls
         {
             var result = true;
             var message = string.Empty;
-            int devicenumber = 0;
+            int dayinmonth = 0;
+            int hour = 0;
+            int minute = 0;
             if (string.IsNullOrEmpty(ScheduleName))
             {
                 result = false;
@@ -295,20 +297,30 @@ namespace TAMHubApp.ViewModels.UserControls
                 result = false;
                 message = ConstantDisplay.LANG_SCH_DayInMonth.TranslateString() + " " + ConstantDisplay.LANG_GLO_CanNotBeBlank.TranslateString();
             }
-            else if (CycleTypeSelected.Key == ScheduleCycleType.Monthly.ToString() && !int.TryParse(DayInMonth, out devicenumber))
+            else if (CycleTypeSelected.Key == ScheduleCycleType.Monthly.ToString() && !int.TryParse(DayInMonth, out dayinmonth))
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_DayInMonth.TranslateString() + " " + ConstantDisplay.LANG_GLO_NotMatchDataType.TranslateString();
+            }
+            else if (CycleTypeSelected.Key == ScheduleCycleType.Monthly.ToString() && (dayinmonth < 1 || dayinmonth > 31))
+            {
+                result = false;
+                message = ConstantDisplay.LANG_SCH_DayInMonth.TranslateString() + " " + ConstantDisplay.LANG_GLO_OutOfRange.TranslateString();
             }
             else if (string.IsNullOrEmpty(CycleHour) || string.IsNullOrEmpty(CycleMinute))
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_TimeRun.TranslateString() + " " + ConstantDisplay.LANG_GLO_CanNotBeBlank.TranslateString();
             }
-            else if (!int.TryParse(CycleHour, out devicenumber) || !int.TryParse(CycleMinute, out devicenumber))
+            else if (!int.TryParse(CycleHour, out hour) || !int.TryParse(CycleMinute, out minute))
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_TimeRun.TranslateString() + " " + ConstantDisplay.LANG_GLO_NotMatchDataType.TranslateString();
+            }
+            else if (hour < 0 || hour > 23 || minute < 0 || minute > 59)
+            {
+                result = false;
+                message = ConstantDisplay.LANG_SCH_TimeRun.TranslateString() + " " + ConstantDisplay.LANG_GLO_OutOfRange.TranslateString();
             }
             ValidateMessage = message;
             return result;

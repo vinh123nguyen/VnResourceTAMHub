@@ -1,9 +1,11 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Riss.Devices;
 using TAMHubApp.Data;
 using TAMHubApp.Data.Entities;
 using TAMHubApp.Infrastructures;
 using TAMHubApp.Infrastructures.Enums;
 using TAMHubApp.Infrastructures.Helpers;
+using TAMHubApp.Infrastructures.TAMUtilities;
 using TAMHubApp.ViewModels;
 using zkemkeeper;
 
@@ -91,7 +93,75 @@ namespace TAMHubApp.Services.TAMServices
                 }
                 else if(device.DeviceSDKType == TAMSDKTypes.E_REALAND)
                 {
+                    var rissdevice = (RealandDeviceItem)device;
 
+                    var deviceins = new Riss.Devices.Device();
+                    deviceins.DN = device.MachineNo;
+                    if (device.CommPassword != null)
+                        deviceins.Password = device.CommPassword.ToString();
+
+                    deviceins.Model = "ZDC2911";
+                    deviceins.IpAddress = device.IPAddress;
+                    deviceins.IpPort = device.Port;
+                    deviceins.CommunicationType = CommunicationType.Tcp;
+
+                    var deviceConnectionIns = DeviceConnection.CreateConnection(ref deviceins);
+
+                    if (deviceConnectionIns.Open() > 0)
+                    {
+                        object extraProperty = new object();
+                        object extraData = new object();
+                        //extraData = Global.DeviceBusy;
+                        //bool resultRiss = deviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, deviceins, extraData);
+
+                        List<DateTime> dtList = new List<DateTime>();
+                        dtList.Add(DateTime.MinValue);
+                        dtList.Add(DateTime.MaxValue);
+                        extraProperty = true;
+                        extraData = dtList;
+                        bool resultRiss = deviceConnectionIns.GetProperty(DeviceProperty.AttRecordsCount, extraProperty, ref deviceins, ref extraData);
+                        if (result)
+                        {
+                            rissdevice.NewLogCount = (int)extraData;
+                            dbDevice.NewLogCount = (int)extraData;
+                        }
+                        extraProperty = false;
+                        resultRiss = deviceConnectionIns.GetProperty(DeviceProperty.AttRecordsCount, extraProperty, ref deviceins, ref extraData);
+                        if (result)
+                        {
+                            rissdevice.AllLogCount = (int)extraData;
+                            dbDevice.AllLogCount = (int)extraData;
+                        }
+
+                        if (string.IsNullOrEmpty(device.SerialNumber))
+                        {
+                            object extraProperty1 = new object();
+                            object extraData1 = Zd2911Utils.DeviceSerialNo;
+                            result = deviceConnectionIns.GetProperty(DeviceProperty.SerialNo, extraProperty1, ref deviceins, ref extraData1);
+                            if (result)
+                            {
+                                rissdevice.SerialNumber = (string)extraData1;
+                                dbDevice.SerialNumber = (string)extraData1;
+                            }
+                        }
+                        if (string.IsNullOrEmpty(device.ProductName))
+                        {
+                            object extraProperty1 = new object();
+                            object extraData1 = Zd2911Utils.DeviceModel;
+                            result = deviceConnectionIns.GetProperty(DeviceProperty.Model, extraProperty1, ref deviceins, ref extraData1);
+                            if (result)
+                            {
+                                rissdevice.ProductName = (string)extraData1;
+                                dbDevice.ProductName = (string)extraData1;
+                            }
+                        }
+                        //extraData = Global.DeviceIdle;
+                        //resultRiss = deviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, deviceins, extraData);
+
+                        rissdevice.DeviceIns = deviceins;
+                        rissdevice.DeviceConnectionIns = deviceConnectionIns;
+                        rissdevice.IsConnected = true;
+                    }
                 }
 
                 await _unitOfWork.SaveChanageAsync();
@@ -119,6 +189,15 @@ namespace TAMHubApp.Services.TAMServices
                     zkdevice.IsConnected = false;
                     zkdevice.DeviceIns.Disconnect();
                 }
+                else if(device.DeviceSDKType == TAMSDKTypes.E_REALAND)
+                {
+                    var rissdevice = (RealandDeviceItem)device;
+                    rissdevice.DeviceConnectionIns.Close();
+                    rissdevice.IsConnected = false;
+                    rissdevice.DeviceConnectionIns = null;
+                    rissdevice.DeviceIns = null;
+                }
+                
                 return true;
             }
             catch (Exception ex)
@@ -127,7 +206,7 @@ namespace TAMHubApp.Services.TAMServices
                 {
                     _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
                 });
-                return true;
+                return false;
             }
         }
 
@@ -196,6 +275,57 @@ namespace TAMHubApp.Services.TAMServices
                         }
                     }
                 }
+                else if (device.DeviceSDKType == TAMSDKTypes.E_REALAND)
+                {
+                    var rissdevice = (RealandDeviceItem)device;
+
+                    List<DateTime> dtList = new List<DateTime>(); 
+                    dtList.Add(DateTime.MinValue); 
+                    dtList.Add(DateTime.MaxValue);
+
+                    object extraProperty = new object(); 
+                    object extraData = new object();
+
+                    List<bool> boolList = new List<bool>();
+                    boolList.Add(false);
+                    boolList.Add(false);
+
+                    try
+                    {
+                        extraData = Global.DeviceBusy;
+                        var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+
+                        extraProperty = boolList;
+                        extraData = dtList;
+                        resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                        if (resultRiss)
+                        {
+                            List<Record> recordList = (List<Record>)extraData;
+                            listAttRecord = recordList.Select(x => new TAMScanLog()
+                            {
+                                Id = Guid.NewGuid(),
+                                DeviceID = device.Id,
+                                EnrollNumber = (int)x.DIN,
+                                VerifyMode = GlobalUtilities.VerifyType(x.Action),
+                                InOutModeOrigin = x.Verify,
+                                //InOutModeView = 
+                                TimeLog = x.Clock
+                            }).ToList();
+                        }
+                    }catch(Exception ex)
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                        });
+                        return false;
+                    }
+                    finally
+                    {
+                        extraData = Global.DeviceIdle;
+                        var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                    }
+                }
 
                 if (listAttRecord.Any())
                 {
@@ -229,7 +359,6 @@ namespace TAMHubApp.Services.TAMServices
                 return false;
             }
         }
-
 
         public async Task<bool> Action_GetDataByDate(BaseTAMService device, DateTime datefrom, DateTime dateend)
         {
@@ -351,10 +480,62 @@ namespace TAMHubApp.Services.TAMServices
                         listAttRecord = listAttRecordAll.Where(x => x.TimeLog >= datefrom && x.TimeLog <= dateend).ToList();
                     }
                 }
+                else if (device.DeviceSDKType == TAMSDKTypes.E_REALAND)
+                {
+                    var rissdevice = (RealandDeviceItem)device;
+
+                    List<DateTime> dtList = new List<DateTime>();
+                    dtList.Add(datefrom);
+                    dtList.Add(dateend);
+
+                    object extraProperty = new object();
+                    object extraData = new object();
+
+                    List<bool> boolList = new List<bool>();
+                    boolList.Add(false);
+                    boolList.Add(false);
+
+                    try
+                    {
+                        extraData = Global.DeviceBusy;
+                        var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+
+                        extraProperty = boolList;
+                        extraData = dtList;
+
+                        resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                        if (resultRiss)
+                        {
+                            List<Record> recordList = (List<Record>)extraData;
+                            listAttRecord = recordList.Select(x => new TAMScanLog()
+                            {
+                                Id = Guid.NewGuid(),
+                                DeviceID = device.Id,
+                                EnrollNumber = (int)x.DIN,
+                                VerifyMode = GlobalUtilities.VerifyType(x.Action),
+                                InOutModeOrigin = x.Verify,
+                                //InOutModeView = 
+                                TimeLog = x.Clock
+                            }).ToList();
+                        }
+                    }catch(Exception ex)
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                        });
+                        return false;
+                    }
+                    finally
+                    {
+                        extraData = Global.DeviceIdle;
+                        var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                    }
+                }
                 if (listAttRecord.Any())
                 {
-                    var lstDbTAMScanLog = (await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id)).ToList();
-                    var lstDbTAMScanLogHistory = (await _unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id)).ToList();
+                    var lstDbTAMScanLog = (await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
+                    var lstDbTAMScanLogHistory = (await _unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
 
                     var lis1 = lstDbTAMScanLog.Select(item => (item.EnrollNumber, item.TimeLog));
                     var lis2 = lstDbTAMScanLogHistory.Select(item => (item.EnrollNumber, item.TimeLog));
@@ -412,6 +593,106 @@ namespace TAMHubApp.Services.TAMServices
                     Action_Dicconnect(devive);
                     devive.IsConnected = false;
                 });
+            }
+        }
+
+        public async Task<bool> Action_Realand_GetNewlyData(BaseTAMService device)
+        {
+            try
+            {
+                if (!device.IsConnected)
+                {
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _mainWindow.Action_ShowToastNotify(ConstantDisplay.LANG_DEV_DeviceNotConnected.TranslateString(), ToastNotifyType.Warning);
+                    });
+                    return false;
+                }
+                var dbDevice = await _unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
+
+                var listAttRecord = new List<TAMScanLog>();
+
+                if(device.DeviceSDKType == TAMSDKTypes.E_REALAND)
+                {
+                    var rissdevice = (RealandDeviceItem)device;
+
+                    List<DateTime> dtList = new List<DateTime>();
+                    dtList.Add(DateTime.MinValue);
+                    dtList.Add(DateTime.MaxValue);
+
+                    object extraProperty = new object();
+                    object extraData = new object();
+
+                    try
+                    {
+                        extraData = Global.DeviceBusy;
+                        var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+
+                        extraProperty = true;
+                        extraData = dtList;
+
+                        resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                        if (resultRiss)
+                        {
+                            List<Record> recordList = (List<Record>)extraData;
+                            listAttRecord = recordList.Select(x => new TAMScanLog()
+                            {
+                                Id = Guid.NewGuid(),
+                                DeviceID = device.Id,
+                                EnrollNumber = (int)x.DIN,
+                                VerifyMode = GlobalUtilities.VerifyType(x.Action),
+                                InOutModeOrigin = x.Verify,
+                                //InOutModeView = 
+                                TimeLog = x.Clock
+                            }).ToList();
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                        });
+                        return false;
+                    }
+                    finally
+                    {
+                        extraData = Global.DeviceIdle;
+                        var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                    }
+                }
+                if (listAttRecord.Any())
+                {
+                    var datefrom = listAttRecord.Min(x => x.TimeLog);
+                    var dateend = listAttRecord.Max(x => x.TimeLog);
+
+                    var lstDbTAMScanLog = (await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
+                    var lstDbTAMScanLogHistory = (await _unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
+
+                    var lis1 = lstDbTAMScanLog.Select(item => (item.EnrollNumber, item.TimeLog));
+                    var lis2 = lstDbTAMScanLogHistory.Select(item => (item.EnrollNumber, item.TimeLog));
+
+                    var hsetDataDbTAMScanLog = new HashSet<(int, DateTime)>(lis1.Concat(lis2));
+
+                    var listInsertscanlog = listAttRecord.Where(item => !hsetDataDbTAMScanLog.Contains((item.EnrollNumber, item.TimeLog))).ToList();
+
+                    await _unitOfWork.TAMScanLogRepository.AddRangeAsync(listInsertscanlog);
+
+                    await _unitOfWork.SaveChanageAsync();
+                }
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DEV_GetDataSuccess.TranslateString(), listAttRecord.Count), ToastNotifyType.Success);
+                });
+                return true;
+            }
+            catch(Exception ex)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                });
+                return false;
             }
         }
     }

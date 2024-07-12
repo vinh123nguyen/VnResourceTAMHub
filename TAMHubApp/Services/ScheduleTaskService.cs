@@ -23,32 +23,11 @@ namespace TAMHubApp.Services
             InitScheduleTask().Wait();
         }
 
-        public async void AddJob(DateTimeOffset startTime, int intervalSeconds, Type jobTypeObj1)
+        public async Task StopSchedule(ScheduleTaskModel model)
         {
             var scheduler = await _schedulerFactory.GetScheduler();
-            await scheduler.Start();
-            var jobTypeObj = Type.GetType("TAMHubApp.ScheduleTasks.Jobs.TestJob");
-            if (jobTypeObj == null)
-            {
-                return;
-            }
-            var jobId = Guid.NewGuid().ToString();
-            var jobKey = new JobKey($"job-{jobId}");
-            var triggerKey = new TriggerKey($"trigger-{jobId}");
-
-            var job = JobBuilder.Create(jobTypeObj)
-                .WithIdentity(jobKey)
-                .Build();
-
-            var trigger = TriggerBuilder.Create()
-                .WithIdentity(triggerKey)
-                .StartAt(startTime)
-                .WithSimpleSchedule(x => x
-                    .WithIntervalInSeconds(intervalSeconds)
-                    .RepeatForever())
-                .Build();
-
-            await scheduler.ScheduleJob(job, trigger);
+            var jobKey = new JobKey($"job__{model.Id}");
+            await scheduler.DeleteJob(jobKey);
         }
 
         public async Task New_AddJob(ScheduleTaskModel model)
@@ -100,6 +79,12 @@ namespace TAMHubApp.Services
             var scheduler = await _schedulerFactory.GetScheduler();
             var jobGroups = await scheduler.GetJobGroupNames();
 
+            foreach(var schedule in ScheduleTasks)
+            {
+                schedule.IsRuning = false;
+                schedule.NextTimeRun = null;
+            }
+
             foreach (var group in jobGroups)
             {
                 var jobKeys = await scheduler.GetJobKeys(GroupMatcher<JobKey>.GroupEquals(group));
@@ -120,26 +105,6 @@ namespace TAMHubApp.Services
                 }
             }
         }
-
-
-        public async void GetRuningSchedule()
-        {
-            var scheduler = await _schedulerFactory.GetScheduler();
-            var jobGroups = await scheduler.GetJobGroupNames();
-
-            foreach (var group in jobGroups)
-            {
-                var jobKeys = await scheduler.GetJobKeys(GroupMatcher<JobKey>.GroupEquals(group));
-                foreach (var jobKey in jobKeys)
-                {
-                    var triggers = await scheduler.GetTriggersOfJob(jobKey);
-                    var nextFireTime = triggers.FirstOrDefault()?.GetNextFireTimeUtc()?.ToLocalTime();
-                    //Log.Information($"listJob: " + jobKey.Name + " | " + nextFireTime.ToString());
-                }
-            }
-
-        }
-
 
         public async Task InitScheduleTask()
         {

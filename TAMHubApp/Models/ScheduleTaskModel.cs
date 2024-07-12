@@ -22,10 +22,10 @@ namespace TAMHubApp.Models
         public string CycleTypeView { get => _cycleTypeView; set { _cycleTypeView = value; OnPropertyChanged(); } }
 
         private int _hour { get; set; }
-        public int Hour { get => _hour; set { _hour = value; OnPropertyChanged(); } }
+        public int Hour { get => _hour; set { _hour = value; OnPropertyChanged(); SetTimeRunView(value, Minute); } }
 
         private int _minute { get; set; }
-        public int Minute { get => _minute; set { _minute = value; OnPropertyChanged(); } }
+        public int Minute { get => _minute; set { _minute = value; OnPropertyChanged(); SetTimeRunView(Hour, value); } }
 
         private int? _dayInMonth { get; set; }
         public int? DayInMonth { get => _dayInMonth; set { _dayInMonth = value; OnPropertyChanged(); } }
@@ -47,6 +47,15 @@ namespace TAMHubApp.Models
 
         private string _nexttimerunView { get; set; }
         public string NextTimeRunView { get => _nexttimerunView; set { _nexttimerunView = value; OnPropertyChanged(); } }
+
+        private string _timerunview { get; set; }
+        public string TimeRunView { get => _timerunview; set { _timerunview = value; OnPropertyChanged(); } }
+
+        private void SetTimeRunView(int h, int m)
+        {
+            TimeSpan timeSpan = new TimeSpan(h, m, 0);
+            TimeRunView = timeSpan.ToString(@"hh\:mm");
+        }
 
         private DateTime? _nexttimerun { get; set; }
         public DateTime? NextTimeRun { get => _nexttimerun; set { _nexttimerun = value; OnPropertyChanged(); NextTimeRunView = value != null ? ((DateTime)value).ToString("dd/MM/yyyy HH:mm") : null; } }
