@@ -13,7 +13,6 @@ namespace TAMHubApp.ViewModels
     {
         private ScheduleTaskService _scheduleTaskService;
         private MainViewModel _mainViewModel;
-        private IUnitOfWork _unitOfWork;
         private IScheduleNavigationService _scheduleNavigationService;
 
         private ObservableCollection<ScheduleTaskModel> _scheduleItems;
@@ -28,17 +27,46 @@ namespace TAMHubApp.ViewModels
         }
 
         public ScheduleViewModel(IScheduleNavigationService scheduleNavigationService
-            , IUnitOfWork unitOfWork, MainViewModel mainViewModel
+            , MainViewModel mainViewModel
             , ScheduleTaskService scheduleTaskService)
         {
             _scheduleTaskService = scheduleTaskService;
             _mainViewModel = mainViewModel;
-            _unitOfWork = unitOfWork;
             _scheduleNavigationService = scheduleNavigationService;
 
             OpenInfoPopupCommand = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateSchedule);
             TongleOnOffCommand = new RelayCommand<object>(x => { return true; }, Action_TongleOnOffScheduleCommandExcute);
+            StartAllCommand = new RelayCommand<object>(x => { return true; }, Action_StartAllCommandExcute);
+            StopAllCommand = new RelayCommand<object>(x => { return true; }, Action_StopAllCommandExcute);
             ScheduleTasks = scheduleTaskService.ScheduleTasks;
+        }
+
+        private async void Action_StopAllCommandExcute(object obj)
+        {
+            foreach(var schedule in ScheduleTasks)
+            {
+                if (!schedule.IsRuning)
+                    continue;
+                await Task.Run(async () =>
+                {
+                    await _scheduleTaskService.StopSchedule(schedule);
+                });
+            }
+            await _scheduleTaskService.UpdateScheduleRuningStatus();
+        }
+
+        private async void Action_StartAllCommandExcute(object obj)
+        {
+            foreach (var schedule in ScheduleTasks)
+            {
+                if (schedule.IsRuning)
+                    continue;
+                await Task.Run(async () =>
+                {
+                    await _scheduleTaskService.New_AddJob(schedule);
+                });
+            }
+            await _scheduleTaskService.UpdateScheduleRuningStatus();
         }
 
         private async void Action_TongleOnOffScheduleCommandExcute(object obj)
@@ -52,13 +80,12 @@ namespace TAMHubApp.ViewModels
                     if (!itemAction.IsRuning)
                     {
                         await _scheduleTaskService.New_AddJob(itemAction);
-                        await _scheduleTaskService.UpdateScheduleRuningStatus();
                     }
                     else
                     {
-
-
+                        await _scheduleTaskService.StopSchedule(itemAction);
                     }
+                    await _scheduleTaskService.UpdateScheduleRuningStatus();
                     itemAction.IsLoading = false;
                 }
             }
@@ -66,19 +93,13 @@ namespace TAMHubApp.ViewModels
 
         public RelayCommand<object> OpenInfoPopupCommand { get; set; }
         public RelayCommand<object> TongleOnOffCommand { get; set; }
+        public RelayCommand<object> StartAllCommand { get; set; }
+        public RelayCommand<object> StopAllCommand { get; set; }
 
-        public IScheduleNavigationService OverlayNavigate
-        {
-            get => _scheduleNavigationService;
-            set { _scheduleNavigationService = value; OnPropertyChanged(); }
-        }
+        public IScheduleNavigationService OverlayNavigate { get => _scheduleNavigationService; set { _scheduleNavigationService = value; OnPropertyChanged(); } }
 
         private bool _isOverlayPopupOpen;
-        public bool IsOverlayPopupOpen
-        {
-            get => _isOverlayPopupOpen;
-            set { _isOverlayPopupOpen = value; OnPropertyChanged(); }
-        }
+        public bool IsOverlayPopupOpen { get => _isOverlayPopupOpen; set { _isOverlayPopupOpen = value; OnPropertyChanged(); } }
 
         
         private void Action_OpenPopupAddOrUpdateSchedule(object parameter)

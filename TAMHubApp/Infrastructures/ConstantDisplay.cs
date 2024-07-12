@@ -3,6 +3,7 @@
     public class ConstantDisplay
     {
         public const string LANG_GLO_NotMatchDataType = "LANG_GLO_NotMatchDataType";
+        public const string LANG_GLO_OutOfRange = "LANG_GLO_OutOfRange";
         public const string LANG_GLO_CanNotBeBlank = "LANG_GLO_CanNotBeBlank";
         public const string LANG_DEV_SKDType = "LANG_DEV_SKDType";
         public const string LANG_DEV_DeviceName = "LANG_DEV_DeviceName";

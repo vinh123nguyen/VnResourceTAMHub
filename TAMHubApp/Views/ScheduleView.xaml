@@ -38,6 +38,7 @@
                 <uc:ButtonUC Grid.Column="1"
                     Title="{StaticResource LANG_SCH_RunAllSchedule}"
                     Icon="{StaticResource Icon_Link}"
+                    ClickCommand="{Binding StartAllCommand}"
                     ButtonBackground="#B6FFB5"
                     IconBackground="#1BBB48"
                     TextFontSize="16"
@@ -47,6 +48,7 @@
                 <uc:ButtonUC Grid.Column="2"
                      Title="{StaticResource LANG_SCH_StopAllSchedule}"
                      Icon="{StaticResource Icon_Power}"
+                     ClickCommand="{Binding StopAllCommand}"
                      ButtonBackground="#FFB5B9"
                      IconBackground="#FF3C3C"
                      TextFontSize="16"
@@ -63,17 +65,9 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate>
-                            <!--<uc:DeviceCardItemUC FontSize="14" TongleOnOffCommand="{Binding TongleOnOffCommand}"/>-->
-                            <!--<uc:DeviceCardItemUC FontSize="14" 
-                                         TongleOnOffCommand="{Binding DataContext.TongleOnOffCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                         OpenSelectDatePopupCommand="{Binding DataContext.OpenSelectDatePopupCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                         OpenEditPopupCommand = "{Binding DataContext.OpenInfoPopup, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>-->
-
                             <uc:ScheduleCardItemUC 
                                 OpenEditPopupCommand="{Binding DataContext.OpenInfoPopupCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                TongleOnOffCommand="{Binding DataContext.TongleOnOffCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
-                                />
-
+                                TongleOnOffCommand="{Binding DataContext.TongleOnOffCommand, RelativeSource={RelativeSource AncestorType=ItemsControl}}"/>
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>

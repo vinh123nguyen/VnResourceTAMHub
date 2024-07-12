@@ -62,4 +62,5 @@
     <system:String x:Key="LANG_GLO_Friday">Thứ 6</system:String>
     <system:String x:Key="LANG_GLO_Saturday">Thứ 7</system:String>
     <system:String x:Key="LANG_GLO_Sunday">Chủ nhật</system:String>
+    <system:String x:Key="LANG_GLO_OutOfRange">ngoài vùng giá trị hợp lệ!</system:String>
 </ResourceDictionary>
