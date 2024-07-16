@@ -2,10 +2,13 @@
                     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                     xmlns:system="clr-namespace:System;assembly=System.Runtime">
     <system:String x:Key="LANG_NAV_Home">Trang chủ</system:String>
-    <system:String x:Key="LANG_NAV_Device">Thiết bị</system:String>
+    <system:String x:Key="LANG_NAV_Device">Máy chấm công</system:String>
     <system:String x:Key="LANG_NAV_Data">Dữ liệu</system:String>
-    <system:String x:Key="LANG_NAV_Schedule">Lập lịch</system:String>
-    <system:String x:Key="LANG_NAV_Setting">Thiết lập</system:String>
+    <system:String x:Key="LANG_NAV_Schedule">Lập lịch tải</system:String>
+    <system:String x:Key="LANG_NAV_Setting">Cài đặt</system:String>
+    <system:String x:Key="LANG_NAV_ActionLog">Lịch sử</system:String>
+    <system:String x:Key="LANG_DEV_Device">Máy chấm công</system:String>
+    <system:String x:Key="LANG_DEV_EnrollNumber">Mã chấm công</system:String>
     <system:String x:Key="LANG_DEV_AddDevice">Thêm thiết bị</system:String>
     <system:String x:Key="LANG_DEV_ConnectAll">Kết nối tất cả</system:String>
     <system:String x:Key="LANG_DEV_DisconnectAll">Ngắt kết nối tất cả</system:String>
@@ -18,8 +21,6 @@
     <system:String x:Key="LANG_DEV_SupportGetDataByDate">Hỗ trợ lấy dữ liệu theo ngày</system:String>
     <system:String x:Key="LANG_DEV_FromDate">Từ ngày</system:String>
     <system:String x:Key="LANG_DEV_ToDate">Đến ngày</system:String>
-    <system:String x:Key="LANG_DEV_DownByDate">Tải theo ngày</system:String>
-    <system:String x:Key="LANG_DEV_DownAll">Tải tất cả</system:String>
     <system:String x:Key="LANG_DEV_DownloadData">Tải dữ liệu</system:String>
     <system:String x:Key="LANG_DEV_DeviceNotConnected">Thiết bị chưa được kết nối</system:String>
     <system:String x:Key="LANG_DEV_GetDataSuccess">Tải {0} dòng dữ liệu mới thành công</system:String>
@@ -36,6 +37,7 @@
     <system:String x:Key="LANG_DAT_DateFrom">Từ ngày</system:String>
     <system:String x:Key="LANG_DAT_DateTo">Đến ngày</system:String>
     <system:String x:Key="LANG_DAT_AlreadySyncData">Dữ liệu đã đồng bộ</system:String>
+    <system:String x:Key="LANG_DAT_DownDataManual">Tải thủ công</system:String>
     <system:String x:Key="LANG_DAT_GRID_EnrollNumber">Mã chấm công</system:String>
     <system:String x:Key="LANG_DAT_GRID_TimeLog">Thời gian</system:String>
     <system:String x:Key="LANG_DAT_GRID_VerifyMode">Loại xác thực</system:String>

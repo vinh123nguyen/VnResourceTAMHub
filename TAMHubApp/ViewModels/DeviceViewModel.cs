@@ -16,7 +16,6 @@ namespace TAMHubApp.ViewModels
             _navigationService = navigationService;
             OpenInfoPopup = new RelayCommand<object>(x => { return true; }, Action_OpenPopupAddOrUpdateDevice);
             TongleOnOffCommand = new RelayCommand<object>(x => { return true; }, Action_TongleOnOffDevice);
-            OpenSelectDatePopupCommand = new RelayCommand<object>(x => { return true; }, Action_OpenPopupSelectDateRange);
             ConnectAllCommand = new RelayCommand<object>(x => { return true; }, x => { Action_ConnectDisconnectAllDevice(true); });
             DisconnectAllCommand = new RelayCommand<object>(x => { return true; }, x => { Action_ConnectDisconnectAllDevice(false); });
 
@@ -39,7 +38,6 @@ namespace TAMHubApp.ViewModels
 
         public RelayCommand<object> ConnectAllCommand { get; set; }
         public RelayCommand<object> DisconnectAllCommand { get; set; }
-        public RelayCommand<object> OpenSelectDatePopupCommand { get; set; }
         public RelayCommand<object> OpenInfoPopup { get; set; }
         public RelayCommand<object> GetDataCommand { get; set; }
         public RelayCommand<object> TongleOnOffCommand { get; set; }
@@ -55,19 +53,6 @@ namespace TAMHubApp.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        private void Action_OpenPopupSelectDateRange(object parameter)
-        {
-            if(parameter != null)
-            {
-                IsCreateOrUpdatePopupOpen = true;
-                OverlayNavigate.NavigateTo<SelectDateRangeGetDataUCViewModel>();
-
-                var daw = (SelectDateRangeGetDataUCViewModel)OverlayNavigate.CurrentView;
-                daw.Id = parameter.ToString();
-            }
-        }
-
 
         private void Action_OpenPopupAddOrUpdateDevice(object parameter)
         {

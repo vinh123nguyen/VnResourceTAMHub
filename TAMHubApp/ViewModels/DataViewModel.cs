@@ -2,7 +2,10 @@
 using TAMHubApp.Commands;
 using TAMHubApp.Data;
 using TAMHubApp.Models;
+using TAMHubApp.Services;
 using TAMHubApp.Services.TAMServices;
+using TAMHubApp.ViewModels.UserControls;
+using TAMHubApp.Views.UserControls;
 
 namespace TAMHubApp.ViewModels
 {
@@ -10,10 +13,13 @@ namespace TAMHubApp.ViewModels
     {
         private IUnitOfWork _unitOfWork;
         private MainViewModel _mainViewModel;
+        private IDataNavigationService _dataNavigationService;
 
         public DataViewModel(IUnitOfWork unitOfWork
-            ,MainViewModel mainViewModel)
+            ,MainViewModel mainViewModel
+            , IDataNavigationService dataNavigationService)
         {
+            _dataNavigationService = dataNavigationService;
             CurrentPage = 1;
             TotalRow = 0;
             CurrentPageView = "0/0";
@@ -22,6 +28,8 @@ namespace TAMHubApp.ViewModels
             PaginationBackCommand = new RelayCommand<object>(x=> { return CurrentPage != 1; }, x => { GetDataChangePaging(x, false); });
             PaginationForwardCommand = new RelayCommand<object>(x=> { return CurrentPage != TotalPages && TotalPages != 0; }, x => { GetDataChangePaging(x, true); });
             SearchCommand = new RelayCommand<object>(x=> { return true; }, x => { GetDataPaging(); });
+            DownloadDataCommand = new RelayCommand<object>(x => { return true; }, OpenDownloadDataPopupExcute);
+            CloseOverlayPopupCommand = new RelayCommand<object>(x => { return true; }, CloseOverlayPopupExcute);
 
             InitData();
         }
@@ -31,9 +39,14 @@ namespace TAMHubApp.ViewModels
         public RelayCommand<object> PaginationBackCommand { get; set; }
         public RelayCommand<object> PaginationForwardCommand { get; set; }
         public RelayCommand<object> SearchCommand { get; set; }
+        public RelayCommand<object> DownloadDataCommand { get; set; }
+        public RelayCommand<object> CloseOverlayPopupCommand { get; set; }
         #endregion
 
         #region Properties
+        public IDataNavigationService OverlayNavigate { get => _dataNavigationService; set { _dataNavigationService = value; OnPropertyChanged(); } }
+        private bool _isOverlayPopupOpen;
+        public bool IsOverlayPopupOpen { get => _isOverlayPopupOpen; set { _isOverlayPopupOpen = value; OnPropertyChanged(); } }
         private int _currentPage { get; set; }
         public int CurrentPage { get => _currentPage; set { _currentPage = value; OnPropertyChanged(); Event_UpdateCurrentPage(value); } }
         private int _totalRow { get; set; }
@@ -178,6 +191,16 @@ namespace TAMHubApp.ViewModels
 
                 _mainViewModel.IsLoading = false;
             });
+        }
+
+        private void OpenDownloadDataPopupExcute(object obj)
+        {
+            IsOverlayPopupOpen = true;
+            OverlayNavigate.NavigateTo<SelectDateRangeGetDataUCViewModel>();
+        }
+        private void CloseOverlayPopupExcute(object obj)
+        {
+            IsOverlayPopupOpen = false;
         }
 
     }

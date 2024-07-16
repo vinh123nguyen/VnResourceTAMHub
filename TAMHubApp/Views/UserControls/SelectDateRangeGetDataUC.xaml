@@ -5,8 +5,9 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
              xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
+             xmlns:sdl="http://schemas.sdl.com/xaml"
              mc:Ignorable="d" 
-             d:DesignHeight="200" d:DesignWidth="400">
+             d:DesignHeight="300" d:DesignWidth="400">
     <UserControl.Resources>
         <Style x:Key="style_masterBoder" TargetType="Border">
             <Setter Property="Background" Value="White"/>
@@ -19,6 +20,15 @@
         <Style x:Key="style_CloseButton" TargetType="Button">
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate" DataType="models:LanguageItem">
+            <TextBlock Grid.Column="1" Text="{Binding Path=Name}"/>
+        </DataTemplate>
+        <Style x:Key="style_RequiredMark" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Text" Value="*"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
         </Style>
     </UserControl.Resources>
     <Border Style="{StaticResource style_masterBoder}">
@@ -54,23 +64,56 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
                     <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
-                <TextBlock  Grid.Column="1" Grid.Row="0" Text="{StaticResource LANG_DEV_FromDate}" Margin="8,8,8,8" />
-                <DatePicker Grid.Column="2" Grid.Row="0" Height="26" Width="200"
+
+                <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{StaticResource LANG_DEV_Device}" Margin="8,8,0,8" />
+                    <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                </StackPanel>
+                <sdl:MultiSelectComboBox
+                    SelectedItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"
+                    DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"           
+                    Margin="4" Height="Auto"
+                    Grid.Column="2" Grid.Row="0"
+                    SelectionMode="{Binding SelectionMode}"
+                    ItemsSource="{Binding Items}" 
+                    SelectedItems="{Binding SelectedItems}"
+                    EnableFiltering="False"
+                    MaxDropDownHeight="300"
+                    EnableAutoComplete="False"
+                    />
+
+                <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{StaticResource LANG_DEV_FromDate}" Margin="8,8,0,8" />
+                    <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                </StackPanel>
+                <DatePicker Grid.Column="2" Grid.Row="1" Height="26" Width="200"
                     Margin="4" Background="White" 
                     SelectedDate="{Binding DateFrom}"/>
 
-                <TextBlock  Grid.Column="1" Grid.Row="1" Text="{StaticResource LANG_DEV_ToDate}" Margin="8,8,8,8" />
-                <DatePicker Grid.Column="2" Grid.Row="1" Height="26" Width="200"
+                <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
+                    <TextBlock Grid.Column="1" Grid.Row="2" Text="{StaticResource LANG_DEV_ToDate}" Margin="8,8,0,8" />
+                    <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                </StackPanel>
+                <DatePicker Grid.Column="2" Grid.Row="2" Height="26" Width="200"
                     Margin="4" Background="White" 
-                    SelectedDate="{Binding DateTo}"/> 
+                    SelectedDate="{Binding DateTo}"/>
+
+                <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
+                    <TextBlock Text="{StaticResource LANG_DEV_EnrollNumber}" Margin="8,8,0,8" />
+                </StackPanel>
+                <TextBox Grid.Column="2" Grid.Row="3"
+                    Width="200" Height="25"
+                    Text="{Binding DeviceName}"/>
+
+
             </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
 
                 <uc:ButtonUC
@@ -79,14 +122,7 @@
                     ButtonBackground="#B6FFB5" Padding="8"
                     Icon="{StaticResource Icon_Download}" 
                     ClickCommand="{Binding DownloadDataByDateCommand}"
-                    Title="{StaticResource LANG_DEV_DownByDate}"/>
-                <uc:ButtonUC
-                    Grid.Column="2"
-                    IconBackground="#1BBB48" 
-                    ButtonBackground="#B6FFB5" Padding="8"
-                    Icon="{StaticResource Icon_Download}" 
-                    ClickCommand="{Binding DownloadAllDateCommand}"
-                    Title="{StaticResource LANG_DEV_DownAll}"/>
+                    Title="{StaticResource LANG_DEV_DownloadData}"/>
             </Grid>
 
 

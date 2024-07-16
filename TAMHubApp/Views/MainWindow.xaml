@@ -61,6 +61,12 @@
                             NameTab="ScheduleView"
                             />
                         <uc:NavigationButtonUC
+                            Icon="{DynamicResource Icon_Reload}"
+                            Title="{DynamicResource LANG_NAV_ActionLog}"
+                            NavigateCommand="{Binding NavigateActionLogCommand}"
+                            TabActive="{Binding TabActive}"
+                            NameTab="ActionLogView" />
+                        <uc:NavigationButtonUC
                             Icon="{DynamicResource Icon_Setting}"
                             Title="{DynamicResource LANG_NAV_Setting}"
                             NavigateCommand="{Binding NavigateSettingCommand}"

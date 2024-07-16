@@ -27,6 +27,9 @@
             <DataTemplate DataType="{x:Type TypeName=viewModel:SettingViewModel}">
                 <view:SettingView/>
             </DataTemplate>
+            <DataTemplate DataType="{x:Type TypeName=viewModel:ActionLogViewModel}">
+                <view:ActionLogView/>
+            </DataTemplate>
 
             <DataTemplate DataType="{x:Type TypeName=deviceUCVM:DeviceItemInfoUCViewModel}">
                 <viewUC:DeviceItemInfoUC/>

@@ -5,14 +5,14 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TAMHubApp.Views"
              xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
-            xmlns:converter="clr-namespace:TAMHubApp.Converters"
+             xmlns:converter="clr-namespace:TAMHubApp.Converters"
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
     </UserControl.Resources>
     <Grid Background="#EFF3FF">
-        <Grid Grid.ColumnSpan="2">
+        <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"></RowDefinition>
                 <RowDefinition></RowDefinition>

@@ -98,4 +98,35 @@ namespace TAMHubApp.Services
             CurrentView = viewModel;
         }
     }
+
+    public interface IDataNavigationService
+    {
+        BaseViewModel CurrentView { get; }
+        void NavigateTo<TViewModel>() where TViewModel : BaseViewModel;
+    }
+    public class DataNavigationService : BaseViewModel, IDataNavigationService
+    {
+        private BaseViewModel _currentView;
+        private readonly Func<Type, BaseViewModel> _viewModelFactory;
+
+        public DataNavigationService(Func<Type, BaseViewModel> viewModelFactory)
+        {
+            _viewModelFactory = viewModelFactory;
+            CurrentView = new HomeViewModel();
+        }
+        public BaseViewModel CurrentView
+        {
+            get => _currentView;
+            private set
+            {
+                _currentView = value;
+                OnPropertyChanged();
+            }
+        }
+        public void NavigateTo<TViewModel>() where TViewModel : BaseViewModel
+        {
+            BaseViewModel viewModel = _viewModelFactory.Invoke(typeof(TViewModel));
+            CurrentView = viewModel;
+        }
+    }
 }

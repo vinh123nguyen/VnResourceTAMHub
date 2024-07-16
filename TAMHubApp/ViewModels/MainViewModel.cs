@@ -58,6 +58,7 @@ namespace TAMHubApp.ViewModels
         public RelayCommand<BaseViewModel> NavigateDataCommand { get; set; }
         public RelayCommand<BaseViewModel> NavigateScheduleCommand { get; set; }
         public RelayCommand<BaseViewModel> NavigateSettingCommand { get; set; }
+        public RelayCommand<BaseViewModel> NavigateActionLogCommand { get; set; }
 
         public void Action_ShowToastNotify(string message, ToastNotifyType type)
         {
@@ -90,6 +91,7 @@ namespace TAMHubApp.ViewModels
             NavigateDataCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DataView"; }, x => { MainViewNavigate.NavigateTo<DataViewModel>(); TabActive = "DataView"; });
             NavigateScheduleCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ScheduleView"; }, x => { MainViewNavigate.NavigateTo<ScheduleViewModel>(); TabActive = "ScheduleView"; });
             NavigateSettingCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "SettingView"; }, x => { MainViewNavigate.NavigateTo<SettingViewModel>(); TabActive = "SettingView"; });
+            NavigateActionLogCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ActionLogView"; }, x => { MainViewNavigate.NavigateTo<ActionLogViewModel>(); TabActive = "ActionLogView"; });
         }
 
 

@@ -45,6 +45,7 @@ namespace TAMHubApp
             services.AddSingleton<DataViewModel>();
             services.AddSingleton<ScheduleViewModel>();
             services.AddSingleton<SettingViewModel>();
+            services.AddSingleton<ActionLogViewModel>();
             services.AddTransient<DeviceItemInfoUCViewModel>();
             services.AddTransient<SelectDateRangeGetDataUCViewModel>();
             services.AddTransient<ScheduleTaskItemInfoUCViewModel>();
@@ -62,6 +63,7 @@ namespace TAMHubApp
             services.AddSingleton<ITabNavigationService, TabNavigationService>();
             services.AddSingleton<IDeviceNavigationService, DeviceNavigationService>();
             services.AddSingleton<IScheduleNavigationService, ScheduleNavigationService>();
+            services.AddSingleton<IDataNavigationService, DataNavigationService>();
             services.AddSingleton<Func<Type, BaseViewModel>>(serviceProvider => viewModelType => (BaseViewModel)serviceProvider.GetRequiredService(viewModelType));
 
             // DB DI Register

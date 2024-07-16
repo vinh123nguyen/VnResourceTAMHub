@@ -56,6 +56,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Sdl.MultiSelectComboBox\Sdl.MultiSelectComboBox.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
 	  <Resource Include="Resources\Images\logovnr.png" />
   </ItemGroup>
 	<ItemGroup>
