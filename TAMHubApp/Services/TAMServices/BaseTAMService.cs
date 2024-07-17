@@ -6,6 +6,7 @@ namespace TAMHubApp.Services.TAMServices
 {
     public abstract class BaseTAMService : INotifyPropertyChanged
     {
+        public bool IsEnabled = true;
         public TAMSDKTypes DeviceSDKType { get; set; }
         public Guid Id { get; set; }
 

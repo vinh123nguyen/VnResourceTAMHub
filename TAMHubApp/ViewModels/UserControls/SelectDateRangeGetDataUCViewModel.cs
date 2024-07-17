@@ -1,7 +1,10 @@
 ﻿using System.Collections.ObjectModel;
 using TAMHubApp.Commands;
+using TAMHubApp.Infrastructures.Enums;
+using TAMHubApp.Infrastructures;
 using TAMHubApp.Models;
 using TAMHubApp.Services.TAMServices;
+using TAMHubApp.Infrastructures.Helpers;
 
 namespace TAMHubApp.ViewModels.UserControls
 {
@@ -25,16 +28,7 @@ namespace TAMHubApp.ViewModels.UserControls
             //DownloadAllDateCommand = new RelayCommand<object>(x => { return true; }, x => { DownLoadLogData(true); });
 
 
-            var fesf = new List<DeviceMultiSelectItem>();
-            for (int i = 1; i <= 100; i++)
-            {
-                fesf.Add(new DeviceMultiSelectItem()
-                {
-                    Id = i.ToString(),
-                    Name = "Name " + i.ToString(),
-                });
-            }
-            Items = new ObservableCollection<DeviceMultiSelectItem>(fesf);
+            Items = _singletonTAMInstance.TAMs;
         }
 
         #region Command
@@ -45,30 +39,18 @@ namespace TAMHubApp.ViewModels.UserControls
         #endregion
 
         #region Prop
-        private string _id;
-        public string Id
-        {
-            get { return _id; }
-            set
-            {
-                _id = value;
-                OnPropertyChanged();
-                if (string.IsNullOrEmpty(value))
-                    CloseOverlayCommandExcute(true);
-            }
-        }
 
-        private ObservableCollection<DeviceMultiSelectItem> _items;
-        private ObservableCollection<DeviceMultiSelectItem> _selectedItems;
-        public ObservableCollection<DeviceMultiSelectItem> Items
+        private ObservableCollection<BaseTAMService> _items;
+        private ObservableCollection<BaseTAMService> _selectedItems;
+        public ObservableCollection<BaseTAMService> Items
         {
-            get => _items ?? (_items = new ObservableCollection<DeviceMultiSelectItem>());
+            get => _items ?? (_items = new ObservableCollection<BaseTAMService>());
             set => _items = value;
         }
 
-        public ObservableCollection<DeviceMultiSelectItem> SelectedItems
+        public ObservableCollection<BaseTAMService> SelectedItems
         {
-            get => _selectedItems ?? (_selectedItems = new ObservableCollection<DeviceMultiSelectItem>());
+            get => _selectedItems ?? (_selectedItems = new ObservableCollection<BaseTAMService>());
             set { _selectedItems = value; OnPropertyChanged(nameof(SelectedItems)); }
         }
 
@@ -78,6 +60,9 @@ namespace TAMHubApp.ViewModels.UserControls
 
         private DateTime _dateTo { get; set; }
         public DateTime DateTo { get => _dateTo; set { _dateTo = value; OnPropertyChanged(); } }
+
+        private string _enrollNumber { get; set; }
+        public string EnrollNumber { get => _enrollNumber; set {  _enrollNumber = value; OnPropertyChanged();} }
 
         #endregion
 
@@ -89,27 +74,61 @@ namespace TAMHubApp.ViewModels.UserControls
 
         public void DownLoadLogData(bool isGetAll = true)
         {
-            var device = _singletonTAMInstance.TAMs.FirstOrDefault(x => x.Id.ToString() == Id);
-            
-            if (device != null)
+            //var device = _singletonTAMInstance.TAMs.FirstOrDefault();
+
+            var listIdSelected = SelectedItems.Select(x => x.Id).ToList();
+
+            var lstDevice = _singletonTAMInstance.TAMs.Where(x => listIdSelected.Contains(x.Id)).ToList();
+
+            if(lstDevice != null && lstDevice.Any())
             {
+                var listTask = new List<Task>();
                 _mainWindow.IsLoading = true;
-                Task.Run(async() =>
+                foreach(var device in lstDevice)
                 {
-                    var service = new TAMCommonService();
-                    var result = false;
-                    if (isGetAll)
+                    var task = Task.Run(async () =>
                     {
-                        result = await service.Action_GetAllData(device);
-                    }
-                    else
-                    {
-                        result = await service.Action_GetDataByDate(device, DateFrom, DateTo);
-                    }
-                    _dataViewModel.IsOverlayPopupOpen = false;
-                    _mainWindow.IsLoading = false;
+                        var service = new TAMCommonService();
+                        var result = false;
+                        if (isGetAll)
+                        {
+                            result = await service.Action_GetAllData(device);
+                        }
+                        else
+                        {
+                            result = await service.Action_GetDataByDate(device, DateFrom, DateTo, EnrollNumber);
+                        }
+                    });
+                    listTask.Add(task);
+                }
+                Task.WaitAll(listTask.ToArray());
+                _dataViewModel.IsOverlayPopupOpen = false;
+                _mainWindow.IsLoading = false;
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(ConstantDisplay.LANG_GLO_ActionSuccess.TranslateString(), ToastNotifyType.Success);
                 });
             }
+
+            //if (device != null)
+            //{
+            //    _mainWindow.IsLoading = true;
+            //    Task.Run(async() =>
+            //    {
+            //        var service = new TAMCommonService();
+            //        var result = false;
+            //        if (isGetAll)
+            //        {
+            //            result = await service.Action_GetAllData(device);
+            //        }
+            //        else
+            //        {
+            //            result = await service.Action_GetDataByDate(device, DateFrom, DateTo);
+            //        }
+            //        _dataViewModel.IsOverlayPopupOpen = false;
+            //        _mainWindow.IsLoading = false;
+            //    });
+            //}
 
         }
 

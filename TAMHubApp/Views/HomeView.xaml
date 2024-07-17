@@ -9,17 +9,134 @@
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              d:DesignHeight="484" d:DesignWidth="960">
     <UserControl.Resources>
-        
+        <Style x:Key="style_BorderGroup" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Margin" Value="8"/>
+        </Style>
+        <Style x:Key="style_ActionButton" TargetType="Button">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="0" CornerRadius="6"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="Gray"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </UserControl.Resources>
     <Grid Background="#EFF3FF">
-        <!--<TextBlock>Home Page</TextBlock>
-        <TextBlock Text="{Binding Source={x:Static sys:DateTime.Now}, StringFormat='HH:mm:ss'}"
-           FontSize="36" FontWeight="Bold"
-           HorizontalAlignment="Center" VerticalAlignment="Center"/>-->
-        <TextBlock HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32">
-            <TextBlock.Text>
-                <converter:CurrentTimeExtension />
-            </TextBlock.Text>
-        </TextBlock>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <Grid>
+            
+        </Grid>
+
+        <StackPanel Grid.Row="1" Orientation="Horizontal">
+            <Border Style="{StaticResource style_BorderGroup}" Margin="8,8,8,8">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="8"
+                      Color="#877b77"
+                      Opacity="30"
+                      ShadowDepth="0"
+                      Direction="0" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="24"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{StaticResource LANG_HOM_Setting}" Margin="8"/>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+                        <Button Background="#EEEEEE" Width="70" Height="70" Margin="8" 
+                                Style="{StaticResource style_ActionButton}"
+                                Command="{Binding NavigateSettingCommand}">
+                            <StackPanel>
+                                <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_Setting.png" Margin="8,8,8,8" />
+                                <TextBlock Text="{StaticResource LANG_NAV_Setting}" FontSize="12" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Background="#EEEEEE" Width="70" Height="70" Margin="8" 
+                                Style="{StaticResource style_ActionButton}"
+                                Command="{Binding NavigateScheduleCommand}">
+                            <StackPanel>
+                                <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_Schedule.png" Margin="8,8,8,8" />
+                                <TextBlock Text="{StaticResource LANG_NAV_Schedule}" FontSize="12" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Background="#EEEEEE" Width="70" Height="70" Margin="8" 
+                                Style="{StaticResource style_ActionButton}"
+                                Command="{Binding NavigateDeviceCommand}">
+                            <StackPanel>
+                                <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_Tamdevice.png" Margin="8,8,8,8" />
+                                <TextBlock Text="{StaticResource LANG_DEV_Device}" FontSize="12" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Border Style="{StaticResource style_BorderGroup}" Margin="8,8,8,8">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="8"
+                        Color="#877b77"
+                        Opacity="30"
+                        ShadowDepth="0"
+                        Direction="0" />
+                </Border.Effect>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition/>
+                        <RowDefinition Height="24"/>
+                    </Grid.RowDefinitions>
+                    <TextBlock Text="{StaticResource LANG_HOM_Data}" Margin="8"/>
+
+                    <StackPanel Grid.Row="1" Orientation="Horizontal">
+
+                        <Button Background="#EEEEEE" Width="70" Height="70" Margin="8" 
+                                Style="{StaticResource style_ActionButton}"
+                                Command="{Binding NavigateActionLogCommand}">
+                            <StackPanel>
+                                <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_History.png" Margin="8,8,8,8" />
+                                <TextBlock Text="{StaticResource LANG_NAV_ActionLog}" FontSize="12" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Background="#EEEEEE" Width="70" Height="70" Margin="8" 
+                                Style="{StaticResource style_ActionButton}"
+                                Command="{Binding NavigateDataCommand}">
+                            <StackPanel>
+                                <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_Data.png" Margin="8,8,8,8" />
+                                <TextBlock Text="{StaticResource LANG_NAV_Data}" FontSize="12" HorizontalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+
+        </StackPanel>
     </Grid>
 </UserControl>
+
+
+

@@ -63,6 +63,13 @@
 	  <Resource Include="Resources\Images\logovnr.png" />
   </ItemGroup>
 	<ItemGroup>
+		<Resource Include="Resources\Images\image_Data.png" />
+		<Resource Include="Resources\Images\image_History.png" />
+		<Resource Include="Resources\Images\image_Schedule.png" />
+		<Resource Include="Resources\Images\image_Setting.png" />
+		<Resource Include="Resources\Images\image_Tamdevice.png" />
+	</ItemGroup>
+	<ItemGroup>
 		<Resource Include="Resources\Images\windowicon.png" />
 	</ItemGroup>
 	<ItemGroup>

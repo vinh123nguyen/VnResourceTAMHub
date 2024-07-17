@@ -83,8 +83,8 @@ namespace TAMHubApp.ViewModels
         {
             ToastColor = Brushes.LightGreen;
             TabActive = "HomeView";
-
             _navigationService = navigationService;
+            //MainViewNavigate.NavigateTo<HomeViewModel>();
 
             NavigateHomeCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "HomeView"; }, x => { MainViewNavigate.NavigateTo<HomeViewModel>(); TabActive = "HomeView"; });
             NavigateDeviceCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DeviceView"; }, x => { MainViewNavigate.NavigateTo<DeviceViewModel>(); TabActive = "DeviceView"; });

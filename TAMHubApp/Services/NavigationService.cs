@@ -15,7 +15,6 @@ namespace TAMHubApp.Services
         public TabNavigationService(Func<Type, BaseViewModel> viewModelFactory)
         {
             _viewModelFactory = viewModelFactory;
-            CurrentView = new HomeViewModel();
         }
 
         public BaseViewModel CurrentView
@@ -47,7 +46,6 @@ namespace TAMHubApp.Services
         public DeviceNavigationService(Func<Type, BaseViewModel> viewModelFactory)
         {
             _viewModelFactory = viewModelFactory;
-            CurrentView = new HomeViewModel();
         }
 
         public BaseViewModel CurrentView
@@ -79,7 +77,6 @@ namespace TAMHubApp.Services
         public ScheduleNavigationService(Func<Type, BaseViewModel> viewModelFactory)
         {
             _viewModelFactory = viewModelFactory;
-            CurrentView = new HomeViewModel();
         }
 
         public BaseViewModel CurrentView
@@ -112,7 +109,35 @@ namespace TAMHubApp.Services
         public DataNavigationService(Func<Type, BaseViewModel> viewModelFactory)
         {
             _viewModelFactory = viewModelFactory;
-            CurrentView = new HomeViewModel();
+        }
+        public BaseViewModel CurrentView
+        {
+            get => _currentView;
+            private set
+            {
+                _currentView = value;
+                OnPropertyChanged();
+            }
+        }
+        public void NavigateTo<TViewModel>() where TViewModel : BaseViewModel
+        {
+            BaseViewModel viewModel = _viewModelFactory.Invoke(typeof(TViewModel));
+            CurrentView = viewModel;
+        }
+    }
+    public interface ISettingNavigationService
+    {
+        BaseViewModel CurrentView { get; }
+        void NavigateTo<TViewModel>() where TViewModel : BaseViewModel;
+    }
+    public class SettingNavigationService : BaseViewModel, ISettingNavigationService
+    {
+        private BaseViewModel _currentView;
+        private readonly Func<Type, BaseViewModel> _viewModelFactory;
+
+        public SettingNavigationService(Func<Type, BaseViewModel> viewModelFactory)
+        {
+            _viewModelFactory = viewModelFactory;
         }
         public BaseViewModel CurrentView
         {

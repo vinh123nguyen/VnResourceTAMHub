@@ -73,11 +73,12 @@
                     <TextBlock Style="{StaticResource style_RequiredMark}"/>
                 </StackPanel>
                 <sdl:MultiSelectComboBox
+                    VerticalAlignment="Center"
                     SelectedItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"
                     DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"           
                     Margin="4" Height="Auto"
                     Grid.Column="2" Grid.Row="0"
-                    SelectionMode="{Binding SelectionMode}"
+                    SelectionMode="Multiple"
                     ItemsSource="{Binding Items}" 
                     SelectedItems="{Binding SelectedItems}"
                     EnableFiltering="False"
@@ -106,7 +107,7 @@
                 </StackPanel>
                 <TextBox Grid.Column="2" Grid.Row="3"
                     Width="200" Height="25"
-                    Text="{Binding DeviceName}"/>
+                    Text="{Binding EnrollNumber}"/>
 
 
             </Grid>
@@ -121,7 +122,7 @@
                     IconBackground="#1BBB48" 
                     ButtonBackground="#B6FFB5" Padding="8"
                     Icon="{StaticResource Icon_Download}" 
-                    ClickCommand="{Binding DownloadDataByDateCommand}"
+                    ClickCommand="{Binding DownloadDataCommand}"
                     Title="{StaticResource LANG_DEV_DownloadData}"/>
             </Grid>
 

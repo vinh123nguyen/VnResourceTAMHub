@@ -29,7 +29,10 @@
                         <!--<ColumnDefinition></ColumnDefinition>-->
                     </Grid.ColumnDefinitions>
 
-                    <Image Grid.Column="0" Source="/Resources/Images/logovnr.png" Margin="8,8,8,8"></Image>
+                    <Button Style="{StaticResource style_navButton}" Template="{StaticResource NoMouseOverButtonTemplate}" Background="White" Command="{Binding NavigateHomeCommand}" Grid.Column="0">
+                        <Image Source="/Resources/Images/logovnr.png" Margin="8,8,8,8"/>
+                    </Button>
+                    
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto">
 
                         <uc:NavigationButtonUC

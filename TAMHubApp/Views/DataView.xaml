@@ -289,10 +289,10 @@
 
                         <TextBlock Grid.Column="2" Grid.Row="0" FontSize="16" Text="{StaticResource LANG_DAT_TAMDevice}" VerticalAlignment="Center"/>
                         <ComboBox Grid.Column="3" Grid.Row="0"
-                Height="26" 
-                Margin="4"
-                ItemsSource="{Binding ListOptionsTAMs}" 
-                SelectedItem="{Binding TAMSelected, Mode=TwoWay}">
+                            Height="26" 
+                            Margin="4"
+                            ItemsSource="{Binding ListOptionsTAMs}" 
+                            SelectedItem="{Binding TAMSelected, Mode=TwoWay}">
                             <ComboBox.ItemTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Name}"/>

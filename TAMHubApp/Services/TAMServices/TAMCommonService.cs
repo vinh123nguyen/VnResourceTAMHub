@@ -360,7 +360,7 @@ namespace TAMHubApp.Services.TAMServices
             }
         }
 
-        public async Task<bool> Action_GetDataByDate(BaseTAMService device, DateTime datefrom, DateTime dateend)
+        public async Task<bool> Action_GetDataByDate(BaseTAMService device, DateTime datefrom, DateTime dateend, string EnrollNumber)
         {
             datefrom = datefrom.Date;
             dateend = dateend.Date.AddDays(1).AddMicroseconds(-1);
@@ -368,11 +368,9 @@ namespace TAMHubApp.Services.TAMServices
             {
                 if (!device.IsConnected)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        _mainWindow.Action_ShowToastNotify(ConstantDisplay.LANG_DEV_DeviceNotConnected.TranslateString(), ToastNotifyType.Warning);
-                    });
-                    return false;
+                    var rescon = await Action_Connect(device);
+                    if (!rescon)
+                        return false;
                 }
 
                 var dbDevice = await _unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
@@ -534,6 +532,15 @@ namespace TAMHubApp.Services.TAMServices
                 }
                 if (listAttRecord.Any())
                 {
+                    if (!string.IsNullOrEmpty(EnrollNumber))
+                    {
+                        listAttRecord.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                        if (!listAttRecord.Any())
+                        {
+                            return true;
+                        }
+                    }
+
                     var lstDbTAMScanLog = (await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
                     var lstDbTAMScanLogHistory = (await _unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
 
@@ -548,10 +555,6 @@ namespace TAMHubApp.Services.TAMServices
 
                     await _unitOfWork.SaveChanageAsync();
                 }
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DEV_GetDataSuccess.TranslateString(), listAttRecord.Count), ToastNotifyType.Success);
-                });
                 return true;
             }
             catch(Exception ex)
