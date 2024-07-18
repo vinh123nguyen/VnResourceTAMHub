@@ -14,12 +14,16 @@ namespace TAMHubApp.Services
             notifyIcon.Visible = true;
             notifyIcon.ContextMenuStrip = new ContextMenuStrip();
 
-            notifyIcon.ContextMenuStrip.Items.Add("Status", Image.FromFile("Resources/Images/icon.ico"), OnStatusClicked);
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripLabel("Status: Running"));
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripButton("Status: Running"));
-            notifyIcon.ContextMenuStrip.Items.Add(new ToolStripDropDownButton("Status: Running", null,
-                new ToolStripLabel("Label 1"),
-                new ToolStripLabel("Label 2")));
+            notifyIcon.ContextMenuStrip.Items.Add("Open", Image.FromFile("Resources/Images/icon.ico"), OnStatusClicked);
+            notifyIcon.ContextMenuStrip.Items.Add("Exit", Image.FromFile("Resources/Images/icon.ico"), OnStatusClickedExit);
+            
+            
+            
+            //notifyIcon.ContextMenuStrip.Items.Add(new ToolStripLabel("Status: Running"));
+            //notifyIcon.ContextMenuStrip.Items.Add(new ToolStripButton("Status: Running"));
+            //notifyIcon.ContextMenuStrip.Items.Add(new ToolStripDropDownButton("Status: Running", null,
+            //    new ToolStripLabel("Label 1"),
+            //    new ToolStripLabel("Label 2")));
 
             notifyIcon.BalloonTipClicked += NotifyIcon_BalloonTipClicked;
             notifyIcon.Click += NotifyIcon_Click;
@@ -43,7 +47,11 @@ namespace TAMHubApp.Services
 
         private static void OnStatusClicked(object? sender, EventArgs e)
         {
-            System.Windows.MessageBox.Show("Application is running.", "Status", MessageBoxButton.OK, MessageBoxImage.Information);
+            System.Windows.Application.Current.Windows[0].WindowState = WindowState.Normal;
+        }
+        private static void OnStatusClickedExit(object? sender, EventArgs e)
+        {
+            System.Windows.Application.Current.Shutdown();
         }
     }
 }

@@ -1,6 +1,223 @@
-﻿namespace TAMHubApp.ViewModels.UserControls
+﻿using System.Windows.Input;
+using TAMHubApp.Commands;
+using TAMHubApp.Data;
+using TAMHubApp.Data.Entities;
+using TAMHubApp.Infrastructures;
+using TAMHubApp.Infrastructures.Enums;
+using TAMHubApp.Infrastructures.Helpers;
+
+namespace TAMHubApp.ViewModels.UserControls
 {
     public class GeneralSettingViewUCViewModel : BaseViewModel
     {
+        private IUnitOfWork _unitOfWork;
+        private MainViewModel _mainViewModel;
+
+        public GeneralSettingViewUCViewModel(IUnitOfWork unitOfWork, MainViewModel mainViewModel)
+        {
+            _unitOfWork = unitOfWork;
+            _mainViewModel = mainViewModel;
+
+            SaveConfigCommand = new RelayCommand<object>(x => { return true; }, SaveConfigCommandExcute);
+
+            LoadDataConfig().Wait();
+        }
+
+
+        private bool _isSyncDb {  get; set; }
+        public bool IsSyncDb { get => _isSyncDb; set {  _isSyncDb = value;  OnPropertyChanged(); } }
+
+        private bool _isSyncApi { get; set; }
+        public bool IsSyncApi { get => _isSyncApi; set { _isSyncApi = value; OnPropertyChanged(); } }
+
+        private string _serverName { get; set; }
+        public string ServerName { get => _serverName; set { _serverName = value; OnPropertyChanged();} }
+
+        private string _dbName { get; set; }
+        public string DbName { get => _dbName; set { _dbName = value; OnPropertyChanged(); } }
+
+        private string _userId { get; set; }
+        public string UserId { get => _userId; set { _userId = value; OnPropertyChanged(); } }
+
+        private string _password { get; set; }
+        public string Password { get => _password; set { _password = value; OnPropertyChanged(); } }
+
+        private string _apiAdress { get; set; }
+        public string ApiAddress { get => _apiAdress; set { _apiAdress = value; OnPropertyChanged(); } }
+
+        
+
+        public ICommand SaveConfigCommand { get; set; }
+
+
+        public async Task LoadDataConfig()
+        {
+            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains("SYNC_"));
+            var servercf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_SERVER.ToString());
+            var dbnamecf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_DBNAME.ToString());
+            var useridcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_USERID.ToString());
+            var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
+            var synctype = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
+            var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString());
+
+            if (synctype != null)
+            {
+                if(synctype.Value == "DB")
+                {
+                    IsSyncDb = true;
+                    IsSyncApi = false;
+                }
+                if (synctype.Value == "API")
+                {
+                    IsSyncDb = false;
+                    IsSyncApi = true;
+                }
+            }
+
+            if (servercf != null)
+            {
+                ServerName = servercf.Value;
+            }
+            if (dbnamecf != null)
+            {
+                DbName = dbnamecf.Value;
+            }
+            if (useridcf != null)
+            {
+                UserId = useridcf.Value;
+            }
+            if (pwdcf != null)
+            {
+                Password = pwdcf.Value;
+            }
+            if (apiaddress != null)
+            {
+                ApiAddress = apiaddress.Value;
+            }
+
+
+        }
+
+        private async void SaveConfigCommandExcute(object obj)
+        {
+            _mainViewModel.IsLoading = true;
+            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains("SYNC_"));
+            var servercf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_SERVER.ToString());
+            var dbnamecf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_DBNAME.ToString());
+            var useridcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_USERID.ToString());
+            var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
+            var synctype = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
+            var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString());
+
+            var IsSyncDbdw = IsSyncDb;
+            var dwdf = IsSyncApi;
+            if (synctype != null)
+            {
+                if (IsSyncDb)
+                {
+                    synctype.Value = "DB";
+                }
+                if (IsSyncApi)
+                {
+                    synctype.Value = "API";
+                }
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.SYNC_TYPE.ToString(),
+                };
+                if (IsSyncDb)
+                {
+                    item.Value = "DB";
+                }
+                if (IsSyncApi)
+                {
+                    item.Value = "API";
+                }
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
+
+            if (servercf != null)
+            {
+                servercf.Value = ServerName;
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.SYNC_DB_SERVER.ToString(),
+                    Value = ServerName
+                };
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
+
+            if (dbnamecf != null)
+            {
+                dbnamecf.Value = DbName;
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.SYNC_DB_DBNAME.ToString(),
+                    Value = DbName
+                };
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
+
+            if (useridcf != null)
+            {
+                useridcf.Value = UserId;
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.SYNC_DB_USERID.ToString(),
+                    Value = UserId
+                };
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
+
+            if (pwdcf != null)
+            {
+                pwdcf.Value = Password;
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.SYNC_DB_PWD.ToString(),
+                    Value = Password
+                };
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
+            if (apiaddress != null)
+            {
+                apiaddress.Value = ApiAddress;
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString(),
+                    Value = ApiAddress
+                };
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
+            await _unitOfWork.SaveChanageAsync();
+            _mainViewModel.IsLoading = false;
+            _mainViewModel.Action_ShowToastNotify(ConstantDisplay.LANG_GLO_ActionSuccess.TranslateString(), ToastNotifyType.Success);
+
+        }
+
     }
 }

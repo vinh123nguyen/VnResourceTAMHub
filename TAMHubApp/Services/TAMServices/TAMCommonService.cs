@@ -1,12 +1,13 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Riss.Devices;
-using System.Windows.Input;
+using System.Data.SqlClient;
 using TAMHubApp.Data;
 using TAMHubApp.Data.Entities;
 using TAMHubApp.Infrastructures;
 using TAMHubApp.Infrastructures.Enums;
 using TAMHubApp.Infrastructures.Helpers;
 using TAMHubApp.Infrastructures.TAMUtilities;
+using TAMHubApp.Models;
 using TAMHubApp.ViewModels;
 using zkemkeeper;
 
@@ -90,6 +91,8 @@ namespace TAMHubApp.Services.TAMServices
 
                         zkdevice.DeviceIns = _deviceIns;
                         zkdevice.IsConnected = result;
+
+                        await _unitOfWork.SaveChanageAsync();
                     }
                 }
                 else if(device.DeviceSDKType == TAMSDKTypes.E_REALAND)
@@ -176,7 +179,7 @@ namespace TAMHubApp.Services.TAMServices
                 });
                 result = false;
             }
-
+            device.IsConnected = result;
             return result;
         }
 
@@ -378,7 +381,18 @@ namespace TAMHubApp.Services.TAMServices
                 {
                     var rescon = await Action_Connect(device);
                     if (!rescon)
+                    {
+                        actionLog.Message = "Connect fail";
+                        actionLog.Status = "Error";
+
+                        actionLog.TimeLogTo = DateTime.Now;
+
+                        await _unitOfWork.ActionLogRepository.AddAsync(actionLog);
+
+                        await _unitOfWork.SaveChanageAsync();
+
                         return false;
+                    }
                 }
 
                 var dbDevice = await _unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
@@ -577,6 +591,7 @@ namespace TAMHubApp.Services.TAMServices
 
                     var lstDbTAMScanLog = (await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
                     var lstDbTAMScanLogHistory = (await _unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
+                    var synctype = await _unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
 
                     var lis1 = lstDbTAMScanLog.Select(item => (item.EnrollNumber, item.TimeLog));
                     var lis2 = lstDbTAMScanLogHistory.Select(item => (item.EnrollNumber, item.TimeLog));
@@ -594,6 +609,11 @@ namespace TAMHubApp.Services.TAMServices
                     actionLog.TimeLogTo = DateTime.Now;
 
                     actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+
+                    if (synctype != null && synctype.Value == "DB")
+                    {
+                        await SyncDataToDb(dbDevice, actionLog, datefrom, dateend);
+                    }
 
                     await _unitOfWork.ActionLogRepository.AddAsync(actionLog);
 
@@ -747,5 +767,146 @@ namespace TAMHubApp.Services.TAMServices
                 return false;
             }
         }
+
+
+        // Đặc thù taisun
+        public async Task<bool> SyncDataToDb(Data.Entities.Device devicedb ,ActionLog log, DateTime datefrom, DateTime dateend)
+        {
+            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains(ConfigEnumConstant.SYNC_DB_.ToString()));
+
+            var servercf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_SERVER.ToString());
+            var dbnamecf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_DBNAME.ToString());
+            var useridcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_USERID.ToString());
+            var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
+
+            if(servercf != null && !string.IsNullOrEmpty(servercf.Value) 
+                && dbnamecf != null && !string.IsNullOrEmpty(dbnamecf.Value)
+                && useridcf != null && !string.IsNullOrEmpty(useridcf.Value)
+                && pwdcf != null && !string.IsNullOrEmpty(pwdcf.Value))
+            {
+                try
+                {
+                    var listData = await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == devicedb.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend);
+
+                    var DbCStringBuilder = new SqlConnectionStringBuilder();
+                    DbCStringBuilder["Server"] = servercf.Value;
+                    DbCStringBuilder["Database"] = dbnamecf.Value;
+                    DbCStringBuilder["User Id"] = useridcf.Value;
+                    DbCStringBuilder["Password"] = pwdcf.Value;
+
+                    string connectionString = DbCStringBuilder.ToString();
+
+                    var strDateStart = datefrom.ToString("yyyy-MM-dd HH:mm:ss.fff");
+                    var strDateEnd = dateend.ToString("yyyy-MM-dd HH:mm:ss.fff");
+
+                    var listDataAlready = new List<CHECKINOUTModel>();
+                    var ListUserIF = new List<ZkUserInfo>();
+
+                    using (var sqlConnection = new SqlConnection(connectionString))
+                    {
+                        sqlConnection.Open();
+
+                        var commanGetData = $"Select co.*,BADGENUMBER from CHECKINOUT co " +
+                            "left join USERINFO us on co.USERID = us.USERID " +
+                            $"where CHECKTIME >= '{strDateStart}' " +
+                            $"and CHECKTIME <= '{strDateEnd}'";
+
+                        SqlCommand cm1 = new SqlCommand(commanGetData, sqlConnection);
+
+                        SqlDataReader sdr = cm1.ExecuteReader();
+
+                        while (sdr.Read())
+                        {
+                            listDataAlready.Add(new CHECKINOUTModel()
+                            {
+                                USERID = sdr["USERID"].ToString(),
+                                CHECKTIME = DateTime.Parse(sdr["CHECKTIME"].ToString())
+                            });
+                        }
+                    }
+
+                    using (var sqlConnection = new SqlConnection(connectionString))
+                    {
+                        sqlConnection.Open();
+                        var commandgetuser = "select USERID, BADGENUMBER  from USERINFO";
+
+                        SqlCommand cm2 = new SqlCommand(commandgetuser, sqlConnection);
+
+                        SqlDataReader sdr = cm2.ExecuteReader();
+
+                        while (sdr.Read())
+                        {
+                            ListUserIF.Add(new ZkUserInfo()
+                            {
+                                USERID = sdr["USERID"].ToString(),
+                                BADGENUMBER = sdr["BADGENUMBER"].ToString(),
+                            });
+                        }
+                    }
+
+                    if (!ListUserIF.Any())
+                    {
+                        log.Status = "Error";
+                        log.Message = "Can not get userinfomation!";
+                        return false;
+                    }
+
+                    var lstAdd = new List<CHECKINOUTModel>();
+
+                    var ds = from d in listData
+                             join u in ListUserIF on d.EnrollNumber.ToString() equals u.BADGENUMBER
+                             select new CHECKINOUTModel
+                             {
+                                 USERID = u.USERID,
+                                 CHECKTIME = d.TimeLog,
+                                 CHECKTYPE = d.InOutModeView,
+                                 VERIFYCODE = int.TryParse(d.VerifyMode, out int verifycode) ? verifycode : 0 ,
+                                 SENSORID = d.Device.MachineNo.ToString(),
+                                 Memoinfo = null,
+                                 WorkCode = 0,
+                                 sn = d.Device.SerialNumber.ToString(),
+                                 UserExtFmt = 1,
+                                 BADGENUMBER = u.BADGENUMBER,
+                             };
+                    using (var sqlConnection = new SqlConnection(connectionString))
+                    {
+                        sqlConnection.Open();
+                        int count = 0;
+                        foreach (var row in ds)
+                        {
+                            if (listDataAlready.Any(x => x.USERID == row.USERID && x.CHECKTIME == row.CHECKTIME))
+                            {
+                                continue;
+                            }
+                            var commandins = "INSERT INTO CHECKINOUT (USERID, CHECKTIME, CHECKTYPE, VERIFYCODE, SENSORID, WorkCode, sn, UserExtFmt) " +
+                                $"VALUES ({row.USERID}, '{row.CHECKTIME.ToString("yyyy-MM-dd HH:mm:ss.fff")}', '{row.CHECKTYPE}', {row.VERIFYCODE}, '{row.SENSORID}', {row.WorkCode}, '{row.sn}', {row.UserExtFmt});";
+
+                            SqlCommand cm3 = new SqlCommand(commandins, sqlConnection);
+                            cm3.ExecuteNonQuery();
+                            cm3.Dispose();
+                            count++;
+                        }
+                        log.Status = "Success";
+                        log.TotalNewlyData = count;
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    log.Status = "Error";
+                    log.Message = ex.Message;
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                log.Status = "Error";
+                log.Message = "Missing Db connection info";
+                return false;
+            }
+
+        }
+
     }
 }

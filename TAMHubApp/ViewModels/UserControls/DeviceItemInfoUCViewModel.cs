@@ -9,6 +9,7 @@ using TAMHubApp.Infrastructures.Helpers;
 using TAMHubApp.Infrastructures.TAMUtilities;
 using TAMHubApp.Models;
 using TAMHubApp.Services.TAMServices;
+using TAMHubApp.Views;
 
 namespace TAMHubApp.ViewModels.UserControls
 {
@@ -127,8 +128,8 @@ namespace TAMHubApp.ViewModels.UserControls
             IPAddress = currentDevice.IPAddress;
             Port = currentDevice.Port.ToString();
             Password = currentDevice.CommPassword.ToString();
-
-            if(currentDevice.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
+            CompanyCode = currentDevice.CompanyCode;
+            if (currentDevice.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
             {
                 SupportGetDataByDate = ((ZKTecoDeviceItem)currentDevice).ZKTeco_IsCanGetLogByTime;
             }
@@ -159,6 +160,8 @@ namespace TAMHubApp.ViewModels.UserControls
                         currentObject.Port = int.Parse(Port);
                         currentObject.CommPassword = string.IsNullOrEmpty(Password) ? null : int.Parse(Password);
                         currentObject.DeviceSDKType = (TAMSDKTypes)Enum.Parse(typeof(TAMSDKTypes), SDKSelected.Key);
+                        currentObject.CompanyCode = CompanyCode;
+                        currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
                     }
                 }
                 else
@@ -171,6 +174,8 @@ namespace TAMHubApp.ViewModels.UserControls
                     currentObject.Port = int.Parse(Port);
                     currentObject.CommPassword = string.IsNullOrEmpty(Password) ? null : int.Parse(Password);
                     currentObject.DeviceSDKType = (TAMSDKTypes)Enum.Parse(typeof(TAMSDKTypes), SDKSelected.Key);
+                    currentObject.CompanyCode = CompanyCode;
+                    currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
                     await _unitOfWork.DeviceRepository.AddAsync(currentObject);
                     ObjectId = currentObject.Id;
                 }
@@ -179,6 +184,10 @@ namespace TAMHubApp.ViewModels.UserControls
                 _singletonTAMInstance.UpdateDeviceFromDb(ObjectId);
                 _mainViewModel.IsLoading = false;
                 _deviceViewModel.IsCreateOrUpdatePopupOpen = false;
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainViewModel.Action_ShowToastNotify(ConstantDisplay.LANG_GLO_ActionSuccess.TranslateString(), ToastNotifyType.Success);
+                });
             });
         }
 

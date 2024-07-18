@@ -116,6 +116,7 @@ namespace TAMHubApp.ViewModels
                 lstQuery = lstQuery.Where(x => x.TimeLogFrom <= DateTo);
             }
             TotalRow = lstQuery.Count();
+            lstQuery = lstQuery.OrderByDescending(x => x.TimeLogFrom).ToList();
             lstQuery = lstQuery.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
             var lstData = lstQuery.Select(x => new ActionLogModel()
             {

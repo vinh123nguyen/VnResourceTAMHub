@@ -39,10 +39,13 @@ namespace TAMHubApp.Services.TAMServices
         private bool _isConnected { get; set; }
         public bool IsConnected { get => _isConnected; set { _isConnected = value; OnPropertyChanged(); } }
 
-        public string SerialNumber { get; set; }
+        public string? SerialNumber { get; set; }
 
-        private string _productName { get; set; }
-        public string ProductName { get => _productName; set { _productName = value; OnPropertyChanged(); } }
+        private string? _productName { get; set; }
+        public string? ProductName { get => _productName; set { _productName = value; OnPropertyChanged(); } }
+
+        private string? _companyCode { get; set; }
+        public string? CompanyCode { get => _companyCode; set { _companyCode = value; OnPropertyChanged(); } }
 
 
         #region Prop change

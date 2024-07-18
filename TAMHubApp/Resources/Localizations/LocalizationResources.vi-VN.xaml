@@ -85,8 +85,15 @@
     <system:String x:Key="LANG_SET_In">Vào</system:String>
     <system:String x:Key="LANG_SET_Out">Ra</system:String>
     <system:String x:Key="LANG_SET_Enum">Enum</system:String>
+    <system:String x:Key="LANG_SET_Server">Server</system:String>
+    <system:String x:Key="LANG_SET_DBName">DB Name</system:String>
+    <system:String x:Key="LANG_SET_UserID">User ID</system:String>
+    <system:String x:Key="LANG_SET_Pwd">Password</system:String>
+    <system:String x:Key="LANG_SET_API">API Address</system:String>
     <system:String x:Key="Manual">Bằng tay</system:String>
     <system:String x:Key="Schedule">Tự động</system:String>
     <system:String x:Key="Success">Thành công</system:String>
     <system:String x:Key="Error">Lỗi</system:String>
+    <system:String x:Key="LANG_GLO_DeviceDownloadError">Máy: {0} tải không thành công</system:String>
+    <system:String x:Key="LANG_GLO_DeviceDownloadSuccess">Máy: {0} tải thành công</system:String>
 </ResourceDictionary>

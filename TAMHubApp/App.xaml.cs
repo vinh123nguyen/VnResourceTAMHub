@@ -4,6 +4,7 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using Serilog;
+using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
 using TAMHubApp.Data;
@@ -106,8 +107,8 @@ namespace TAMHubApp
             mainWindows = serviceProvider.GetRequiredService<MainWindow>();
             mainWindows.Show();
 
-            //TrayBarService.CreateTrayIcon(notifyIcon);
-            AutoUpdaterService.CheckForUpdate();
+            TrayBarService.CreateTrayIcon(notifyIcon);
+            //AutoUpdaterService.CheckForUpdate();
             DataBaseService.EnsureUpdateDatabase(serviceProvider);
             //LocalizationHelper.SetLanguage("vi-VN");
 
@@ -115,14 +116,10 @@ namespace TAMHubApp
         }
         protected override void OnExit(ExitEventArgs e)
         {
-            TrayBarService.ShowBalloonTipTest(notifyIcon);
+            //mainWindows.Hide();
+            //notifyIcon.Dispose();
 
-            //var unitofwork = serviceProvider.GetRequiredService<IUnitOfWork>();
-            //unitofwork.DisposeAsync();
-            notifyIcon.Dispose();
-            //serviceProvider.Dispose();
-
-            base.OnExit(e);
+            //base.OnExit(e);
         }
     }
 

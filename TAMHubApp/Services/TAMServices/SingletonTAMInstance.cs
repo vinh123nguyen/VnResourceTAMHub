@@ -56,6 +56,9 @@ namespace TAMHubApp.Services.TAMServices
                             IsConnectLoading = false,
                             IsConnected = false,
                             DeviceSDKTypeView = "ZKTeco",
+                            CompanyCode = devicedb.CompanyCode,
+                            SerialNumber = devicedb.SerialNumber,
+                            ProductName = devicedb.ProductName,
                             AllLogCount = devicedb.AllLogCount,
                             ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime,
                             ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value,
@@ -74,6 +77,9 @@ namespace TAMHubApp.Services.TAMServices
                             IPAddress = devicedb.IPAddress,
                             Port = devicedb.Port,
                             CommPassword = devicedb.CommPassword,
+                            CompanyCode = devicedb.CompanyCode,
+                            SerialNumber = devicedb.SerialNumber,
+                            ProductName = devicedb.ProductName,
                             IsConnectLoading = false,
                             IsConnected = false,
                             AllLogCount = devicedb.AllLogCount,
@@ -111,6 +117,9 @@ namespace TAMHubApp.Services.TAMServices
                     existDevice.AllLogCount = devicedb.AllLogCount;
                     existDevice.NewLogCount = devicedb.NewLogCount;
                     existDevice.DeviceSDKTypeView = "Realand";
+                    existDevice.CompanyCode = devicedb.CompanyCode;
+                    existDevice.SerialNumber = devicedb.SerialNumber;
+                    existDevice.ProductName = devicedb.ProductName;
 
                     if (existDevice.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
                     {
@@ -137,6 +146,9 @@ namespace TAMHubApp.Services.TAMServices
                             IsConnected = false,
                             AllLogCount = devicedb.AllLogCount,
                             NewLogCount = devicedb.NewLogCount,
+                            SerialNumber = devicedb.SerialNumber,
+                            ProductName = devicedb.ProductName,
+                            CompanyCode = devicedb.CompanyCode,
                             DeviceSDKTypeView = "Realand",
                         };
                         Application.Current.Dispatcher.Invoke(() =>
@@ -160,6 +172,9 @@ namespace TAMHubApp.Services.TAMServices
                             AllLogCount = devicedb.AllLogCount,
                             DeviceSDKTypeView = "ZKTeco",
                             NewLogCount = devicedb.NewLogCount,
+                            SerialNumber = devicedb.SerialNumber,
+                            ProductName = devicedb.ProductName,
+                            CompanyCode = devicedb.CompanyCode,
                             ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime,
                             ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value,
                             ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value

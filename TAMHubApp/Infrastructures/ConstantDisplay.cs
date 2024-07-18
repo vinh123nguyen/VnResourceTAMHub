@@ -20,5 +20,7 @@
         public const string LANG_SCH_DayInMonth = "LANG_SCH_DayInMonth";
         public const string LANG_SCH_ScheduleIsRuningCanNotDoAction = "LANG_SCH_ScheduleIsRuningCanNotDoAction";
         public const string LANG_GLO_ActionSuccess = "LANG_GLO_ActionSuccess";
+        public const string LANG_GLO_DeviceDownloadSuccess = "LANG_GLO_DeviceDownloadSuccess";
+        public const string LANG_GLO_DeviceDownloadError = "LANG_GLO_DeviceDownloadError";
     }
 }

@@ -11,5 +11,11 @@ namespace TAMHubApp.Views
         {
             InitializeComponent();
         }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            e.Cancel = true;
+            System.Windows.Application.Current.Windows[0].WindowState = WindowState.Minimized;
+        }
     }
 }

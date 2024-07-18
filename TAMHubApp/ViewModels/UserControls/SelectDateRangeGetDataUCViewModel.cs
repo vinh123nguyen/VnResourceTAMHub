@@ -74,8 +74,6 @@ namespace TAMHubApp.ViewModels.UserControls
 
         public void DownLoadLogData(bool isGetAll = true)
         {
-            //var device = _singletonTAMInstance.TAMs.FirstOrDefault();
-
             var listIdSelected = SelectedItems.Select(x => x.Id).ToList();
 
             var lstDevice = _singletonTAMInstance.TAMs.Where(x => listIdSelected.Contains(x.Id)).ToList();
@@ -98,41 +96,19 @@ namespace TAMHubApp.ViewModels.UserControls
                         {
                             result = await service.Action_GetDataByDate(device, DateFrom, DateTo, EnrollNumber);
                         }
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                        {
+                            _mainWindow.IsLoading = false;
+                            _dataViewModel.IsOverlayPopupOpen = false;
+                            if(result)
+                                _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadSuccess.TranslateString(), device.Name), ToastNotifyType.Success);
+                            else
+                                _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadError.TranslateString(), device.Name), ToastNotifyType.Error);
+                        });
                     });
                     listTask.Add(task);
                 }
-                Task.WaitAll(listTask.ToArray());
-                _dataViewModel.IsOverlayPopupOpen = false;
-                _mainWindow.IsLoading = false;
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    _mainWindow.Action_ShowToastNotify(ConstantDisplay.LANG_GLO_ActionSuccess.TranslateString(), ToastNotifyType.Success);
-                });
             }
-
-            //if (device != null)
-            //{
-            //    _mainWindow.IsLoading = true;
-            //    Task.Run(async() =>
-            //    {
-            //        var service = new TAMCommonService();
-            //        var result = false;
-            //        if (isGetAll)
-            //        {
-            //            result = await service.Action_GetAllData(device);
-            //        }
-            //        else
-            //        {
-            //            result = await service.Action_GetDataByDate(device, DateFrom, DateTo);
-            //        }
-            //        _dataViewModel.IsOverlayPopupOpen = false;
-            //        _mainWindow.IsLoading = false;
-            //    });
-            //}
-
         }
-
-
-
     }
 }

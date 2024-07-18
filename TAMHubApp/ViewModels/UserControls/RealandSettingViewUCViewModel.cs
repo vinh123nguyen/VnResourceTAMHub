@@ -112,7 +112,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 await _unitOfWork.AppSettingRepository.AddRangeAsync(listAdd);
             }
             await _unitOfWork.SaveChanageAsync();
-            await GlobalEnumInOutConverter.InitUpdateEnumConverter("ZKTeco");
+            await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
             _mainViewModel.IsLoading = false;
             _mainViewModel.Action_ShowToastNotify(ConstantDisplay.LANG_GLO_ActionSuccess.TranslateString(), ToastNotifyType.Success);
         }

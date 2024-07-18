@@ -63,34 +63,6 @@ namespace TAMHubApp.Migrations
                     b.HasIndex("DeviceID");
 
                     b.ToTable("ActionLogs", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("00603b0d-0779-4fd7-8167-472582701370"),
-                            DateDownDataFrom = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateDownDataTo = new DateTime(2024, 7, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeviceID = new Guid("ea669d45-1a2d-4ac0-bdec-1268ff7a473d"),
-                            DownloadType = "Manual",
-                            Status = "Success",
-                            TimeLogFrom = new DateTime(2024, 7, 18, 17, 4, 0, 498, DateTimeKind.Local).AddTicks(8796),
-                            TimeLogTo = new DateTime(2024, 7, 18, 17, 9, 0, 498, DateTimeKind.Local).AddTicks(8797),
-                            TimeRun = new TimeSpan(0, 0, 5, 3, 0),
-                            TotalNewlyData = 256,
-                            TotalRowDownload = 1000
-                        },
-                        new
-                        {
-                            Id = new Guid("9ba91a09-9ba3-4e83-b357-b4513222d30d"),
-                            DateDownDataFrom = new DateTime(2024, 7, 1, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DateDownDataTo = new DateTime(2024, 7, 31, 0, 0, 0, 0, DateTimeKind.Unspecified),
-                            DeviceID = new Guid("ea669d45-1a2d-4ac0-bdec-1268ff7a473d"),
-                            DownloadType = "Manual",
-                            Message = "Error test",
-                            Status = "Error",
-                            TimeLogFrom = new DateTime(2024, 7, 18, 17, 4, 0, 498, DateTimeKind.Local).AddTicks(8808),
-                            TimeLogTo = new DateTime(2024, 7, 18, 17, 9, 0, 498, DateTimeKind.Local).AddTicks(8809)
-                        });
                 });
 
             modelBuilder.Entity("TAMHubApp.Data.Entities.AppSetting", b =>
@@ -113,14 +85,26 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("dc4adbf6-7a31-4a4f-8db5-351e003e4f58"),
+                            Id = new Guid("c019d3a8-d6da-413f-86e6-61e8770b15d4"),
                             Name = "ENUM_INOUT_ZKTECO_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("b4df6162-7f2f-40ba-b5bc-e480e07bff5b"),
+                            Id = new Guid("e76a4860-56f8-481e-9a4f-b4d6b7a7b85e"),
                             Name = "ENUM_INOUT_ZKTECO_OUT_KEY",
+                            Value = "E_OUT"
+                        },
+                        new
+                        {
+                            Id = new Guid("80b86ddd-44fa-4ca2-81f8-1610a4c4fddb"),
+                            Name = "ENUM_INOUT_REALAND_IN_KEY",
+                            Value = "E_IN"
+                        },
+                        new
+                        {
+                            Id = new Guid("701e72d9-32d4-44eb-bb8d-3e0012dd9741"),
+                            Name = "ENUM_INOUT_REALAND_OUT_KEY",
                             Value = "E_OUT"
                         });
                 });
@@ -181,47 +165,6 @@ namespace TAMHubApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Devices", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("ea669d45-1a2d-4ac0-bdec-1268ff7a473d"),
-                            AllLogCount = 140000,
-                            CommPassword = 0,
-                            DeviceSDKType = 0,
-                            IPAddress = "10.0.0.231",
-                            LastTimeConnected = new DateTime(2024, 7, 18, 16, 4, 0, 498, DateTimeKind.Local).AddTicks(8599),
-                            MachineNo = 103,
-                            Name = "Máy chấm công 1",
-                            Port = 4370,
-                            ZKTeco_IsCanGetLogByTime = true
-                        },
-                        new
-                        {
-                            Id = new Guid("1b9e2472-ca8a-4e90-9a38-34d166560c25"),
-                            AllLogCount = 140000,
-                            CommPassword = 0,
-                            DeviceSDKType = 0,
-                            IPAddress = "10.0.0.13",
-                            LastTimeConnected = new DateTime(2024, 7, 18, 16, 4, 0, 498, DateTimeKind.Local).AddTicks(8629),
-                            MachineNo = 103,
-                            Name = "Máy chấm công 2",
-                            Port = 4370,
-                            ZKTeco_IsCanGetLogByTime = false
-                        },
-                        new
-                        {
-                            Id = new Guid("7a0c5e8d-4728-4eaf-ba8e-9fdee23881a4"),
-                            AllLogCount = 140000,
-                            CommPassword = 0,
-                            DeviceSDKType = 1,
-                            IPAddress = "10.20.5.85",
-                            LastTimeConnected = new DateTime(2024, 7, 18, 16, 4, 0, 498, DateTimeKind.Local).AddTicks(8632),
-                            MachineNo = 103,
-                            Name = "Máy chấm công 3",
-                            Port = 5500,
-                            ZKTeco_IsCanGetLogByTime = false
-                        });
                 });
 
             modelBuilder.Entity("TAMHubApp.Data.Entities.ScheduleTask", b =>
@@ -255,34 +198,6 @@ namespace TAMHubApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ScheduleTasks", (string)null);
-
-                    b.HasData(
-                        new
-                        {
-                            Id = new Guid("868d6504-dcf3-4c04-bfd7-e28c6589da84"),
-                            CycleType = 0,
-                            Hour = 10,
-                            Minute = 30,
-                            Name = "Schedule 1"
-                        },
-                        new
-                        {
-                            Id = new Guid("99bf078d-7522-4319-9304-61a9f09f2f73"),
-                            CycleType = 1,
-                            DayOfWeek = 1,
-                            Hour = 10,
-                            Minute = 30,
-                            Name = "Schedule 1"
-                        },
-                        new
-                        {
-                            Id = new Guid("e71d2cc6-8f6d-4560-a3d3-1c8c27ccaa0f"),
-                            CycleType = 2,
-                            DayInMonth = 15,
-                            Hour = 10,
-                            Minute = 30,
-                            Name = "Schedule 1"
-                        });
                 });
 
             modelBuilder.Entity("TAMHubApp.Data.Entities.TAMScanLog", b =>
