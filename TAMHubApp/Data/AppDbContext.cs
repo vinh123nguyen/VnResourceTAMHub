@@ -25,10 +25,10 @@ namespace TAMHubApp.Data
             builder.ApplyConfiguration(new TAMScanLogHistoryConfiguration());
             builder.ApplyConfiguration(new ScheduleTaskConfiguration());
 
-
+            var deviceid = Guid.NewGuid();
             builder.Entity<Device>().HasData([new Device()
             {
-                Id = Guid.NewGuid(),
+                Id = deviceid,
                 Name = "Máy chấm công 1",
                 MachineNo = 103,
                 IPAddress = "10.0.0.231",
@@ -95,6 +95,55 @@ namespace TAMHubApp.Data
                 },
             ]);
 
+            builder.Entity<ActionLog>().HasData([
+                new ActionLog(){
+                    Id = Guid.NewGuid(),
+                    DateDownDataFrom = new DateTime(2024,07,01),
+                    DateDownDataTo = new DateTime(2024,07,31),
+                    TimeLogFrom = DateTime.Now,
+                    TimeLogTo = DateTime.Now.AddMinutes(5),
+                    DownloadType = "Manual",
+                    DeviceID = deviceid,
+                    Status = "Success",
+                    TotalRowDownload = 1000,
+                    TotalNewlyData = 256,
+                    TimeRun = new TimeSpan(0,5,3)
+                },
+                new ActionLog(){
+                    Id = Guid.NewGuid(),
+                    DateDownDataFrom = new DateTime(2024,07,01),
+                    DateDownDataTo = new DateTime(2024,07,31),
+                    TimeLogFrom = DateTime.Now,
+                    TimeLogTo = DateTime.Now.AddMinutes(5),
+                    DownloadType = "Manual",
+                    DeviceID = deviceid,
+                    Status = "Error",
+                    Message = "Error test",
+                }
+                ]); ;
+
+            builder.Entity<AppSetting>().HasData([
+                new AppSetting(){
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.ENUM_INOUT_ZKTECO_IN_KEY.ToString(),
+                    Value = "E_IN"
+                },
+                new AppSetting(){
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.ENUM_INOUT_ZKTECO_OUT_KEY.ToString(),
+                    Value = "E_OUT"
+                },
+                new AppSetting(){
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.ENUM_INOUT_REALAND_IN_KEY.ToString(),
+                    Value = "E_IN"
+                },
+                new AppSetting(){
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.ENUM_INOUT_REALAND_OUT_KEY.ToString(),
+                    Value = "E_OUT"
+                }
+                ]);
             
         }
 

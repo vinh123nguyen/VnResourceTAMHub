@@ -10,6 +10,9 @@ namespace TAMHubApp.Services.TAMServices
         public TAMSDKTypes DeviceSDKType { get; set; }
         public Guid Id { get; set; }
 
+        private string _deviceSDKTypeView { get; set; }
+        public string DeviceSDKTypeView { get => _deviceSDKTypeView; set { _deviceSDKTypeView = value; OnPropertyChanged(); } }
+
         private string _name { get; set; }
         public string Name { get => _name; set { _name = value; OnPropertyChanged(); } }
 

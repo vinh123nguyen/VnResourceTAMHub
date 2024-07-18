@@ -11,7 +11,7 @@
         public string DownloadType { get; set; }
         public int? TotalRowDownload { get; set; }
         public int? TotalNewlyData { get; set; }
-        public string TimeRun { get; set; }
-        public string Message { get; set; }
+        public string? TimeRun { get; set; }
+        public string? Message { get; set; }
     }
 }

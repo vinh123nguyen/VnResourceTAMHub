@@ -24,6 +24,22 @@ namespace TAMHubApp.Converters
             {
                 return Visibility.Visible;
             }
+            else if (values[0] is string && values[1] is string && (string)values[0] == "ActionLogView" && (string)values[0] == (string)values[1])
+            {
+                return Visibility.Visible;
+            }
+            else if (values[0] is string && values[1] is string && (string)values[0] == "General" && (string)values[0] == (string)values[1])
+            {
+                return Visibility.Visible;
+            }
+            else if (values[0] is string && values[1] is string && (string)values[0] == "ZKTeco" && (string)values[0] == (string)values[1])
+            {
+                return Visibility.Visible;
+            }
+            else if (values[0] is string && values[1] is string && (string)values[0] == "Realand" && (string)values[0] == (string)values[1])
+            {
+                return Visibility.Visible;
+            }
             else if (values[0] is string && values[1] is string && (string)values[0] == "SettingView" && (string)values[0] == (string)values[1])
             {
                 return Visibility.Visible;

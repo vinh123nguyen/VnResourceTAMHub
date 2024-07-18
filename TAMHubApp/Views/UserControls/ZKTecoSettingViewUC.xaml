@@ -5,8 +5,93 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
              mc:Ignorable="d" 
+             xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
+             xmlns:sdl="http://schemas.sdl.com/xaml"
              d:DesignHeight="450" d:DesignWidth="800">
+    <UserControl.Resources>
+        <Style x:Key="style_masterBoder" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="12"/>
+        </Style>
+        <Style x:Key="style_HeaderBoder" TargetType="Border">
+            <Setter Property="BorderThickness" Value="0,0,0,0.5"/>
+            <Setter Property="BorderBrush" Value="#949494"/>
+        </Style>
+        <Style x:Key="style_CloseButton" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Background" Value="Transparent" />
+        </Style>
+        <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate" DataType="models:LanguageItem">
+            <TextBlock Grid.Column="1" Text="{Binding Path=Name}"/>
+        </DataTemplate>
+        <Style x:Key="style_RequiredMark" TargetType="TextBlock">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Text" Value="*"/>
+            <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+    </UserControl.Resources>
     <Grid>
-        <TextBlock Text="ZK"/>
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="100"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="300"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        
+
+        <TextBlock Margin="4" Text="{StaticResource LANG_SET_InOutEnumSetting}" FontSize="16" Grid.ColumnSpan="4"/>
+
+        <uc:ButtonUC HorizontalAlignment="Right" Width="Auto" 
+            Grid.Column="0" Grid.Row="1" Margin="4"
+            FontSize="10" Title="{StaticResource LANG_GLO_Save}" 
+            Icon="{StaticResource Icon_Download}" 
+            IconBackground="#1BBB48" 
+            ButtonBackground="#B6FFB5" Padding="1"
+            ClickCommand="{Binding SaveConfig}"/>
+        
+        <TextBlock Text="{StaticResource LANG_SET_In}" FontSize="16" Margin="4" Grid.Row="2"/>
+        <TextBox Grid.Column="1" Grid.Row="2" Margin="4" Text="{Binding EnumIn}"/>
+        <TextBlock Grid.Column="2" Grid.Row="2" FontSize="16"  Margin="4" Text="{StaticResource LANG_SET_Enum}" />
+        <sdl:MultiSelectComboBox
+            Grid.Column="3" Grid.Row="2"
+            VerticalAlignment="Center"
+            SelectedItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"
+            DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"           
+            Margin="4" Height="Auto"
+            SelectionMode="Multiple"
+            ItemsSource="{Binding ListZKInType}" 
+            SelectedItems="{Binding ListSelectedZKInType}"
+            EnableFiltering="False"
+            MaxDropDownHeight="300"
+            EnableAutoComplete="False"
+            sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedInItemsChangedCommand}"
+            />
+
+        <TextBlock Text="{StaticResource LANG_SET_Out}" FontSize="16" Margin="4" Grid.Row="3"/>
+        <TextBox Grid.Column="1" Grid.Row="3" Margin="4" Text="{Binding EnumOut}"/>
+        <TextBlock Grid.Column="2" Grid.Row="3" FontSize="16"  Margin="4" Text="{StaticResource LANG_SET_Enum}" />
+        <sdl:MultiSelectComboBox
+            Grid.Column="3" Grid.Row="3"
+            VerticalAlignment="Center"
+            SelectedItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"
+            DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"           
+            Margin="4" Height="Auto"
+            SelectionMode="Multiple"
+            ItemsSource="{Binding ListZKOutType}" 
+            SelectedItems="{Binding ListSelectedZKOutType}"
+            EnableFiltering="False"
+            MaxDropDownHeight="300"
+            EnableAutoComplete="False"
+            sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedOutItemsChangedCommand}"
+            />
+
     </Grid>
 </UserControl>

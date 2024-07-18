@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Riss.Devices;
+using System.Windows.Input;
 using TAMHubApp.Data;
 using TAMHubApp.Data.Entities;
 using TAMHubApp.Infrastructures;
@@ -360,10 +361,17 @@ namespace TAMHubApp.Services.TAMServices
             }
         }
 
-        public async Task<bool> Action_GetDataByDate(BaseTAMService device, DateTime datefrom, DateTime dateend, string EnrollNumber)
+        public async Task<bool> Action_GetDataByDate(BaseTAMService device, DateTime datefrom, DateTime dateend, string EnrollNumber, string DownloadType = "Manual", bool IsDownSchedule = false)
         {
+            var actionLog = new ActionLog();
+            actionLog.Id = Guid.NewGuid();
             datefrom = datefrom.Date;
             dateend = dateend.Date.AddDays(1).AddMicroseconds(-1);
+            actionLog.DateDownDataFrom = datefrom;
+            actionLog.DateDownDataTo = dateend;
+            actionLog.TimeLogFrom = DateTime.Now;
+            actionLog.DownloadType  = DownloadType;
+            actionLog.DeviceID = device.Id;
             try
             {
                 if (!device.IsConnected)
@@ -379,7 +387,7 @@ namespace TAMHubApp.Services.TAMServices
                 if (device.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
                 {
                     var zkdevice = (ZKTecoDeviceItem)device;
-                    var enumconvert = TAMEnumConverter.ZKTecoEnumConvert;
+                    var settingenumconvert = GlobalEnumInOutConverter.ZKEnumConverter;
                     if (zkdevice.ZKTeco_IsCanGetLogByTime && zkdevice.ZKTeco_IsNewFirmwareMachine)
                     {
                         if (zkdevice.DeviceIns.ReadTimeGLogData(zkdevice.MachineNo, datefrom.ToString("yyyy-MM-dd HH:mm:ss"), dateend.ToString("yyyy-MM-dd HH:mm:ss")))
@@ -399,7 +407,7 @@ namespace TAMHubApp.Services.TAMServices
                                         EnrollNumber = int.Parse(enrollNumber),
                                         VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                         InOutModeOrigin = tInOutMode,
-                                        InOutModeView = enumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
+                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                     });
 
@@ -420,7 +428,7 @@ namespace TAMHubApp.Services.TAMServices
                                         EnrollNumber = enrollNumber,
                                         VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                         InOutModeOrigin = tInOutMode,
-                                        InOutModeView = enumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
+                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                     });
 
@@ -448,7 +456,7 @@ namespace TAMHubApp.Services.TAMServices
                                         EnrollNumber = int.Parse(enrollNumber),
                                         VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                         InOutModeOrigin = tInOutMode,
-                                        InOutModeView = enumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
+                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                     });
                                 }
@@ -468,7 +476,7 @@ namespace TAMHubApp.Services.TAMServices
                                         EnrollNumber = enrollNumber,
                                         VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                         InOutModeOrigin = tInOutMode,
-                                        InOutModeView = enumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
+                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                     });
 
@@ -481,6 +489,8 @@ namespace TAMHubApp.Services.TAMServices
                 else if (device.DeviceSDKType == TAMSDKTypes.E_REALAND)
                 {
                     var rissdevice = (RealandDeviceItem)device;
+
+                    var settingenumconvert = GlobalEnumInOutConverter.RealandEnumConverter;
 
                     List<DateTime> dtList = new List<DateTime>();
                     dtList.Add(datefrom);
@@ -495,26 +505,53 @@ namespace TAMHubApp.Services.TAMServices
 
                     try
                     {
-                        extraData = Global.DeviceBusy;
-                        var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
-
-                        extraProperty = boolList;
-                        extraData = dtList;
-
-                        resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
-                        if (resultRiss)
+                        if (IsDownSchedule)
                         {
-                            List<Record> recordList = (List<Record>)extraData;
-                            listAttRecord = recordList.Select(x => new TAMScanLog()
+                            extraData = Global.DeviceBusy;
+                            var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+
+                            extraProperty = true;
+                            extraData = dtList;
+
+                            resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                            if (resultRiss)
                             {
-                                Id = Guid.NewGuid(),
-                                DeviceID = device.Id,
-                                EnrollNumber = (int)x.DIN,
-                                VerifyMode = GlobalUtilities.VerifyType(x.Action),
-                                InOutModeOrigin = x.Verify,
-                                //InOutModeView = 
-                                TimeLog = x.Clock
-                            }).ToList();
+                                List<Record> recordList = (List<Record>)extraData;
+                                listAttRecord = recordList.Select(x => new TAMScanLog()
+                                {
+                                    Id = Guid.NewGuid(),
+                                    DeviceID = device.Id,
+                                    EnrollNumber = (int)x.DIN,
+                                    VerifyMode = GlobalUtilities.VerifyType(x.Action),
+                                    InOutModeOrigin = x.Verify,
+                                    InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
+                                    TimeLog = x.Clock
+                                }).ToList();
+                            }
+                        }
+                        else
+                        {
+                            extraData = Global.DeviceBusy;
+                            var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+
+                            extraProperty = boolList;
+                            extraData = dtList;
+
+                            resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                            if (resultRiss)
+                            {
+                                List<Record> recordList = (List<Record>)extraData;
+                                listAttRecord = recordList.Select(x => new TAMScanLog()
+                                {
+                                    Id = Guid.NewGuid(),
+                                    DeviceID = device.Id,
+                                    EnrollNumber = (int)x.DIN,
+                                    VerifyMode = GlobalUtilities.VerifyType(x.Action),
+                                    InOutModeOrigin = x.Verify,
+                                    InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
+                                    TimeLog = x.Clock
+                                }).ToList();
+                            }
                         }
                     }catch(Exception ex)
                     {
@@ -530,16 +567,13 @@ namespace TAMHubApp.Services.TAMServices
                         var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
                     }
                 }
+                if (!string.IsNullOrEmpty(EnrollNumber))
+                {
+                    listAttRecord.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                }
                 if (listAttRecord.Any())
                 {
-                    if (!string.IsNullOrEmpty(EnrollNumber))
-                    {
-                        listAttRecord.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
-                        if (!listAttRecord.Any())
-                        {
-                            return true;
-                        }
-                    }
+                    actionLog.TotalRowDownload = listAttRecord.Count;
 
                     var lstDbTAMScanLog = (await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
                     var lstDbTAMScanLogHistory = (await _unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
@@ -551,7 +585,17 @@ namespace TAMHubApp.Services.TAMServices
 
                     var listInsertscanlog = listAttRecord.Where(item => !hsetDataDbTAMScanLog.Contains((item.EnrollNumber, item.TimeLog))).ToList();
 
+                    actionLog.TotalNewlyData = listInsertscanlog?.Count;
+
                     await _unitOfWork.TAMScanLogRepository.AddRangeAsync(listInsertscanlog);
+
+                    actionLog.Status = "Success";
+
+                    actionLog.TimeLogTo = DateTime.Now;
+
+                    actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+
+                    await _unitOfWork.ActionLogRepository.AddAsync(actionLog);
 
                     await _unitOfWork.SaveChanageAsync();
                 }
@@ -559,10 +603,16 @@ namespace TAMHubApp.Services.TAMServices
             }
             catch(Exception ex)
             {
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
-                });
+                actionLog.Status = "Error";
+
+                actionLog.TimeLogTo = DateTime.Now;
+
+                actionLog.Message = ex.Message;
+
+                await _unitOfWork.ActionLogRepository.AddAsync(actionLog);
+
+                await _unitOfWork.SaveChanageAsync();
+
                 return false;
             }
         }
@@ -605,12 +655,11 @@ namespace TAMHubApp.Services.TAMServices
             {
                 if (!device.IsConnected)
                 {
-                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                    {
-                        _mainWindow.Action_ShowToastNotify(ConstantDisplay.LANG_DEV_DeviceNotConnected.TranslateString(), ToastNotifyType.Warning);
-                    });
-                    return false;
+                    var rescon = await Action_Connect(device);
+                    if (!rescon)
+                        return false;
                 }
+                var settingenumconvert = GlobalEnumInOutConverter.RealandEnumConverter;
                 var dbDevice = await _unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
 
                 var listAttRecord = new List<TAMScanLog>();
@@ -645,7 +694,7 @@ namespace TAMHubApp.Services.TAMServices
                                 EnrollNumber = (int)x.DIN,
                                 VerifyMode = GlobalUtilities.VerifyType(x.Action),
                                 InOutModeOrigin = x.Verify,
-                                //InOutModeView = 
+                                InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
                                 TimeLog = x.Clock
                             }).ToList();
                         }

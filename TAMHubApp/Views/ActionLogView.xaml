@@ -313,7 +313,7 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
-                    <DataGrid ItemsSource="{Binding ListTAMScanLogs}" Grid.Row="0" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="membersDataGrid" Style="{DynamicResource DataGridStyle1}">
+                    <DataGrid ItemsSource="{Binding ListActionLogs}" Grid.Row="0" RowStyle="{DynamicResource DataGridRowStyle1}" ColumnHeaderStyle="{DynamicResource DataGridColumnHeaderStyle1}" CellStyle="{DynamicResource DataGridCellStyle1}" x:Name="membersDataGrid" Style="{DynamicResource DataGridStyle1}">
                         <DataGrid.Columns>
                             <DataGridCheckBoxColumn Header="C" CanUserResize="False" Width="auto" ElementStyle="{StaticResource CheckBoxStyle1}">
                                 <DataGridCheckBoxColumn.HeaderTemplate>
@@ -323,31 +323,60 @@
                                 </DataGridCheckBoxColumn.HeaderTemplate>
                             </DataGridCheckBoxColumn>
                             <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="auto"/>
-                            <DataGridTextColumn Header="{StaticResource LANG_ACL_TimeRangeDownData}" Binding="{Binding DateDownData}" IsReadOnly="True" Width="*"/>
-                            <DataGridTextColumn Header="{StaticResource LANG_ACL_Time}" Binding="{Binding TimeLog}" IsReadOnly="True" Width="*"/>
+                            <DataGridTextColumn Header="{StaticResource LANG_ACL_TimeRangeDownData}" Binding="{Binding DateDownData}" IsReadOnly="True" Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
+                            <DataGridTextColumn Header="{StaticResource LANG_ACL_Time}" Binding="{Binding TimeLog}" IsReadOnly="True" Width="*">
+                                <DataGridTextColumn.ElementStyle>
+                                    <Style>
+                                        <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
+                                    </Style>
+                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn>
                             <DataGridTextColumn Header="{StaticResource LANG_ACL_Device}" Binding="{Binding TAMName}" IsReadOnly="True" Width="*"/>
                             <DataGridTextColumn Header="{StaticResource LANG_ACL_Status}" Binding="{Binding StatusView}" IsReadOnly="True" Width="0.7*"/>
                             <DataGridTextColumn Header="{StaticResource LANG_ACL_DownloadMethod}" Binding="{Binding DownloadType}" IsReadOnly="True" Width="0.7*"/>
                             <DataGridTemplateColumn Header="{StaticResource LANG_ACL_Description}" Width="*">
-                                <!--<DataGridCheckBoxColumn.HeaderTemplate>
-                                    <DataTemplate>
-                                        <CheckBox Style="{StaticResource CheckBoxStyle1}"/>
-                                    </DataTemplate>
-                                </DataGridCheckBoxColumn.HeaderTemplate>-->
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
-                                        <StackPanel Orientation="Horizontal">
-                                            <StackPanel Orientation="Horizontal">
+                                        <DataTemplate.Resources>
+                                            <Style x:Key="style_Success" TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Success">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                            <Style x:Key="style_Error" TargetType="StackPanel">
+                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding Status}" Value="Error">
+                                                        <Setter Property="Visibility" Value="Visible" />
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </DataTemplate.Resources>
+                                        <StackPanel Orientation="Vertical">
+                                            <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
                                                 <TextBlock Text="{StaticResource LANG_ACL_TotalRowDownload}"/>
                                                 <TextBlock Text="{Binding TotalRowDownload}"/>
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
                                                 <TextBlock Text="{StaticResource LANG_ACL_TotalNewlyData}"/>
                                                 <TextBlock Text="{Binding TotalNewlyData}"/>
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal">
+                                            <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
                                                 <TextBlock Text="{StaticResource LANG_ACL_TimeRun}"/>
                                                 <TextBlock Text="{Binding TimeRun}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Style="{StaticResource style_Error}">
+                                                <TextBlock Text="{StaticResource LANG_ACL_Error}"/>
+                                                <TextBlock Text="{Binding Message}"/>
                                             </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>

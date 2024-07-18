@@ -171,15 +171,15 @@
                 </StackPanel>
                 <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
                     <TextBlock Text="Model:" Padding="4,0" FontSize="10"/>
-                    <TextBlock Text="TFT1000" FontSize="10"/>
+                    <TextBlock Text="{Binding ProductName}" FontSize="10"/>
                 </StackPanel>
                 <StackPanel Grid.Column="2" Grid.Row="1" Orientation="Horizontal">
                     <TextBlock Text="Log Count:" Padding="4,0" FontSize="10"/>
-                    <TextBlock Text="144500" FontSize="10"/>
+                    <TextBlock Text="{Binding AllLogCount}" FontSize="10"/>
                 </StackPanel>
                 <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
                     <TextBlock Text="Platform:" Padding="4,0" FontSize="10"/>
-                    <TextBlock Text="ZKTeco" FontSize="10"/>
+                    <TextBlock Text="{Binding DeviceSDKTypeView}" FontSize="10"/>
                 </StackPanel>
 
             </Grid>

@@ -77,7 +77,16 @@
     <system:String x:Key="LANG_ACL_TotalRowDownload">Tổng dữ liệu:</system:String>
     <system:String x:Key="LANG_ACL_TotalNewlyData">Dữ liệu mới:</system:String>
     <system:String x:Key="LANG_ACL_TimeRun">Thời gian:</system:String>
+    <system:String x:Key="LANG_ACL_Error">Lỗi:</system:String>
     <system:String x:Key="LANG_SET_General">Cấu hình chung</system:String>
     <system:String x:Key="LANG_SET_ZKTeco">Cấu hình ZKTeco</system:String>
     <system:String x:Key="LANG_SET_Realand">Cấu hình Realand</system:String>
+    <system:String x:Key="LANG_SET_InOutEnumSetting">Cấu hình enum loại vào ra</system:String>
+    <system:String x:Key="LANG_SET_In">Vào</system:String>
+    <system:String x:Key="LANG_SET_Out">Ra</system:String>
+    <system:String x:Key="LANG_SET_Enum">Enum</system:String>
+    <system:String x:Key="Manual">Bằng tay</system:String>
+    <system:String x:Key="Schedule">Tự động</system:String>
+    <system:String x:Key="Success">Thành công</system:String>
+    <system:String x:Key="Error">Lỗi</system:String>
 </ResourceDictionary>

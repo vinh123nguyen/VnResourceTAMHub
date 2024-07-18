@@ -1,5 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using TAMHubApp.Commands;
+using TAMHubApp.Data;
+using TAMHubApp.Infrastructures.Helpers;
 using TAMHubApp.Models;
 using TAMHubApp.Services.TAMServices;
 
@@ -7,7 +9,9 @@ namespace TAMHubApp.ViewModels
 {
     public class ActionLogViewModel : BaseViewModel
     {
-        public ActionLogViewModel(SingletonTAMInstance singletonTAMInstance)
+        public ActionLogViewModel(SingletonTAMInstance singletonTAMInstance, 
+            MainViewModel mainViewModel,
+            IUnitOfWork unitOfWork)
         {
             CurrentPage = 1;
             TotalRow = 0;
@@ -16,6 +20,8 @@ namespace TAMHubApp.ViewModels
             PaginationForwardCommand = new RelayCommand<object>(x => { return CurrentPage != TotalPages && TotalPages != 0; }, x => { GetDataChangePaging(x, true); });
             SearchCommand = new RelayCommand<object>(x => { return true; }, x => { GetDataPaging(); });
             DeviceItems = singletonTAMInstance.TAMs;
+            _mainViewModel = mainViewModel;
+            _unitOfWork = unitOfWork;
         }
 
 
@@ -51,11 +57,20 @@ namespace TAMHubApp.ViewModels
             set => _deviceItems = value;
         }
 
+        private MainViewModel _mainViewModel;
+        private IUnitOfWork _unitOfWork;
+
         public ObservableCollection<BaseTAMService> SelectedDeviceItems
         {
             get => _selectedDeviceItems ?? (_selectedDeviceItems = new ObservableCollection<BaseTAMService>());
             set { _selectedDeviceItems = value; OnPropertyChanged(); }
         }
+
+        private DateTime? _dateFrom { get; set; }
+        public DateTime? DateFrom { get => _dateFrom; set { _dateFrom = value; OnPropertyChanged(); } }
+
+        private DateTime? _dateTo { get; set; }
+        public DateTime? DateTo { get => _dateTo; set { _dateTo = value; OnPropertyChanged(); } }
 
         #endregion
 
@@ -78,9 +93,47 @@ namespace TAMHubApp.ViewModels
             }
             GetDataPaging(false);
         }
-        public void GetDataPaging(bool setDefaultPaging = true)
+        public async void GetDataPaging(bool setDefaultPaging = true)
         {
+            _mainViewModel.IsLoading = true;
 
+            if (setDefaultPaging == true)
+            {
+                CurrentPage = 1;
+            }
+            var lstDeviceIdSelected = SelectedDeviceItems.Select(x => x.Id).ToList();
+            var lstQuery = await _unitOfWork.ActionLogRepository.GetAllAsync();
+            if (lstDeviceIdSelected.Any())
+            {
+                lstQuery = lstQuery.Where(x => x.DeviceID != null && lstDeviceIdSelected.Contains(x.DeviceID.Value));
+            }
+            if (DateFrom != null)
+            {
+                lstQuery = lstQuery.Where(x => x.TimeLogTo >= DateFrom);
+            }
+            if( DateTo != null)
+            {
+                lstQuery = lstQuery.Where(x => x.TimeLogFrom <= DateTo);
+            }
+            TotalRow = lstQuery.Count();
+            lstQuery = lstQuery.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
+            var lstData = lstQuery.Select(x => new ActionLogModel()
+            {
+                Id = x.Id,
+                TimeLog = $"{x.TimeLogFrom.ToString("dd/MM/yyyy HH:mm:ss")} - {x.TimeLogTo.ToString("dd/MM/yyyy HH:mm:ss")}",
+                DateDownData = $"{x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")} - {x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")}",
+                TAMName = x.Device.Name,
+                Status = x.Status,
+                StatusView = x.Status.TranslateString(),
+                TotalNewlyData = x.TotalNewlyData,
+                TotalRowDownload = x.TotalRowDownload,
+                Message = x.Message,
+                DownloadType = x.DownloadType.TranslateString(),
+                TimeRun = x.TimeRun == null ? null : x.TimeRun.ToString(),
+            }).ToList();
+
+            ListActionLogs = new ObservableCollection<ActionLogModel>(lstData);
+            _mainViewModel.IsLoading = false;
         }
 
     }

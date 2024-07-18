@@ -10,7 +10,7 @@
         public string DownloadType { get; set; }
         public Guid? DeviceID { get; set; }
         public string Status { get; set; }
-        public string Message { get; set; }
+        public string? Message { get; set; }
         public int? TotalRowDownload { get; set; }
         public int? TotalNewlyData { get; set; }
         public TimeSpan? TimeRun { get; set; }
