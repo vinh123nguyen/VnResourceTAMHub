@@ -1,11 +1,15 @@
 ﻿using System.Collections.ObjectModel;
 using TAMHubApp.Commands;
 using TAMHubApp.Data;
+using TAMHubApp.Infrastructures.Enums;
+using TAMHubApp.Infrastructures;
 using TAMHubApp.Models;
 using TAMHubApp.Services;
 using TAMHubApp.Services.TAMServices;
 using TAMHubApp.ViewModels.UserControls;
 using TAMHubApp.Views.UserControls;
+using TAMHubApp.Infrastructures.Helpers;
+using TAMHubApp.Views;
 
 namespace TAMHubApp.ViewModels
 {
@@ -17,7 +21,8 @@ namespace TAMHubApp.ViewModels
 
         public DataViewModel(IUnitOfWork unitOfWork
             ,MainViewModel mainViewModel
-            , IDataNavigationService dataNavigationService)
+            , IDataNavigationService dataNavigationService
+            , SingletonTAMInstance singletonTAMInstance)
         {
             _dataNavigationService = dataNavigationService;
             CurrentPage = 1;
@@ -30,8 +35,10 @@ namespace TAMHubApp.ViewModels
             SearchCommand = new RelayCommand<object>(x=> { return true; }, x => { GetDataPaging(); });
             DownloadDataCommand = new RelayCommand<object>(x => { return true; }, OpenDownloadDataPopupExcute);
             CloseOverlayPopupCommand = new RelayCommand<object>(x => { return true; }, CloseOverlayPopupExcute);
+            RemoveDataCommand = new RelayCommand<object>(x => { return true; }, RemoveDataCommandExcute);
+            Devices = singletonTAMInstance.TAMs;
 
-            InitData();
+            //InitData();
         }
 
         #region Command
@@ -41,6 +48,7 @@ namespace TAMHubApp.ViewModels
         public RelayCommand<object> SearchCommand { get; set; }
         public RelayCommand<object> DownloadDataCommand { get; set; }
         public RelayCommand<object> CloseOverlayPopupCommand { get; set; }
+        public RelayCommand<object> RemoveDataCommand { get; set; }
         #endregion
 
         #region Properties
@@ -81,6 +89,21 @@ namespace TAMHubApp.ViewModels
 
         private DateTime? _dateTo { get; set; }
         public DateTime? DateTo { get => _dateTo; set { _dateTo = value; OnPropertyChanged(); } }
+
+
+        private ObservableCollection<BaseTAMService> _devices;
+        private ObservableCollection<BaseTAMService> _selectedDevices;
+        public ObservableCollection<BaseTAMService> Devices
+        {
+            get => _devices ?? (_devices = new ObservableCollection<BaseTAMService>());
+            set { _devices = value; OnPropertyChanged(); }
+            }
+
+        public ObservableCollection<BaseTAMService> SelectedDevices
+        {
+            get => _selectedDevices ?? (_selectedDevices = new ObservableCollection<BaseTAMService>());
+            set { _selectedDevices = value; OnPropertyChanged(); }
+        }
 
         #endregion
 
@@ -141,7 +164,7 @@ namespace TAMHubApp.ViewModels
                         Id = x.Id,
                         DeviceID = x.DeviceID,
                         EnrollNumber = x.EnrollNumber,
-                        VerifyMode = x.VerifyMode,
+                        VerifyMode = x.VerifyModeView,
                         InOutModeView = x.InOutModeView,
                         TimeLog = x.TimeLog,
                         TimeLogView = x.TimeLog.ToString("dd/MM/yyyy HH:mm:ss"),
@@ -168,9 +191,10 @@ namespace TAMHubApp.ViewModels
                 {
                     lstlog = lstlog.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
                 }
-                if (!string.IsNullOrEmpty(TAMSelected.Key))
+                if(SelectedDevices != null && SelectedDevices.Any())
                 {
-                    lstlog = lstlog.Where(x => x.DeviceID.ToString() == TAMSelected.Key).ToList();
+                    var selectedId = SelectedDevices.Select(x => x.Id);
+                    lstlog = lstlog.Where(x => selectedId.Contains(x.Id)).ToList();
                 }
                 if(DateFrom != null)
                 {
@@ -201,6 +225,45 @@ namespace TAMHubApp.ViewModels
         private void CloseOverlayPopupExcute(object obj)
         {
             IsOverlayPopupOpen = false;
+        }
+        private void RemoveDataCommandExcute(object obj)
+        {
+            _mainViewModel.IsLoading = true;
+
+            Task.Run(async () =>
+            {
+
+                var lstQuery = await _unitOfWork.TAMScanLogRepository.GetAllAsync();
+
+                if (!string.IsNullOrEmpty(EnrollNumber))
+                {
+                    lstQuery = lstQuery.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                }
+                if (SelectedDevices != null && SelectedDevices.Any())
+                {
+                    var selectedId = SelectedDevices.Select(x => x.Id);
+                    lstQuery = lstQuery.Where(x => selectedId.Contains(x.Id)).ToList();
+                }
+                if (DateFrom != null)
+                {
+                    lstQuery = lstQuery.Where(x => x.TimeLog >= DateFrom.Value).ToList();
+                }
+                if (DateTo != null)
+                {
+                    lstQuery = lstQuery.Where(x => x.TimeLog <= DateTo.Value).ToList();
+                }
+
+                _unitOfWork.TAMScanLogRepository.RemoveRange(lstQuery);
+
+                await _unitOfWork.SaveChanageAsync();
+
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainViewModel.IsLoading = false;
+                    _mainViewModel.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DAT_DeleteData.TranslateString(), lstQuery.Count()), ToastNotifyType.Success);
+                });
+                GetDataPaging();
+            });
         }
 
     }

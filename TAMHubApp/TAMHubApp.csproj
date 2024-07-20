@@ -68,6 +68,11 @@
 		<Resource Include="Resources\Images\image_Schedule.png" />
 		<Resource Include="Resources\Images\image_Setting.png" />
 		<Resource Include="Resources\Images\image_Tamdevice.png" />
+		<Resource Include="Resources\Images\image-noon.png" />
+		<Resource Include="Resources\Images\image-morning.png" />
+		<Resource Include="Resources\Images\image-afternoon.png" />
+		<Resource Include="Resources\Images\image-night.png" />
+		<Resource Include="Resources\Images\image-midnight.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<Resource Include="Resources\Images\windowicon.png" />
@@ -89,12 +94,6 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
-
-	<!--<ItemGroup>
-	    <None Update="Resources\Images\*">
-		    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	    </None>
-    </ItemGroup>-->
 
   <ItemGroup>
     <None Update="Properties\Settings.settings">

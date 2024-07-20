@@ -28,6 +28,11 @@
     <system:String x:Key="LANG_GLO_Save">Lưu</system:String>
     <system:String x:Key="E_ZKTECO">ZKTeco</system:String>
     <system:String x:Key="E_REALAND">Realand</system:String>
+    <system:String x:Key="LANG_GLO_GoodMorning">Chào buổi sáng!</system:String>
+    <system:String x:Key="LANG_GLO_GoodNoon">Chào buổi trưa!</system:String>
+    <system:String x:Key="LANG_GLO_GoodAfternoon">Chào buổi chiều!</system:String>
+    <system:String x:Key="LANG_GLO_GoodNight">Chào buổi tối!</system:String>
+    <system:String x:Key="LANG_GLO_GoodMidNight">Chúc ngủ ngon!</system:String>
     <system:String x:Key="LANG_GLO_ActionSuccess">Thao tác thành công!</system:String>
     <system:String x:Key="LANG_GLO_CanNotBeBlank">không thể bỏ trống!</system:String>
     <system:String x:Key="LANG_GLO_NotMatchDataType">không đúng định dạng!</system:String>
@@ -58,6 +63,7 @@
     <system:String x:Key="LANG_CYCLE_Daily">Hàng ngày</system:String>
     <system:String x:Key="LANG_CYCLE_Weekly">Hàng tuần</system:String>
     <system:String x:Key="LANG_CYCLE_Monthly">Hàng tháng</system:String>
+    <system:String x:Key="LANG_GLO_Month">Tháng</system:String>
     <system:String x:Key="LANG_GLO_Monday">Thứ 2</system:String>
     <system:String x:Key="LANG_GLO_Tuesday">Thứ 3</system:String>
     <system:String x:Key="LANG_GLO_Wednesday">Thứ 4</system:String>
@@ -90,10 +96,13 @@
     <system:String x:Key="LANG_SET_UserID">User ID</system:String>
     <system:String x:Key="LANG_SET_Pwd">Password</system:String>
     <system:String x:Key="LANG_SET_API">API Address</system:String>
+    <system:String x:Key="LANG_SET_MinScheduleDateStart">Ngày lấy dữ liệu tối thiểu</system:String>
+    <system:String x:Key="LANG_SET_MaxRowNumPerRequest">Số dữ liệu tối đa trên request</system:String>
     <system:String x:Key="Manual">Bằng tay</system:String>
     <system:String x:Key="Schedule">Tự động</system:String>
     <system:String x:Key="Success">Thành công</system:String>
     <system:String x:Key="Error">Lỗi</system:String>
     <system:String x:Key="LANG_GLO_DeviceDownloadError">Máy: {0} tải không thành công</system:String>
     <system:String x:Key="LANG_GLO_DeviceDownloadSuccess">Máy: {0} tải thành công</system:String>
+    <system:String x:Key="LANG_DAT_DeleteData">Xóa {0} dòng thành công!</system:String>
 </ResourceDictionary>

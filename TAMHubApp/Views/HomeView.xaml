@@ -40,7 +40,42 @@
         </Grid.RowDefinitions>
 
         <Grid>
-            
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+            <Border Width="Auto" Style="{StaticResource style_BorderGroup}" Margin="8,8,8,8">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="8"
+                        Color="#877b77"
+                        Opacity="30"
+                        ShadowDepth="0"
+                        Direction="0" />    
+                </Border.Effect>
+                <Grid Width="Auto">
+                    <Grid.RowDefinitions>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition/>
+                        <ColumnDefinition/>
+                    </Grid.ColumnDefinitions>
+
+                    <Image Margin="8" Grid.Column="0" Width="80" Height="80" Source="{Binding ImagePath}" />
+
+                    <Grid Grid.Column="1" Margin="16">
+                        <Grid.RowDefinitions>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                            <RowDefinition/>
+                        </Grid.RowDefinitions>
+                        <TextBlock Grid.Row="0" FontSize="10" Text="{Binding GreetingMessage}"/>
+                        <TextBlock Grid.Row="1" Foreground="Gray" FontSize="10" Text="{Binding CurrentDateView}"/>
+                        <TextBlock Grid.Row="2" FontWeight="SemiBold" FontSize="24" Text="{Binding CurrentTime}"/>
+                    </Grid>
+
+
+                </Grid>
+            </Border>
         </Grid>
 
         <StackPanel Grid.Row="1" Orientation="Horizontal">

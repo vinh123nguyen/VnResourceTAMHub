@@ -82,16 +82,22 @@ namespace TAMHubApp.ViewModels
         public MainViewModel(ITabNavigationService navigationService)
         {
             ToastColor = Brushes.LightGreen;
-            TabActive = "HomeView";
             _navigationService = navigationService;
-            //MainViewNavigate.NavigateTo<HomeViewModel>();
+            //TabActive = "HomeView";
 
-            NavigateHomeCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "HomeView"; }, x => { MainViewNavigate.NavigateTo<HomeViewModel>(); TabActive = "HomeView"; });
-            NavigateDeviceCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DeviceView"; }, x => { MainViewNavigate.NavigateTo<DeviceViewModel>(); TabActive = "DeviceView"; });
-            NavigateDataCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DataView"; }, x => { MainViewNavigate.NavigateTo<DataViewModel>(); TabActive = "DataView"; });
-            NavigateScheduleCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ScheduleView"; }, x => { MainViewNavigate.NavigateTo<ScheduleViewModel>(); TabActive = "ScheduleView"; });
-            NavigateSettingCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "SettingView"; }, x => { MainViewNavigate.NavigateTo<SettingViewModel>(); TabActive = "SettingView"; });
-            NavigateActionLogCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ActionLogView"; }, x => { MainViewNavigate.NavigateTo<ActionLogViewModel>(); TabActive = "ActionLogView"; });
+
+
+            NavigateHomeCommand = new RelayCommand<BaseViewModel>(x => { return true; }, x => { MainViewNavigate.NavigateTo<HomeViewModel>(); TabActive = "HomeView"; });
+            //NavigateDeviceCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DeviceView"; }, x => { MainViewNavigate.NavigateTo<DeviceViewModel>(); TabActive = "DeviceView"; });
+            //NavigateDataCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DataView"; }, x => { MainViewNavigate.NavigateTo<DataViewModel>(); TabActive = "DataView"; });
+            //NavigateScheduleCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ScheduleView"; }, x => { MainViewNavigate.NavigateTo<ScheduleViewModel>(); TabActive = "ScheduleView"; });
+            //NavigateSettingCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "SettingView"; }, x => { MainViewNavigate.NavigateTo<SettingViewModel>(); TabActive = "SettingView"; });
+            //NavigateActionLogCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ActionLogView"; }, x => { MainViewNavigate.NavigateTo<ActionLogViewModel>(); TabActive = "ActionLogView"; });
+
+            Task.Run(() =>
+            {
+                MainViewNavigate.NavigateTo<HomeViewModel>();
+            });
         }
 
 

@@ -90,7 +90,7 @@ namespace TAMHubApp.ViewModels.UserControls
                         var result = false;
                         if (isGetAll)
                         {
-                            result = await service.Action_GetAllData(device);
+                            //result = await service.Action_GetAllData(device);
                         }
                         else
                         {

@@ -152,7 +152,7 @@
             </Grid>
             <Grid Grid.Row="2" Margin="8">
                 <uc:ButtonUC Visibility="{Binding Id, Converter={StaticResource StringEmptyToVisibilityConverter}}"
-                    HorizontalAlignment="Left" Width="Auto" 
+                            HorizontalAlignment="Left" Width="Auto" 
                              FontSize="10" Title="{StaticResource LANG_GLO_Remove}" 
                              Icon="{StaticResource Icon_Trash}" 
                              IconBackground="#FF3C3C" 

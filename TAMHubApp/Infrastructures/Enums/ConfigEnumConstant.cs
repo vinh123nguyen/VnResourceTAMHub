@@ -22,6 +22,8 @@
         SYNC_DB_PWD,
 
         SYNC_DB_APIADDRESS,
+        SYNC_MAX_DATAROW_PER_REQUEST,
 
+        SYNC_MIN_SCHEDULE_DATESTART,
     }
 }

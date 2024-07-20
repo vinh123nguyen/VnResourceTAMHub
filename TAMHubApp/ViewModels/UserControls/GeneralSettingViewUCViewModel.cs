@@ -1,4 +1,5 @@
-﻿using System.Windows.Input;
+﻿using System.Globalization;
+using System.Windows.Input;
 using TAMHubApp.Commands;
 using TAMHubApp.Data;
 using TAMHubApp.Data.Entities;
@@ -45,7 +46,26 @@ namespace TAMHubApp.ViewModels.UserControls
         private string _apiAdress { get; set; }
         public string ApiAddress { get => _apiAdress; set { _apiAdress = value; OnPropertyChanged(); } }
 
-        
+        private DateTime? _minScheduleDateStart { get; set; }
+        public DateTime? MinScheduleDateStart { get => _minScheduleDateStart; set { _minScheduleDateStart = value; OnPropertyChanged(); } }
+
+        private string _maxRowNumPerRequest { get; set; }
+        public string MaxRowNumPerRequest 
+        { 
+            get => _maxRowNumPerRequest; 
+            set 
+            { 
+                if(int.TryParse(value, out int num))
+                {
+                    _maxRowNumPerRequest = num.ToString();
+                }
+                else
+                {
+                    _maxRowNumPerRequest = "";
+                }
+                OnPropertyChanged(); 
+            } 
+        }
 
         public ICommand SaveConfigCommand { get; set; }
 
@@ -59,6 +79,8 @@ namespace TAMHubApp.ViewModels.UserControls
             var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
             var synctype = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
             var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString());
+            var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MAX_DATAROW_PER_REQUEST.ToString());
+            var mindatestart = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
 
             if (synctype != null)
             {
@@ -72,6 +94,15 @@ namespace TAMHubApp.ViewModels.UserControls
                     IsSyncDb = false;
                     IsSyncApi = true;
                 }
+            }
+            if (mindatestart != null)
+            {
+                MinScheduleDateStart = string.IsNullOrEmpty(mindatestart.Value) ? null : DateTime.TryParseExact(mindatestart.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateout) ? dateout : null;
+            }
+
+            if (maxdatarow != null)
+            {
+                MaxRowNumPerRequest = maxdatarow.Value;
             }
 
             if (servercf != null)
@@ -108,9 +139,38 @@ namespace TAMHubApp.ViewModels.UserControls
             var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
             var synctype = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
             var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString());
+            var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MAX_DATAROW_PER_REQUEST.ToString());
+            var mindatestart = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
 
-            var IsSyncDbdw = IsSyncDb;
-            var dwdf = IsSyncApi;
+            if (maxdatarow != null)
+            {
+                maxdatarow.Value = MaxRowNumPerRequest;
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.SYNC_MAX_DATAROW_PER_REQUEST.ToString(),
+                    Value = MaxRowNumPerRequest
+                };
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
+            if (mindatestart != null)
+            {
+                mindatestart.Value = MinScheduleDateStart == null ? null : MinScheduleDateStart.Value.ToString("dd/MM/yyyy");
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString(),
+                    Value = MinScheduleDateStart == null ? null : MinScheduleDateStart.Value.ToString("dd/MM/yyyy")
+                };
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
+
             if (synctype != null)
             {
                 if (IsSyncDb)

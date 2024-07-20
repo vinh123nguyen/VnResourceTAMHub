@@ -22,5 +22,12 @@
         public const string LANG_GLO_ActionSuccess = "LANG_GLO_ActionSuccess";
         public const string LANG_GLO_DeviceDownloadSuccess = "LANG_GLO_DeviceDownloadSuccess";
         public const string LANG_GLO_DeviceDownloadError = "LANG_GLO_DeviceDownloadError";
+        public const string LANG_DAT_DeleteData = "LANG_DAT_DeleteData";
+        public const string LANG_GLO_Month = "LANG_GLO_Month";
+        public const string LANG_GLO_GoodMorning = "LANG_GLO_GoodMorning";
+        public const string LANG_GLO_GoodNoon = "LANG_GLO_GoodNoon";
+        public const string LANG_GLO_GoodAfternoon = "LANG_GLO_GoodAfternoon";
+        public const string LANG_GLO_GoodNight = "LANG_GLO_GoodNight";
+        public const string LANG_GLO_GoodMidNight = "LANG_GLO_GoodMidNight";
     }
 }

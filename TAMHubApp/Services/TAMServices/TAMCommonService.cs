@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Riss.Devices;
+using Serilog;
 using System.Data.SqlClient;
 using TAMHubApp.Data;
 using TAMHubApp.Data.Entities;
@@ -248,7 +249,8 @@ namespace TAMHubApp.Services.TAMServices
                                     Id = Guid.NewGuid(),
                                     DeviceID = device.Id,
                                     EnrollNumber = int.Parse(enrollNumber),
-                                    VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                    VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                    VerifyModeOrigin = tVerifyMode,
                                     InOutModeOrigin = tInOutMode,
                                     InOutModeView = enumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                     TimeLog = new DateTime(year, month, day, hour, minute, second),
@@ -269,7 +271,8 @@ namespace TAMHubApp.Services.TAMServices
                                     Id = Guid.NewGuid(),
                                     DeviceID = device.Id,
                                     EnrollNumber = enrollNumber,
-                                    VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                    VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                    VerifyModeOrigin = tVerifyMode,
                                     InOutModeOrigin = tInOutMode,
                                     InOutModeView = enumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                     TimeLog = new DateTime(year, month, day, hour, minute, second),
@@ -282,7 +285,8 @@ namespace TAMHubApp.Services.TAMServices
                 else if (device.DeviceSDKType == TAMSDKTypes.E_REALAND)
                 {
                     var rissdevice = (RealandDeviceItem)device;
-
+                    await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
+                    var settingenumconvert = GlobalEnumInOutConverter.RealandEnumConverter;
                     List<DateTime> dtList = new List<DateTime>(); 
                     dtList.Add(DateTime.MinValue); 
                     dtList.Add(DateTime.MaxValue);
@@ -310,9 +314,10 @@ namespace TAMHubApp.Services.TAMServices
                                 Id = Guid.NewGuid(),
                                 DeviceID = device.Id,
                                 EnrollNumber = (int)x.DIN,
-                                VerifyMode = GlobalUtilities.VerifyType(x.Action),
+                                VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                VerifyModeOrigin = x.Action,
                                 InOutModeOrigin = x.Verify,
-                                //InOutModeView = 
+                                InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
                                 TimeLog = x.Clock
                             }).ToList();
                         }
@@ -401,6 +406,7 @@ namespace TAMHubApp.Services.TAMServices
                 if (device.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
                 {
                     var zkdevice = (ZKTecoDeviceItem)device;
+                    await GlobalEnumInOutConverter.InitUpdateEnumConverter("ZKTeco");
                     var settingenumconvert = GlobalEnumInOutConverter.ZKEnumConverter;
                     if (zkdevice.ZKTeco_IsCanGetLogByTime && zkdevice.ZKTeco_IsNewFirmwareMachine)
                     {
@@ -419,7 +425,8 @@ namespace TAMHubApp.Services.TAMServices
                                         Id = Guid.NewGuid(),
                                         DeviceID = device.Id,
                                         EnrollNumber = int.Parse(enrollNumber),
-                                        VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                        VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                        VerifyModeOrigin = tVerifyMode,
                                         InOutModeOrigin = tInOutMode,
                                         InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
@@ -440,7 +447,8 @@ namespace TAMHubApp.Services.TAMServices
                                         Id = Guid.NewGuid(),
                                         DeviceID = device.Id,
                                         EnrollNumber = enrollNumber,
-                                        VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                        VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                        VerifyModeOrigin = tVerifyMode,
                                         InOutModeOrigin = tInOutMode,
                                         InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
@@ -468,7 +476,8 @@ namespace TAMHubApp.Services.TAMServices
                                         Id = Guid.NewGuid(),
                                         DeviceID = device.Id,
                                         EnrollNumber = int.Parse(enrollNumber),
-                                        VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                        VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                        VerifyModeOrigin = tVerifyMode,
                                         InOutModeOrigin = tInOutMode,
                                         InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
@@ -488,7 +497,8 @@ namespace TAMHubApp.Services.TAMServices
                                         Id = Guid.NewGuid(),
                                         DeviceID = device.Id,
                                         EnrollNumber = enrollNumber,
-                                        VerifyMode = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                        VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                        VerifyModeOrigin = tVerifyMode,
                                         InOutModeOrigin = tInOutMode,
                                         InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
@@ -503,7 +513,7 @@ namespace TAMHubApp.Services.TAMServices
                 else if (device.DeviceSDKType == TAMSDKTypes.E_REALAND)
                 {
                     var rissdevice = (RealandDeviceItem)device;
-
+                    await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
                     var settingenumconvert = GlobalEnumInOutConverter.RealandEnumConverter;
 
                     List<DateTime> dtList = new List<DateTime>();
@@ -536,7 +546,8 @@ namespace TAMHubApp.Services.TAMServices
                                     Id = Guid.NewGuid(),
                                     DeviceID = device.Id,
                                     EnrollNumber = (int)x.DIN,
-                                    VerifyMode = GlobalUtilities.VerifyType(x.Action),
+                                    VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                    VerifyModeOrigin = x.Action,
                                     InOutModeOrigin = x.Verify,
                                     InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
                                     TimeLog = x.Clock
@@ -560,7 +571,8 @@ namespace TAMHubApp.Services.TAMServices
                                     Id = Guid.NewGuid(),
                                     DeviceID = device.Id,
                                     EnrollNumber = (int)x.DIN,
-                                    VerifyMode = GlobalUtilities.VerifyType(x.Action),
+                                    VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                    VerifyModeOrigin = x.Action,
                                     InOutModeOrigin = x.Verify,
                                     InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
                                     TimeLog = x.Clock
@@ -609,7 +621,7 @@ namespace TAMHubApp.Services.TAMServices
                     actionLog.TimeLogTo = DateTime.Now;
 
                     actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
-
+                    await _unitOfWork.SaveChanageAsync();
                     if (synctype != null && synctype.Value == "DB")
                     {
                         await SyncDataToDb(dbDevice, actionLog, datefrom, dateend);
@@ -679,6 +691,7 @@ namespace TAMHubApp.Services.TAMServices
                     if (!rescon)
                         return false;
                 }
+                await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
                 var settingenumconvert = GlobalEnumInOutConverter.RealandEnumConverter;
                 var dbDevice = await _unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
 
@@ -712,7 +725,8 @@ namespace TAMHubApp.Services.TAMServices
                                 Id = Guid.NewGuid(),
                                 DeviceID = device.Id,
                                 EnrollNumber = (int)x.DIN,
-                                VerifyMode = GlobalUtilities.VerifyType(x.Action),
+                                VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                VerifyModeOrigin = x.Action,
                                 InOutModeOrigin = x.Verify,
                                 InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
                                 TimeLog = x.Clock
@@ -796,6 +810,8 @@ namespace TAMHubApp.Services.TAMServices
 
                     string connectionString = DbCStringBuilder.ToString();
 
+                    Log.Information("Connection string: " + connectionString);
+
                     var strDateStart = datefrom.ToString("yyyy-MM-dd HH:mm:ss.fff");
                     var strDateEnd = dateend.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
@@ -825,6 +841,8 @@ namespace TAMHubApp.Services.TAMServices
                         }
                     }
 
+                    Log.Information("listDataAlready count: " + listDataAlready.Count);
+
                     using (var sqlConnection = new SqlConnection(connectionString))
                     {
                         sqlConnection.Open();
@@ -844,6 +862,8 @@ namespace TAMHubApp.Services.TAMServices
                         }
                     }
 
+                    Log.Information("ListUserIF count: " + ListUserIF.Count);
+
                     if (!ListUserIF.Any())
                     {
                         log.Status = "Error";
@@ -853,6 +873,8 @@ namespace TAMHubApp.Services.TAMServices
 
                     var lstAdd = new List<CHECKINOUTModel>();
 
+                    Log.Information("listData join count: " + listData.Count());
+
                     var ds = from d in listData
                              join u in ListUserIF on d.EnrollNumber.ToString() equals u.BADGENUMBER
                              select new CHECKINOUTModel
@@ -860,7 +882,7 @@ namespace TAMHubApp.Services.TAMServices
                                  USERID = u.USERID,
                                  CHECKTIME = d.TimeLog,
                                  CHECKTYPE = d.InOutModeView,
-                                 VERIFYCODE = int.TryParse(d.VerifyMode, out int verifycode) ? verifycode : 0 ,
+                                 VERIFYCODE = d.VerifyModeOrigin ,
                                  SENSORID = d.Device.MachineNo.ToString(),
                                  Memoinfo = null,
                                  WorkCode = 0,
@@ -868,6 +890,9 @@ namespace TAMHubApp.Services.TAMServices
                                  UserExtFmt = 1,
                                  BADGENUMBER = u.BADGENUMBER,
                              };
+
+                    Log.Information("data after join count: " + ds.Count());
+
                     using (var sqlConnection = new SqlConnection(connectionString))
                     {
                         sqlConnection.Open();
@@ -886,6 +911,7 @@ namespace TAMHubApp.Services.TAMServices
                             cm3.Dispose();
                             count++;
                         }
+                        Log.Information("new data count: " + count);
                         log.Status = "Success";
                         log.TotalNewlyData = count;
                     }

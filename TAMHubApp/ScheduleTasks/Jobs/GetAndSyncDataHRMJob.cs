@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Quartz;
+using System.Globalization;
 using TAMHubApp.Data;
+using TAMHubApp.Infrastructures.Enums;
 using TAMHubApp.Services;
 using TAMHubApp.Services.TAMServices;
 
@@ -22,7 +24,13 @@ namespace TAMHubApp.ScheduleTasks.Jobs
                 await Task.Run(async () =>
                 {
                     var datestart = DateTime.MinValue;
-
+                    var configmindate = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
+                    if(configmindate != null && !string.IsNullOrEmpty(configmindate.Value))
+                    {
+                        DateTime? dateconfig = DateTime.TryParseExact(configmindate.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateout) ? dateout : null;
+                        if(dateconfig != null)
+                            datestart = dateconfig.Value;
+                    }
                     var lastrecord = (await unitOfWork.TAMScanLogRepository.FindListAsync(x => x.DeviceID == device.Id)).ToList().OrderByDescending(x => x.TimeLog).FirstOrDefault();
 
                     if (lastrecord != null)

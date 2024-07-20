@@ -11,7 +11,7 @@ using TAMHubApp.Data;
 namespace TAMHubApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240718165631_init")]
+    [Migration("20240719204822_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -88,25 +88,25 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("c019d3a8-d6da-413f-86e6-61e8770b15d4"),
+                            Id = new Guid("d72a4a40-3922-44fd-9beb-3d96f11a7d9e"),
                             Name = "ENUM_INOUT_ZKTECO_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("e76a4860-56f8-481e-9a4f-b4d6b7a7b85e"),
+                            Id = new Guid("31b437b6-7537-4fe6-ad5b-23225f685e04"),
                             Name = "ENUM_INOUT_ZKTECO_OUT_KEY",
                             Value = "E_OUT"
                         },
                         new
                         {
-                            Id = new Guid("80b86ddd-44fa-4ca2-81f8-1610a4c4fddb"),
+                            Id = new Guid("6e1358d0-549d-4034-b963-b6d3282a7e20"),
                             Name = "ENUM_INOUT_REALAND_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("701e72d9-32d4-44eb-bb8d-3e0012dd9741"),
+                            Id = new Guid("fe39052b-c78f-4f44-97e3-8108435c0dd9"),
                             Name = "ENUM_INOUT_REALAND_OUT_KEY",
                             Value = "E_OUT"
                         });
@@ -225,7 +225,10 @@ namespace TAMHubApp.Migrations
                     b.Property<DateTime>("TimeLog")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("VerifyMode")
+                    b.Property<int>("VerifyModeOrigin")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("VerifyModeView")
                         .IsRequired()
                         .HasColumnType("TEXT");
 

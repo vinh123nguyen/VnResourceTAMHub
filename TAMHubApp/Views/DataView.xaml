@@ -6,11 +6,16 @@
              xmlns:local="clr-namespace:TAMHubApp.Views"
              xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
              mc:Ignorable="d" 
+             xmlns:sdl="http://schemas.sdl.com/xaml"
              xmlns:converter="clr-namespace:TAMHubApp.Converters"
              d:DesignHeight="450" d:DesignWidth="800">
     <UserControl.Resources>
         <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
-        
+
+        <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate" DataType="models:LanguageItem">
+            <TextBlock Grid.Column="1" Text="{Binding Path=Name}"/>
+        </DataTemplate>
+
         <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF"/>
         <SolidColorBrush x:Key="OptionMark.Static.Border" Color="#FF707070"/>
         <SolidColorBrush x:Key="OptionMark.Static.Glyph" Color="#FF212121"/>
@@ -288,7 +293,7 @@
                         <TextBox Grid.Column="1" Grid.Row="0" Height="26" Margin="4" Text="{Binding EnrollNumber}"/>
 
                         <TextBlock Grid.Column="2" Grid.Row="0" FontSize="16" Text="{StaticResource LANG_DAT_TAMDevice}" VerticalAlignment="Center"/>
-                        <ComboBox Grid.Column="3" Grid.Row="0"
+                        <!--<ComboBox Grid.Column="3" Grid.Row="0"
                             Height="26" 
                             Margin="4"
                             ItemsSource="{Binding ListOptionsTAMs}" 
@@ -298,21 +303,35 @@
                                     <TextBlock Text="{Binding Name}"/>
                                 </DataTemplate>
                             </ComboBox.ItemTemplate>
-                        </ComboBox>
+                        </ComboBox>-->
+
+                        <sdl:MultiSelectComboBox
+                            Grid.Column="3" Grid.Row="0"
+                            VerticalAlignment="Center"
+                            SelectedItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"
+                            DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"           
+                            Margin="4" Height="Auto"
+                            SelectionMode="Multiple"
+                            ItemsSource="{Binding Devices}" 
+                            SelectedItems="{Binding SelectedDevices}"
+                            EnableFiltering="False"
+                            MaxDropDownHeight="300"
+                            EnableAutoComplete="False"
+                            />
 
                         <TextBlock Grid.Column="0" Grid.Row="1" FontSize="16" 
-                       Text="{StaticResource LANG_DAT_DateFrom}" VerticalAlignment="Center"/>
+                            Text="{StaticResource LANG_DAT_DateFrom}" VerticalAlignment="Center"/>
                         <DatePicker Grid.Column="1" Grid.Row="1" Height="26" 
-                        Margin="4" Background="White" 
-                        SelectedDate="{Binding DateFrom}"/>
+                            Margin="4" Background="White" 
+                            SelectedDate="{Binding DateFrom}"/>
                         <TextBlock Grid.Column="2" Grid.Row="1" FontSize="16" 
-                       Text="{StaticResource LANG_DAT_DateTo}" VerticalAlignment="Center"/>
+                            Text="{StaticResource LANG_DAT_DateTo}" VerticalAlignment="Center"/>
                         <DatePicker Grid.Column="3" Grid.Row="1" Height="26" Margin="4" Background="White" 
-                        SelectedDate="{Binding DateTo}"/>
+                            SelectedDate="{Binding DateTo}"/>
 
-                        <CheckBox Grid.Column="4" Grid.Row="0" Style="{StaticResource style_getNewData}"
-                Content="{StaticResource LANG_DAT_AlreadySyncData}"
-                IsChecked="{Binding IsAlreadySyncData, Mode=TwoWay}"/>
+                        <!--<CheckBox Grid.Column="4" Grid.Row="0" Style="{StaticResource style_getNewData}"
+                            Content="{StaticResource LANG_DAT_AlreadySyncData}"
+                            IsChecked="{Binding IsAlreadySyncData, Mode=TwoWay}"/>-->
 
                     </Grid>
                 </Grid>
@@ -321,6 +340,7 @@
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition Width="Auto"/>
                         <ColumnDefinition/>
+                        <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
                     <uc:ButtonUC
                         Grid.Column="0"
@@ -341,6 +361,15 @@
                         IconBackground="#0066FF"
                         TextFontSize="16"
                         Margin="0,0"
+                        />
+                    <uc:ButtonUC
+                        Grid.Column="3" 
+                        TextFontSize="16"
+                        Title="{StaticResource LANG_GLO_Remove}" 
+                        Icon="{StaticResource Icon_Trash}" 
+                        IconBackground="#FF3C3C" 
+                        ButtonBackground="#FFB5B9"
+                        ClickCommand="{Binding RemoveDataCommand}"
                         />
                 </Grid>
             </Grid>

@@ -36,7 +36,7 @@
                     
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto">
 
-                        <uc:NavigationButtonUC
+                        <!--<uc:NavigationButtonUC
                             Icon="{DynamicResource Icon_Home}"
                             Title="{DynamicResource LANG_NAV_Home}"
                             NavigateCommand="{Binding NavigateHomeCommand}"
@@ -76,7 +76,7 @@
                             NavigateCommand="{Binding NavigateSettingCommand}"
                             TabActive="{Binding TabActive}"
                             NameTab="SettingView"
-                            />
+                            />-->
 
                     </StackPanel>
 

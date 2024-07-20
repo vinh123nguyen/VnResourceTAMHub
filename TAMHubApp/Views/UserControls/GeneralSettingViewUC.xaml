@@ -16,6 +16,7 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
 
@@ -27,10 +28,18 @@
             ButtonBackground="#B6FFB5" Padding="1"
             ClickCommand="{Binding SaveConfigCommand}"/>
 
-        <RadioButton IsChecked="{Binding IsSyncDb}" GroupName="SyncType" Grid.Row="1" Margin="4" Content="Đồng bộ qua DB"/>
-        <RadioButton IsChecked="{Binding IsSyncApi}" GroupName="SyncType" Grid.Row="1" Margin="4" Grid.Column="1" Content="Đồng bộ qua API"/>
 
-        <Grid Grid.Row="2" Grid.Column="0">
+        <StackPanel Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Orientation="Horizontal">
+            <TextBlock FontSize="16" Margin="4" Text="{StaticResource LANG_SET_MinScheduleDateStart}"/>
+            <DatePicker Grid.Column="2" Height="26" Width="200"
+                Margin="4" Background="White" 
+                SelectedDate="{Binding MinScheduleDateStart}"/>
+        </StackPanel>
+
+        <RadioButton IsChecked="{Binding IsSyncDb}" GroupName="SyncType" Grid.Row="2" Margin="4" Content="Đồng bộ qua DB"/>
+        <RadioButton IsChecked="{Binding IsSyncApi}" GroupName="SyncType" Grid.Row="2" Margin="4" Grid.Column="1" Content="Đồng bộ qua API"/>
+
+        <Grid Grid.Row="3" Grid.Column="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
@@ -56,10 +65,9 @@
 
         </Grid>
 
-        <Grid Grid.Row="2" Grid.Column="1">
+        <Grid Grid.Row="3" Grid.Column="1">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
@@ -70,8 +78,16 @@
                 <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
-            <TextBlock FontSize="16" Margin="4" Grid.Row="0" Grid.Column="1" Text="{StaticResource LANG_SET_API}"/>
-            <TextBox Text="{Binding ApiAddress}" Margin="4" Width="280" Grid.Row="0" Grid.Column="2" />
+
+            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal">
+                <TextBlock FontSize="16" Margin="4"  Text="{StaticResource LANG_SET_API}"/>
+                <TextBox Text="{Binding ApiAddress}" Margin="4" Width="280" />
+            </StackPanel>
+
+            <StackPanel Grid.Row="1" Grid.Column="1" Orientation="Horizontal">
+                <TextBlock FontSize="16" Margin="4" Text="{StaticResource LANG_SET_MaxRowNumPerRequest}"/>
+                <TextBox Text="{Binding MaxRowNumPerRequest}" Margin="4" Width="50" />
+            </StackPanel>
 
 
         </Grid>
