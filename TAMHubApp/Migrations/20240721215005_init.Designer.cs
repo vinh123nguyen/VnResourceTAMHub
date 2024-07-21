@@ -11,7 +11,7 @@ using TAMHubApp.Data;
 namespace TAMHubApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240719204822_init")]
+    [Migration("20240721215005_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -55,6 +55,9 @@ namespace TAMHubApp.Migrations
                     b.Property<TimeSpan?>("TimeRun")
                         .HasColumnType("TEXT");
 
+                    b.Property<int?>("TotalDataAdded")
+                        .HasColumnType("INTEGER");
+
                     b.Property<int?>("TotalNewlyData")
                         .HasColumnType("INTEGER");
 
@@ -88,25 +91,25 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("d72a4a40-3922-44fd-9beb-3d96f11a7d9e"),
+                            Id = new Guid("a4a6b619-dd5d-414e-b2b6-af8792bd4a28"),
                             Name = "ENUM_INOUT_ZKTECO_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("31b437b6-7537-4fe6-ad5b-23225f685e04"),
+                            Id = new Guid("94cfc8cb-decc-424e-b5c2-c7ffd9c790e9"),
                             Name = "ENUM_INOUT_ZKTECO_OUT_KEY",
                             Value = "E_OUT"
                         },
                         new
                         {
-                            Id = new Guid("6e1358d0-549d-4034-b963-b6d3282a7e20"),
+                            Id = new Guid("6917bbe7-b2b2-4fa5-815d-302dfdd9d552"),
                             Name = "ENUM_INOUT_REALAND_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("fe39052b-c78f-4f44-97e3-8108435c0dd9"),
+                            Id = new Guid("8688d515-f63a-43f9-824c-665eac4d7c52"),
                             Name = "ENUM_INOUT_REALAND_OUT_KEY",
                             Value = "E_OUT"
                         });

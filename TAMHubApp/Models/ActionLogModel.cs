@@ -10,6 +10,7 @@
         public string Status { get; set; }
         public string DownloadType { get; set; }
         public int? TotalRowDownload { get; set; }
+        public int? TotalDataAdded { get; set; }
         public int? TotalNewlyData { get; set; }
         public string? TimeRun { get; set; }
         public string? Message { get; set; }

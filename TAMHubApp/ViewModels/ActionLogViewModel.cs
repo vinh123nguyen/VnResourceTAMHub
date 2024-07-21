@@ -127,6 +127,7 @@ namespace TAMHubApp.ViewModels
                 Status = x.Status,
                 StatusView = x.Status.TranslateString(),
                 TotalNewlyData = x.TotalNewlyData,
+                TotalDataAdded = x.TotalDataAdded,
                 TotalRowDownload = x.TotalRowDownload,
                 Message = x.Message,
                 DownloadType = x.DownloadType.TranslateString(),

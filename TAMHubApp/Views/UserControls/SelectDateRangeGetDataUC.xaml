@@ -113,12 +113,21 @@
             </Grid>
             <Grid Grid.Row="2">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <uc:ButtonUC
-                    Grid.Column="1"
+                    Grid.Column="0"
+                    IconBackground="#1BBB48" 
+                    ButtonBackground="#B6FFB5" Padding="8"
+                    Icon="{StaticResource Icon_Download}" 
+                    ClickCommand="{Binding OnlyPushDataCommand}"
+                    Title="{StaticResource LANG_DEV_OnlyPushData}"/>
+                
+                <uc:ButtonUC
+                    Grid.Column="2"
                     IconBackground="#1BBB48" 
                     ButtonBackground="#B6FFB5" Padding="8"
                     Icon="{StaticResource Icon_Download}" 

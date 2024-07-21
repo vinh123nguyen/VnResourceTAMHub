@@ -251,17 +251,6 @@
                         </Grid.RowDefinitions>
 
                         <TextBlock Grid.Column="0" Grid.Row="0" FontSize="16" Text="{StaticResource LANG_DAT_TAMDevice}" VerticalAlignment="Center"/>
-                        <!--<ComboBox Grid.Column="1" Grid.Row="0"
-                            Height="26" 
-                            Margin="4"
-                            ItemsSource="{Binding ListOptionsTAMs}" 
-                            SelectedItem="{Binding TAMSelected, Mode=TwoWay}">
-                            <ComboBox.ItemTemplate>
-                                <DataTemplate>
-                                    <TextBlock Text="{Binding Name}"/>
-                                </DataTemplate>
-                            </ComboBox.ItemTemplate>
-                        </ComboBox>-->
                         <sdl:MultiSelectComboBox
                             Grid.Column="1" Grid.Row="0"
                             VerticalAlignment="Center"
@@ -345,12 +334,12 @@
                                     <DataTemplate>
                                         <DataTemplate.Resources>
                                             <Style x:Key="style_Success" TargetType="StackPanel">
-                                                <Setter Property="Visibility" Value="Collapsed" />
+                                                <!--<Setter Property="Visibility" Value="Collapsed" />
                                                 <Style.Triggers>
                                                     <DataTrigger Binding="{Binding Status}" Value="Success">
                                                         <Setter Property="Visibility" Value="Visible" />
                                                     </DataTrigger>
-                                                </Style.Triggers>
+                                                </Style.Triggers>-->
                                             </Style>
                                             <Style x:Key="style_Error" TargetType="StackPanel">
                                                 <Setter Property="Visibility" Value="Collapsed" />
@@ -369,6 +358,10 @@
                                             <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
                                                 <TextBlock Text="{StaticResource LANG_ACL_TotalNewlyData}"/>
                                                 <TextBlock Text="{Binding TotalNewlyData}"/>
+                                            </StackPanel>
+                                            <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
+                                                <TextBlock Text="{StaticResource LANG_ACL_TotalDataAdded}"/>
+                                                <TextBlock Text="{Binding TotalDataAdded}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
                                                 <TextBlock Text="{StaticResource LANG_ACL_TimeRun}"/>

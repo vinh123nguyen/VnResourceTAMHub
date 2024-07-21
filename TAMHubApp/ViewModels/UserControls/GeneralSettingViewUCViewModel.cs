@@ -78,8 +78,8 @@ namespace TAMHubApp.ViewModels.UserControls
             var useridcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_USERID.ToString());
             var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
             var synctype = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
-            var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString());
-            var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MAX_DATAROW_PER_REQUEST.ToString());
+            var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_APIADDRESS.ToString());
+            var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString());
             var mindatestart = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
 
             if (synctype != null)
@@ -138,8 +138,8 @@ namespace TAMHubApp.ViewModels.UserControls
             var useridcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_USERID.ToString());
             var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
             var synctype = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
-            var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString());
-            var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MAX_DATAROW_PER_REQUEST.ToString());
+            var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_APIADDRESS.ToString());
+            var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString());
             var mindatestart = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
 
             if (maxdatarow != null)
@@ -151,7 +151,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 var item = new AppSetting()
                 {
                     Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.SYNC_MAX_DATAROW_PER_REQUEST.ToString(),
+                    Name = ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString(),
                     Value = MaxRowNumPerRequest
                 };
                 await _unitOfWork.AppSettingRepository.AddAsync(item);
@@ -268,7 +268,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 var item = new AppSetting()
                 {
                     Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString(),
+                    Name = ConfigEnumConstant.SYNC_API_APIADDRESS.ToString(),
                     Value = ApiAddress
                 };
                 await _unitOfWork.AppSettingRepository.AddAsync(item);

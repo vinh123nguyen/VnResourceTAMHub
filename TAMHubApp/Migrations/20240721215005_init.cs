@@ -85,6 +85,7 @@ namespace TAMHubApp.Migrations
                     Message = table.Column<string>(type: "TEXT", nullable: true),
                     TotalRowDownload = table.Column<int>(type: "INTEGER", nullable: true),
                     TotalNewlyData = table.Column<int>(type: "INTEGER", nullable: true),
+                    TotalDataAdded = table.Column<int>(type: "INTEGER", nullable: true),
                     TimeRun = table.Column<TimeSpan>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
@@ -150,10 +151,10 @@ namespace TAMHubApp.Migrations
                 columns: new[] { "Id", "Name", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("31b437b6-7537-4fe6-ad5b-23225f685e04"), "ENUM_INOUT_ZKTECO_OUT_KEY", "E_OUT" },
-                    { new Guid("6e1358d0-549d-4034-b963-b6d3282a7e20"), "ENUM_INOUT_REALAND_IN_KEY", "E_IN" },
-                    { new Guid("d72a4a40-3922-44fd-9beb-3d96f11a7d9e"), "ENUM_INOUT_ZKTECO_IN_KEY", "E_IN" },
-                    { new Guid("fe39052b-c78f-4f44-97e3-8108435c0dd9"), "ENUM_INOUT_REALAND_OUT_KEY", "E_OUT" }
+                    { new Guid("6917bbe7-b2b2-4fa5-815d-302dfdd9d552"), "ENUM_INOUT_REALAND_IN_KEY", "E_IN" },
+                    { new Guid("8688d515-f63a-43f9-824c-665eac4d7c52"), "ENUM_INOUT_REALAND_OUT_KEY", "E_OUT" },
+                    { new Guid("94cfc8cb-decc-424e-b5c2-c7ffd9c790e9"), "ENUM_INOUT_ZKTECO_OUT_KEY", "E_OUT" },
+                    { new Guid("a4a6b619-dd5d-414e-b2b6-af8792bd4a28"), "ENUM_INOUT_ZKTECO_IN_KEY", "E_IN" }
                 });
 
             migrationBuilder.CreateIndex(

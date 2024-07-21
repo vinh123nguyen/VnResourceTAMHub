@@ -22,6 +22,7 @@
     <system:String x:Key="LANG_DEV_FromDate">Từ ngày</system:String>
     <system:String x:Key="LANG_DEV_ToDate">Đến ngày</system:String>
     <system:String x:Key="LANG_DEV_DownloadData">Tải dữ liệu</system:String>
+    <system:String x:Key="LANG_DEV_OnlyPushData">Chỉ đẩy dữ liệu</system:String>
     <system:String x:Key="LANG_DEV_DeviceNotConnected">Thiết bị chưa được kết nối</system:String>
     <system:String x:Key="LANG_DEV_GetDataSuccess">Tải {0} dòng dữ liệu mới thành công</system:String>
     <system:String x:Key="LANG_DEV_CompanyCode">Mã công ty</system:String>
@@ -82,6 +83,7 @@
     <system:String x:Key="LANG_ACL_Description">Mô tả</system:String>
     <system:String x:Key="LANG_ACL_TotalRowDownload">Tổng dữ liệu:</system:String>
     <system:String x:Key="LANG_ACL_TotalNewlyData">Dữ liệu mới:</system:String>
+    <system:String x:Key="LANG_ACL_TotalDataAdded">Dữ liệu đã đẩy:</system:String>
     <system:String x:Key="LANG_ACL_TimeRun">Thời gian:</system:String>
     <system:String x:Key="LANG_ACL_Error">Lỗi:</system:String>
     <system:String x:Key="LANG_SET_General">Cấu hình chung</system:String>

@@ -598,7 +598,7 @@ namespace TAMHubApp.Services.TAMServices
                         var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
                     }
                 }
-                if (!string.IsNullOrEmpty(EnrollNumber))
+                    if (!string.IsNullOrEmpty(EnrollNumber))
                 {
                     listAttRecord.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
                 }
@@ -689,108 +689,6 @@ namespace TAMHubApp.Services.TAMServices
                 });
             }
         }
-
-        public async Task<bool> Action_Realand_GetNewlyData(BaseTAMService device)
-        {
-            try
-            {
-                if (!device.IsConnected)
-                {
-                    var rescon = await Action_Connect(device);
-                    if (!rescon)
-                        return false;
-                }
-                await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
-                var settingenumconvert = GlobalEnumInOutConverter.RealandEnumConverter;
-                var dbDevice = await _unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
-
-                var listAttRecord = new List<TAMScanLog>();
-
-                if(device.DeviceSDKType == TAMSDKTypes.E_REALAND)
-                {
-                    var rissdevice = (RealandDeviceItem)device;
-
-                    List<DateTime> dtList = new List<DateTime>();
-                    dtList.Add(DateTime.MinValue);
-                    dtList.Add(DateTime.MaxValue);
-
-                    object extraProperty = new object();
-                    object extraData = new object();
-
-                    try
-                    {
-                        extraData = Global.DeviceBusy;
-                        var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
-
-                        extraProperty = true;
-                        extraData = dtList;
-
-                        resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
-                        if (resultRiss)
-                        {
-                            List<Record> recordList = (List<Record>)extraData;
-                            listAttRecord = recordList.Select(x => new TAMScanLog()
-                            {
-                                Id = Guid.NewGuid(),
-                                DeviceID = device.Id,
-                                EnrollNumber = (int)x.DIN,
-                                VerifyModeView = GlobalUtilities.VerifyType(x.Action),
-                                VerifyModeOrigin = x.Action,
-                                InOutModeOrigin = x.Verify,
-                                InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
-                                TimeLog = x.Clock
-                            }).ToList();
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
-                        });
-                        return false;
-                    }
-                    finally
-                    {
-                        extraData = Global.DeviceIdle;
-                        var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
-                    }
-                }
-                if (listAttRecord.Any())
-                {
-                    var datefrom = listAttRecord.Min(x => x.TimeLog);
-                    var dateend = listAttRecord.Max(x => x.TimeLog);
-
-                    var lstDbTAMScanLog = (await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
-                    var lstDbTAMScanLogHistory = (await _unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
-
-                    var lis1 = lstDbTAMScanLog.Select(item => (item.EnrollNumber, item.TimeLog));
-                    var lis2 = lstDbTAMScanLogHistory.Select(item => (item.EnrollNumber, item.TimeLog));
-
-                    var hsetDataDbTAMScanLog = new HashSet<(int, DateTime)>(lis1.Concat(lis2));
-
-                    var listInsertscanlog = listAttRecord.Where(item => !hsetDataDbTAMScanLog.Contains((item.EnrollNumber, item.TimeLog))).ToList();
-
-                    await _unitOfWork.TAMScanLogRepository.AddRangeAsync(listInsertscanlog);
-
-                    await _unitOfWork.SaveChanageAsync();
-                }
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DEV_GetDataSuccess.TranslateString(), listAttRecord.Count), ToastNotifyType.Success);
-                });
-                return true;
-            }
-            catch(Exception ex)
-            {
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
-                });
-                return false;
-            }
-        }
-
 
         // Đặc thù taisun
         public async Task<bool> SyncDataToDb(Data.Entities.Device devicedb ,ActionLog log, DateTime datefrom, DateTime dateend)
@@ -949,10 +847,10 @@ namespace TAMHubApp.Services.TAMServices
             log.TotalDataAdded = 0;
             int maxrow = 100;
             string url = string.Empty;
-            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains(ConfigEnumConstant.SYNC_DB_.ToString()));
+            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains(ConfigEnumConstant.SYNC_API_.ToString()));
 
-            var baseapiaddressconf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString());
-            var maxrowconf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MAX_DATAROW_PER_REQUEST.ToString());
+            var baseapiaddressconf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_APIADDRESS.ToString());
+            var maxrowconf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString());
 
             if(baseapiaddressconf == null || string.IsNullOrEmpty(baseapiaddressconf.Value))
             {
@@ -1000,9 +898,7 @@ namespace TAMHubApp.Services.TAMServices
                                 jsondata = json
                             };
 
-                            var json1 = JsonConvert.SerializeObject(payload, settings);
-
-                            var content = new StringContent(json1, Encoding.UTF8, "application/json");
+                            var content = new StringContent(JsonConvert.SerializeObject(payload, settings), Encoding.UTF8, "application/json");
 
                             HttpResponseMessage response = await client.PostAsync(url, content);
 
@@ -1036,5 +932,58 @@ namespace TAMHubApp.Services.TAMServices
             }
         }
 
+
+        public async Task<bool> Action_OnlyPushData(BaseTAMService device, DateTime datefrom, DateTime dateend, string EnrollNumber)
+        {
+            var synctsqype = await _unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString());
+
+            var actionLog = new ActionLog();
+            actionLog.Id = Guid.NewGuid();
+            datefrom = datefrom.Date;
+            dateend = dateend.Date.AddDays(1).AddMicroseconds(-1);
+            actionLog.DateDownDataFrom = datefrom;
+            actionLog.DateDownDataTo = dateend;
+            actionLog.TimeLogFrom = DateTime.Now;
+            actionLog.DownloadType = "Manual";
+            actionLog.DeviceID = device.Id;
+            try
+            {
+                var dbDevice = await _unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
+                var synctype = await _unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
+                actionLog.Status = "Success";
+
+                actionLog.TimeLogTo = DateTime.Now;
+                var res = true;
+                actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+                if (synctype != null && synctype.Value == "DB")
+                {
+                    res = await SyncDataToDb(dbDevice, actionLog, datefrom, dateend);
+                }
+                if (synctype != null && synctype.Value == "API")
+                {
+                    res = await SyncDataByApi(dbDevice, actionLog, datefrom, dateend);
+                }
+
+                await _unitOfWork.ActionLogRepository.AddAsync(actionLog);
+
+                await _unitOfWork.SaveChanageAsync();
+                return res;
+
+            }
+            catch(Exception ex)
+            {
+                actionLog.Status = "Error";
+
+                actionLog.TimeLogTo = DateTime.Now;
+
+                actionLog.Message = ex.Message;
+
+                await _unitOfWork.ActionLogRepository.AddAsync(actionLog);
+
+                await _unitOfWork.SaveChanageAsync();
+
+                return false;
+            }
+        }
     }
 }
