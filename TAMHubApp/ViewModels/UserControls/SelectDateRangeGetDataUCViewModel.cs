@@ -5,6 +5,7 @@ using TAMHubApp.Infrastructures;
 using TAMHubApp.Models;
 using TAMHubApp.Services.TAMServices;
 using TAMHubApp.Infrastructures.Helpers;
+using TAMHubApp.Data.Entities;
 
 namespace TAMHubApp.ViewModels.UserControls
 {
@@ -72,7 +73,7 @@ namespace TAMHubApp.ViewModels.UserControls
             _dataViewModel.IsOverlayPopupOpen = false;
         }
 
-        public void DownLoadLogData(bool isGetAll = true)
+        public async void DownLoadLogData(bool isGetAll = true)
         {
             var listIdSelected = SelectedItems.Select(x => x.Id).ToList();
 
@@ -84,29 +85,33 @@ namespace TAMHubApp.ViewModels.UserControls
                 _mainWindow.IsLoading = true;
                 foreach(var device in lstDevice)
                 {
-                    var task = Task.Run(async () =>
-                    {
-                        var service = new TAMCommonService();
-                        var result = false;
-                        if (isGetAll)
-                        {
-                            //result = await service.Action_GetAllData(device);
-                        }
-                        else
-                        {
-                            result = await service.Action_GetDataByDate(device, DateFrom, DateTo, EnrollNumber);
-                        }
-                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            _mainWindow.IsLoading = false;
-                            _dataViewModel.IsOverlayPopupOpen = false;
-                            if(result)
-                                _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadSuccess.TranslateString(), device.Name), ToastNotifyType.Success);
-                            else
-                                _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadError.TranslateString(), device.Name), ToastNotifyType.Error);
-                        });
-                    });
-                    listTask.Add(task);
+                    var qwqe = new Device();
+                    qwqe.Id = device.Id;
+                    var service = new TAMCommonService();
+                    await service.SyncDataByApi(qwqe, new Data.Entities.ActionLog(), DateFrom, DateTo);
+                    //var task = Task.Run(async () =>
+                    //{
+                    //    var service = new TAMCommonService();
+                    //    var result = false;
+                    //    if (isGetAll)
+                    //    {
+                    //        //result = await service.Action_GetAllData(device);
+                    //    }
+                    //    else
+                    //    {
+                    //        result = await service.Action_GetDataByDate(device, DateFrom, DateTo, EnrollNumber);
+                    //    }
+                    //    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    //    {
+                    //        _mainWindow.IsLoading = false;
+                    //        _dataViewModel.IsOverlayPopupOpen = false;
+                    //        if(result)
+                    //            _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadSuccess.TranslateString(), device.Name), ToastNotifyType.Success);
+                    //        else
+                    //            _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadError.TranslateString(), device.Name), ToastNotifyType.Error);
+                    //    });
+                    //});
+                    //listTask.Add(task);
                 }
             }
         }
