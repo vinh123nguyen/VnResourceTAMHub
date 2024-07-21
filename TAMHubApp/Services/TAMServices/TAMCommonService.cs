@@ -546,7 +546,7 @@ namespace TAMHubApp.Services.TAMServices
                             if (resultRiss)
                             {
                                 List<Record> recordList = (List<Record>)extraData;
-                                listAttRecord = recordList.Select(x => new TAMScanLog()
+                                listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend).Select(x => new TAMScanLog()
                                 {
                                     Id = Guid.NewGuid(),
                                     DeviceID = device.Id,
@@ -571,7 +571,7 @@ namespace TAMHubApp.Services.TAMServices
                             if (resultRiss)
                             {
                                 List<Record> recordList = (List<Record>)extraData;
-                                listAttRecord = recordList.Select(x => new TAMScanLog()
+                                listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend).Select(x => new TAMScanLog()
                                 {
                                     Id = Guid.NewGuid(),
                                     DeviceID = device.Id,
@@ -630,6 +630,10 @@ namespace TAMHubApp.Services.TAMServices
                     if (synctype != null && synctype.Value == "DB")
                     {
                         await SyncDataToDb(dbDevice, actionLog, datefrom, dateend);
+                    }
+                    if (synctype != null && synctype.Value == "API")
+                    {
+                        await SyncDataByApi(dbDevice, actionLog, datefrom, dateend);
                     }
 
                     await _unitOfWork.ActionLogRepository.AddAsync(actionLog);
@@ -942,6 +946,7 @@ namespace TAMHubApp.Services.TAMServices
 
         public async Task<bool> SyncDataByApi(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend)
         {
+            log.TotalDataAdded = 0;
             int maxrow = 100;
             string url = string.Empty;
             var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains(ConfigEnumConstant.SYNC_DB_.ToString()));
@@ -974,23 +979,52 @@ namespace TAMHubApp.Services.TAMServices
                     {
                         using (var client = new HttpClient())
                         {
-                            var json = JsonConvert.SerializeObject(listDataChunk);
-                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+                            client.Timeout = TimeSpan.FromSeconds(300);
+                            var lst = listDataChunk.Select(x => new SyncTAMScanLogDTO()
+                            {
+                                ID = x.Id,
+                                EnrollNumber = x.EnrollNumber,
+                                InOutMode = x.InOutModeView,
+                                TimeLog = x.TimeLog,
+                                MachineNo = x.Device.MachineNo,
+                                CompanyCode = x.Device.CompanyCode
+                            });
+                            var settings = new JsonSerializerSettings
+                            {
+                                ReferenceLoopHandling = ReferenceLoopHandling.Ignore
+                            };
+                            var json = JsonConvert.SerializeObject(lst, settings);
+
+                            var payload = new
+                            {
+                                jsondata = json
+                            };
+
+                            var json1 = JsonConvert.SerializeObject(payload, settings);
+
+                            var content = new StringContent(json1, Encoding.UTF8, "application/json");
 
                             HttpResponseMessage response = await client.PostAsync(url, content);
 
                             response.EnsureSuccessStatusCode();
 
-                            string responseBody = await response.Content.ReadAsStringAsync();
+                            if (response.IsSuccessStatusCode)
+                            {
+                                string responseBody = await response.Content.ReadAsStringAsync();
                             
-                            var dw = JsonConvert.DeserializeObject<List<Guid>>(responseBody);
+                                var ids = JsonConvert.DeserializeObject<List<Guid>>(responseBody);
+
+                                log.TotalDataAdded += ids == null ? 0 : ids.Count;
+                            }
                         }
                     }
                     catch(Exception ex)
                     {
-
+                        log.Status = "Error";
+                        log.Message = ex.Message;
                     }
                 }
+                log.Status = "Success";
                 return true;
 
             }
