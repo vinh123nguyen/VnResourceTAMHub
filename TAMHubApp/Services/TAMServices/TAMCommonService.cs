@@ -935,8 +935,6 @@ namespace TAMHubApp.Services.TAMServices
 
         public async Task<bool> Action_OnlyPushData(BaseTAMService device, DateTime datefrom, DateTime dateend, string EnrollNumber)
         {
-            var synctsqype = await _unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString());
-
             var actionLog = new ActionLog();
             actionLog.Id = Guid.NewGuid();
             datefrom = datefrom.Date;
