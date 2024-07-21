@@ -240,7 +240,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 var Hour = int.TryParse(CycleHour, out int value) ? value : 0;
                 currentObject.Hour = Hour;
                 var Minute = int.TryParse(CycleMinute, out int value2) ? value2 : 0;
-                currentObject.Hour = Minute;
+                currentObject.Minute = Minute;
                 int? _DayInMonth = int.TryParse(DayInMonth, out int value3) ? value3 : null;
                 currentObject.DayInMonth = _DayInMonth;
                 currentObject.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected?.Key) : null;

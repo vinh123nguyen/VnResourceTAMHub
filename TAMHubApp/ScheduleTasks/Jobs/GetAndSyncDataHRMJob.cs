@@ -12,13 +12,27 @@ namespace TAMHubApp.ScheduleTasks.Jobs
     {
         public async Task Execute(IJobExecutionContext context)
         {
-            var dw = context.JobDetail.Key.Name;  // job__idjob
+            var schedulekey = context.JobDetail.Key.Name;  // job__idjob
             var scheduletaskService = ServiceLocator.Instance.GetRequiredService<ScheduleTaskService>();
             var TAMSInstance = ServiceLocator.Instance.GetRequiredService<SingletonTAMInstance>();
             var unitOfWork = ServiceLocator.Instance.GetRequiredService<IUnitOfWork>();
+            var scheduletasksevice = ServiceLocator.Instance.GetRequiredService<ScheduleTaskService>();
             await scheduletaskService.UpdateScheduleRuningStatus();
             var TAMService = new TAMCommonService();
-            
+
+            var idstring = schedulekey.Split("__")[1];
+            var scheduleDB = await unitOfWork.ScheduleTaskRepository.FindAsync( x => x.Id.ToString() == idstring);
+            if(scheduleDB != null)
+            {
+                scheduleDB.LastTimeRun = DateTime.Now;
+                await unitOfWork.SaveChanageAsync();
+            }
+            var scheduletask = scheduletasksevice.ScheduleTasks.FirstOrDefault(x => x.Id.ToString() == idstring);
+            if(scheduletask != null)
+            {
+                scheduletask.LastTimeRun = DateTime.Now;
+            }
+
             foreach (var device in TAMSInstance.TAMs)
             {
                 await Task.Run(async () =>
@@ -31,7 +45,8 @@ namespace TAMHubApp.ScheduleTasks.Jobs
                         if(dateconfig != null)
                             datestart = dateconfig.Value;
                     }
-                    var lastrecord = (await unitOfWork.TAMScanLogRepository.FindListAsync(x => x.DeviceID == device.Id)).ToList().OrderByDescending(x => x.TimeLog).FirstOrDefault();
+                    var listrecord = await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id);
+                    var lastrecord = listrecord.OrderByDescending(x => x.TimeLog).FirstOrDefault();
 
                     if (lastrecord != null)
                     {

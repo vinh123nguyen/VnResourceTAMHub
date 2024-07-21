@@ -122,7 +122,7 @@ namespace TAMHubApp.ViewModels
             {
                 Id = x.Id,
                 TimeLog = $"{x.TimeLogFrom.ToString("dd/MM/yyyy HH:mm:ss")} - {x.TimeLogTo.ToString("dd/MM/yyyy HH:mm:ss")}",
-                DateDownData = $"{x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")} - {x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")}",
+                DateDownData = $"{x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")} - {x.DateDownDataTo.Value.ToString("dd/MM/yyyy")}",
                 TAMName = x.Device.Name,
                 Status = x.Status,
                 StatusView = x.Status.TranslateString(),

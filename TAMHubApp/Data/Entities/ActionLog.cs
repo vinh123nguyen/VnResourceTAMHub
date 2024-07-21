@@ -13,6 +13,7 @@
         public string? Message { get; set; }
         public int? TotalRowDownload { get; set; }
         public int? TotalNewlyData { get; set; }
+        public int? TotalDataAdded { get; set; }
         public TimeSpan? TimeRun { get; set; }
 
         public Device Device { get; set; }

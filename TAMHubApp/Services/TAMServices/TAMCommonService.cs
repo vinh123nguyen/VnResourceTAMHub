@@ -1,7 +1,12 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
 using Riss.Devices;
 using Serilog;
 using System.Data.SqlClient;
+using System.IO;
+using System.Net.Http;
+using System.Security.Policy;
+using System.Text;
 using TAMHubApp.Data;
 using TAMHubApp.Data.Entities;
 using TAMHubApp.Infrastructures;
@@ -913,7 +918,7 @@ namespace TAMHubApp.Services.TAMServices
                         }
                         Log.Information("new data count: " + count);
                         log.Status = "Success";
-                        log.TotalNewlyData = count;
+                        log.TotalDataAdded = count;
                     }
 
                 }
@@ -932,6 +937,69 @@ namespace TAMHubApp.Services.TAMServices
                 return false;
             }
 
+        }
+
+
+        public async Task<bool> SyncDataByApi(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend)
+        {
+            int maxrow = 100;
+            string url = string.Empty;
+            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains(ConfigEnumConstant.SYNC_DB_.ToString()));
+
+            var baseapiaddressconf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_APIADDRESS.ToString());
+            var maxrowconf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MAX_DATAROW_PER_REQUEST.ToString());
+
+            if(baseapiaddressconf == null || string.IsNullOrEmpty(baseapiaddressconf.Value))
+            {
+                log.Status = "Error";
+                log.Message = "Missing base sync address";
+                return false;
+            }
+            else
+            {
+                url = Path.Combine(baseapiaddressconf.Value, "Att_GetData", "SyncDataFromTAMHub");
+            }
+            if(maxrowconf != null && !string.IsNullOrEmpty(maxrowconf.Value) && int.TryParse(maxrowconf.Value, out int maxrowcon))
+            {
+                maxrow = maxrowcon;
+            }
+
+            try
+            {
+                var listData = await _unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == devicedb.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend);
+
+                foreach(var listDataChunk in listData.Chunk(maxrow))
+                {
+                    try
+                    {
+                        using (var client = new HttpClient())
+                        {
+                            var json = JsonConvert.SerializeObject(listDataChunk);
+                            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+                            HttpResponseMessage response = await client.PostAsync(url, content);
+
+                            response.EnsureSuccessStatusCode();
+
+                            string responseBody = await response.Content.ReadAsStringAsync();
+                            
+                            var dw = JsonConvert.DeserializeObject<List<Guid>>(responseBody);
+                        }
+                    }
+                    catch(Exception ex)
+                    {
+
+                    }
+                }
+                return true;
+
+            }
+            catch(Exception ex)
+            {
+                log.Status = "Error";
+                log.Message = ex.Message;
+                return false;
+            }
         }
 
     }
