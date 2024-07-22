@@ -27,71 +27,83 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
-                        <!--<ColumnDefinition></ColumnDefinition>-->
                     </Grid.ColumnDefinitions>
 
                     <Button Style="{StaticResource style_navButton}" Template="{StaticResource NoMouseOverButtonTemplate}" Background="White" Command="{Binding NavigateHomeCommand}" Grid.Column="0">
                         <Image Source="/Resources/Images/logovnr.png" Margin="8,8,8,8"/>
                     </Button>
-                    
+
                     <StackPanel Grid.Column="1" Orientation="Horizontal" Width="auto">
 
-                        <!--<uc:NavigationButtonUC
-                            Icon="{DynamicResource Icon_Home}"
-                            Title="{DynamicResource LANG_NAV_Home}"
-                            NavigateCommand="{Binding NavigateHomeCommand}"
-                            TabActive="{Binding TabActive}"
-                            NameTab="HomeView"
-                            />
-                        <uc:NavigationButtonUC
-                            Icon="{DynamicResource Icon_Device}"
-                            Title="{DynamicResource LANG_NAV_Device}"
-                            NavigateCommand="{Binding NavigateDeviceCommand}"
-                            TabActive="{Binding TabActive}"
-                            NameTab="DeviceView"
-                            />
-                        <uc:NavigationButtonUC
-                            Icon="{DynamicResource Icon_Data}"
-                            Title="{DynamicResource LANG_NAV_Data}"
-                            NavigateCommand="{Binding NavigateDataCommand}"
-                            TabActive="{Binding TabActive}"
-                            NameTab="DataView"
-                            />
-                        <uc:NavigationButtonUC
-                            Icon="{DynamicResource Icon_Calendar}"
-                            Title="{DynamicResource LANG_NAV_Schedule}"
-                            NavigateCommand="{Binding NavigateScheduleCommand}"
-                            TabActive="{Binding TabActive}"
-                            NameTab="ScheduleView"
-                            />
-                        <uc:NavigationButtonUC
-                            Icon="{DynamicResource Icon_Reload}"
-                            Title="{DynamicResource LANG_NAV_ActionLog}"
-                            NavigateCommand="{Binding NavigateActionLogCommand}"
-                            TabActive="{Binding TabActive}"
-                            NameTab="ActionLogView" />
-                        <uc:NavigationButtonUC
-                            Icon="{DynamicResource Icon_Setting}"
-                            Title="{DynamicResource LANG_NAV_Setting}"
-                            NavigateCommand="{Binding NavigateSettingCommand}"
-                            TabActive="{Binding TabActive}"
-                            NameTab="SettingView"
-                            />-->
+                        <Button x:Name="NavButton" Style="{StaticResource style_navButton}" 
+                                Template="{StaticResource NoMouseOverButtonTemplate}" Background="White" Grid.Column="0"
+                                MouseEnter="NavButton_MouseEnter" MouseLeave="NavButton_MouseLeave">
+                            <Border Background="#E6F7FF" Padding="12,8" BorderThickness="0,0,2,0" BorderBrush="#329DFF" Width="200">
+                                <Grid >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="Auto"/>
+                                        <ColumnDefinition/>
+                                    </Grid.ColumnDefinitions>
+                                    <Path Grid.Column="0" Data="{StaticResource Icon_Setting1}" Stroke="#1890FF" StrokeThickness="1" Height="16" Width="16" Stretch="Fill"/>
+                                    <Path Grid.Column="0" Data="{StaticResource Icon_Setting2}" Stroke="#1890FF" StrokeThickness="1" Height="8" Width="8" Stretch="Fill"/>
+                                    <TextBlock Foreground="#1890FF" Margin="4" Grid.Column="1" Text="Tải dữ liệu chấm công"/>
+                                </Grid>
+                            </Border>
+                        </Button>
 
+                        <Popup x:Name="NavPopup" PlacementTarget="{Binding ElementName=NavButton}" Placement="Bottom" StaysOpen="False">
+                            <Border Background="White" BorderBrush="Gray" BorderThickness="0">
+                                <StackPanel>
+                                    <uc:NavigationButtonUC
+                                        Icon="{DynamicResource Icon_Device}"
+                                        Title="{DynamicResource LANG_NAV_Device}"
+                                        NavigateCommand="{Binding NavigateDeviceCommand}"
+                                        TabActive="{Binding TabActive}"
+                                        NameTab="DeviceView"
+                                        />
+                                    <uc:NavigationButtonUC
+                                        Icon="{DynamicResource Icon_Calendar}"
+                                        Title="{DynamicResource LANG_NAV_Schedule}"
+                                        NavigateCommand="{Binding NavigateScheduleCommand}"
+                                        TabActive="{Binding TabActive}"
+                                        NameTab="ScheduleView"
+                                        />
+                                    <uc:NavigationButtonUC
+                                        Icon="{DynamicResource Icon_Reload}"
+                                        Title="{DynamicResource LANG_NAV_ActionLog}"
+                                        NavigateCommand="{Binding NavigateActionLogCommand}"
+                                        TabActive="{Binding TabActive}"
+                                        NameTab="ActionLogView" />
+                                    <uc:NavigationButtonUC
+                                        Icon="{DynamicResource Icon_Data}"
+                                        Title="{DynamicResource LANG_NAV_Data}"
+                                        NavigateCommand="{Binding NavigateDataCommand}"
+                                        TabActive="{Binding TabActive}"
+                                        NameTab="DataView"
+                                        />
+                                    <uc:NavigationButtonUC
+                                        Icon="{DynamicResource Icon_Setting}"
+                                        Title="{DynamicResource LANG_NAV_Setting}"
+                                        NavigateCommand="{Binding NavigateSettingCommand}"
+                                        TabActive="{Binding TabActive}"
+                                        NameTab="SettingView"
+                                        />
+                                </StackPanel>
+                            </Border>
+                        </Popup>
                     </StackPanel>
-
                 </Grid>
             </Border>
             <ContentControl Grid.Row="1" Content="{Binding MainViewNavigate.CurrentView}">
             </ContentControl>
         </Grid>
 
-        <Grid Background="#100000FF" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <!--<Grid Background="#100000FF" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <uc:LoadingUC/>
         </Grid>
         <uc:ToastNotificationUC x:Name="ToastNotification" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10" 
                                 Message="{Binding ToastMessage}"
                                 IsShowingToast="{Binding IsShowingToast}"
-                                ToastColor ="{Binding ToastColor}"/>
+                                ToastColor ="{Binding ToastColor}"/>-->
     </Grid>
 </Window>

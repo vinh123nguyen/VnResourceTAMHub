@@ -4,7 +4,7 @@ using System.Windows.Data;
 
 namespace TAMHubApp.Converters
 {
-    class StringTabNameToVisibilityConverter : IMultiValueConverter
+    public class StringTabNameToVisibilityConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {

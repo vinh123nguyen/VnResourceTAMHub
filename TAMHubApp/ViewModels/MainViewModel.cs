@@ -88,11 +88,11 @@ namespace TAMHubApp.ViewModels
 
 
             NavigateHomeCommand = new RelayCommand<BaseViewModel>(x => { return true; }, x => { MainViewNavigate.NavigateTo<HomeViewModel>(); TabActive = "HomeView"; });
-            //NavigateDeviceCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DeviceView"; }, x => { MainViewNavigate.NavigateTo<DeviceViewModel>(); TabActive = "DeviceView"; });
-            //NavigateDataCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DataView"; }, x => { MainViewNavigate.NavigateTo<DataViewModel>(); TabActive = "DataView"; });
-            //NavigateScheduleCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ScheduleView"; }, x => { MainViewNavigate.NavigateTo<ScheduleViewModel>(); TabActive = "ScheduleView"; });
-            //NavigateSettingCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "SettingView"; }, x => { MainViewNavigate.NavigateTo<SettingViewModel>(); TabActive = "SettingView"; });
-            //NavigateActionLogCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ActionLogView"; }, x => { MainViewNavigate.NavigateTo<ActionLogViewModel>(); TabActive = "ActionLogView"; });
+            NavigateDeviceCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DeviceView"; }, x => { MainViewNavigate.NavigateTo<DeviceViewModel>(); TabActive = "DeviceView"; });
+            NavigateDataCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DataView"; }, x => { MainViewNavigate.NavigateTo<DataViewModel>(); TabActive = "DataView"; });
+            NavigateScheduleCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ScheduleView"; }, x => { MainViewNavigate.NavigateTo<ScheduleViewModel>(); TabActive = "ScheduleView"; });
+            NavigateSettingCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "SettingView"; }, x => { MainViewNavigate.NavigateTo<SettingViewModel>(); TabActive = "SettingView"; });
+            NavigateActionLogCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ActionLogView"; }, x => { MainViewNavigate.NavigateTo<ActionLogViewModel>(); TabActive = "ActionLogView"; });
 
             Task.Run(() =>
             {

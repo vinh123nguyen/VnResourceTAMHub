@@ -16,11 +16,17 @@ namespace TAMHubApp.ViewModels
         public HomeViewModel(MainViewModel mainViewModel)
         {
             _mainViewModel = mainViewModel;
-            NavigateDeviceCommand = new RelayCommand<BaseViewModel>(x => { return true; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<DeviceViewModel>(); });
-            NavigateDataCommand = new RelayCommand<BaseViewModel>(x => { return true; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<DataViewModel>(); });
-            NavigateScheduleCommand = new RelayCommand<BaseViewModel>(x => { return true; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<ScheduleViewModel>(); });
-            NavigateSettingCommand = new RelayCommand<BaseViewModel>(x => { return true; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<SettingViewModel>(); });
-            NavigateActionLogCommand = new RelayCommand<BaseViewModel>(x => { return true; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<ActionLogViewModel>(); });
+            NavigateDeviceCommand = _mainViewModel.NavigateDeviceCommand;
+            NavigateDataCommand = _mainViewModel.NavigateDataCommand;
+            NavigateScheduleCommand = _mainViewModel.NavigateScheduleCommand;
+            NavigateSettingCommand = _mainViewModel.NavigateSettingCommand;
+            NavigateActionLogCommand = _mainViewModel.NavigateActionLogCommand;
+
+            //NavigateDeviceCommand = new RelayCommand<BaseViewModel>(x => { return _mainViewModel.TabActive != "DeviceView"; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<DeviceViewModel>(); _mainViewModel.TabActive = "DeviceView"; });
+            //NavigateDataCommand = new RelayCommand<BaseViewModel>(x => { return _mainViewModel.TabActive != "DataView"; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<DataViewModel>(); _mainViewModel.TabActive = "DataView"; });
+            //NavigateScheduleCommand = new RelayCommand<BaseViewModel>(x => { return _mainViewModel.TabActive != "ScheduleView"; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<ScheduleViewModel>(); _mainViewModel.TabActive = "ScheduleView"; });
+            //NavigateSettingCommand = new RelayCommand<BaseViewModel>(x => { return _mainViewModel.TabActive != "SettingView"; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<SettingViewModel>(); _mainViewModel.TabActive = "SettingView"; });
+            //NavigateActionLogCommand = new RelayCommand<BaseViewModel>(x => { return _mainViewModel.TabActive != "ActionLogView"; }, x => { _mainViewModel.MainViewNavigate.NavigateTo<ActionLogViewModel>(); _mainViewModel.TabActive = "ActionLogView"; });
 
 
             _timer = new System.Timers.Timer(1000); // Update every minute
