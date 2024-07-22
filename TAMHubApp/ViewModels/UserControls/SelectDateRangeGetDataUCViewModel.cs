@@ -87,25 +87,29 @@ namespace TAMHubApp.ViewModels.UserControls
                 {
                     var task = Task.Run(async () =>
                     {
-                        var service = new TAMCommonService();
-                        var result = false;
-                        if (isGetAll)
+                        using (var service = new TAMCommonService())
                         {
-                            //result = await service.Action_GetAllData(device);
-                        }
-                        else
-                        {
-                            result = await service.Action_GetDataByDate(device, DateFrom, DateTo, EnrollNumber);
-                        }
-                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            _mainWindow.IsLoading = false;
-                            _dataViewModel.IsOverlayPopupOpen = false;
-                            if (result)
-                                _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadSuccess.TranslateString(), device.Name), ToastNotifyType.Success);
+                            //var servic2e = new TAMCommonService();
+                            var result = false;
+                            if (isGetAll)
+                            {
+                                //result = await service.Action_GetAllData(device);
+                            }
                             else
-                                _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadError.TranslateString(), device.Name), ToastNotifyType.Error);
-                        });
+                            {
+
+                            }
+                            result = await service.Action_GetDataByDate(device, DateFrom, DateTo, EnrollNumber);
+                            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                _mainWindow.IsLoading = false;
+                                _dataViewModel.IsOverlayPopupOpen = false;
+                                if (result)
+                                    _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadSuccess.TranslateString(), device.Name), ToastNotifyType.Success);
+                                else
+                                    _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadError.TranslateString(), device.Name), ToastNotifyType.Error);
+                            });
+                        }
                     });
                     listTask.Add(task);
                 }

@@ -280,8 +280,8 @@
                 <Grid Grid.Row="1" Margin="4">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
-                        <ColumnDefinition/>
                     </Grid.ColumnDefinitions>
                     <uc:ButtonUC
                         Grid.Column="0"
@@ -292,6 +292,16 @@
                         IconBackground="#c49000"
                         TextFontSize="16"
                         Margin="4,0"
+                        />
+
+                    <uc:ButtonUC
+                        Grid.Column="3" 
+                        TextFontSize="16"
+                        Title="{StaticResource LANG_GLO_Remove}" 
+                        Icon="{StaticResource Icon_Trash}" 
+                        IconBackground="#FF3C3C" 
+                        ButtonBackground="#FFB5B9"
+                        ClickCommand="{Binding RemoveDataCommand}"
                         />
                 </Grid>
             </Grid>
@@ -312,7 +322,7 @@
                                 </DataGridCheckBoxColumn.HeaderTemplate>
                             </DataGridCheckBoxColumn>
                             <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="auto"/>
-                            <DataGridTextColumn Header="{StaticResource LANG_ACL_TimeRangeDownData}" Binding="{Binding DateDownData}" IsReadOnly="True" Width="*">
+                            <DataGridTextColumn Header="{StaticResource LANG_ACL_TimeRangeDownData}" Binding="{Binding DateDownData}" IsReadOnly="True" Width="0.7*">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
@@ -326,7 +336,7 @@
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="{StaticResource LANG_ACL_Device}" Binding="{Binding TAMName}" IsReadOnly="True" Width="*"/>
+                            <DataGridTextColumn Header="{StaticResource LANG_ACL_Device}" Binding="{Binding TAMName}" IsReadOnly="True" Width="0.7*"/>
                             <DataGridTextColumn Header="{StaticResource LANG_ACL_Status}" Binding="{Binding StatusView}" IsReadOnly="True" Width="0.7*"/>
                             <DataGridTextColumn Header="{StaticResource LANG_ACL_DownloadMethod}" Binding="{Binding DownloadType}" IsReadOnly="True" Width="0.7*"/>
                             <DataGridTemplateColumn Header="{StaticResource LANG_ACL_Description}" Width="*">
@@ -367,10 +377,14 @@
                                                 <TextBlock Text="{StaticResource LANG_ACL_TimeRun}"/>
                                                 <TextBlock Text="{Binding TimeRun}"/>
                                             </StackPanel>
-                                            <StackPanel Orientation="Horizontal" Style="{StaticResource style_Error}">
-                                                <TextBlock Text="{StaticResource LANG_ACL_Error}"/>
-                                                <TextBlock Text="{Binding Message}"/>
-                                            </StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                    <ColumnDefinition  Width="*"/>
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock Grid.Column="0" Text="{StaticResource LANG_ACL_Error}"/>
+                                                <TextBlock Grid.Column="1" Text="{Binding Message}" TextWrapping="Wrap"/>
+                                            </Grid>
                                         </StackPanel>
                                     </DataTemplate>
                                 </DataGridTemplateColumn.CellTemplate>

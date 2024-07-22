@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using TAMHubApp.Commands;
 using TAMHubApp.Data;
+using TAMHubApp.Infrastructures.Enums;
+using TAMHubApp.Infrastructures;
 using TAMHubApp.Infrastructures.Helpers;
 using TAMHubApp.Models;
 using TAMHubApp.Services.TAMServices;
@@ -19,6 +21,7 @@ namespace TAMHubApp.ViewModels
             PaginationBackCommand = new RelayCommand<object>(x => { return CurrentPage != 1; }, x => { GetDataChangePaging(x, false); });
             PaginationForwardCommand = new RelayCommand<object>(x => { return CurrentPage != TotalPages && TotalPages != 0; }, x => { GetDataChangePaging(x, true); });
             SearchCommand = new RelayCommand<object>(x => { return true; }, x => { GetDataPaging(); });
+            RemoveDataCommand = new RelayCommand<object>(x => { return true; }, RemoveDataCommandExcute);
             DeviceItems = singletonTAMInstance.TAMs;
             _mainViewModel = mainViewModel;
             _unitOfWork = unitOfWork;
@@ -29,6 +32,7 @@ namespace TAMHubApp.ViewModels
         public RelayCommand<object> PaginationBackCommand { get; set; }
         public RelayCommand<object> PaginationForwardCommand { get; set; }
         public RelayCommand<object> SearchCommand { get; set; }
+        public RelayCommand<object> RemoveDataCommand { get; set; }
 
 
         #endregion
@@ -137,6 +141,33 @@ namespace TAMHubApp.ViewModels
             ListActionLogs = new ObservableCollection<ActionLogModel>(lstData);
             _mainViewModel.IsLoading = false;
         }
+        private async void RemoveDataCommandExcute(object obj)
+        {
+            _mainViewModel.IsLoading = true;
+            var lstDeviceIdSelected = SelectedDeviceItems.Select(x => x.Id).ToList();
+            var lstQuery = await _unitOfWork.ActionLogRepository.GetAllAsync();
+            if (lstDeviceIdSelected.Any())
+            {
+                lstQuery = lstQuery.Where(x => x.DeviceID != null && lstDeviceIdSelected.Contains(x.DeviceID.Value));
+            }
+            if (DateFrom != null)
+            {
+                lstQuery = lstQuery.Where(x => x.TimeLogTo >= DateFrom);
+            }
+            if (DateTo != null)
+            {
+                lstQuery = lstQuery.Where(x => x.TimeLogFrom <= DateTo);
+            }
+            _unitOfWork.ActionLogRepository.RemoveRange(lstQuery);
 
+            await _unitOfWork.SaveChanageAsync();
+
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                _mainViewModel.IsLoading = false;
+                _mainViewModel.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DAT_DeleteData.TranslateString(), lstQuery.Count()), ToastNotifyType.Success);
+            });
+            GetDataPaging();
+        }
     }
 }

@@ -75,7 +75,7 @@ namespace TAMHubApp
             services.AddDbContext<AppDbContext>(opts =>
             {
                 opts.UseSqlite($"Data Source=Data/AppDB.db");
-            });
+            }, ServiceLifetime.Transient, ServiceLifetime.Transient);
 
             services.AddSingleton<MainWindow>(provider => new MainWindow
             {

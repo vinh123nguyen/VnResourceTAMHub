@@ -19,8 +19,22 @@ using zkemkeeper;
 
 namespace TAMHubApp.Services.TAMServices
 {
-    public class TAMCommonService
+    public class TAMCommonService : IDisposable
     {
+        private bool disposed = false;
+
+        public void Dispose(bool v)
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
         private SingletonTAMInstance _singletonTAMInstance;
 
         private IUnitOfWork _unitOfWork;
