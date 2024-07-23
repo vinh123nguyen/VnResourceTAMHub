@@ -39,6 +39,7 @@
     <system:String x:Key="LANG_GLO_NotMatchDataType">không đúng định dạng!</system:String>
     <system:String x:Key="LANG_GLO_Remove">Xóa</system:String>
     <system:String x:Key="LANG_GLO_Search">Tìm kiếm</system:String>
+    <system:String x:Key="LANG_DAT_PleaseSelectDevice">Vui lòng chọn thiết bị!</system:String>
     <system:String x:Key="LANG_DAT_EnrollNumber">Mã chấm công</system:String>
     <system:String x:Key="LANG_DAT_TAMDevice">Máy chấm công</system:String>
     <system:String x:Key="LANG_DAT_DateFrom">Từ ngày</system:String>
@@ -61,6 +62,7 @@
     <system:String x:Key="LANG_SCH_LastTimeRun">Lần chạy cuối</system:String>
     <system:String x:Key="LANG_SCH_NextTimeRun">Lần chạy tiếp theo</system:String>
     <system:String x:Key="LANG_SCH_ScheduleIsRuningCanNotDoAction">Schedule đang chạy không thể thao tác</system:String>
+    <system:String x:Key="LANG_DEV_DeviceIsConnectedCanNotDoAction">Thiết bị đang kết nối không thể thao tác</system:String>
     <system:String x:Key="LANG_CYCLE_Daily">Hàng ngày</system:String>
     <system:String x:Key="LANG_CYCLE_Weekly">Hàng tuần</system:String>
     <system:String x:Key="LANG_CYCLE_Monthly">Hàng tháng</system:String>
@@ -73,6 +75,8 @@
     <system:String x:Key="LANG_GLO_Saturday">Thứ 7</system:String>
     <system:String x:Key="LANG_GLO_Sunday">Chủ nhật</system:String>
     <system:String x:Key="LANG_GLO_OutOfRange">ngoài vùng giá trị hợp lệ!</system:String>
+    <system:String x:Key="LANG_GLO_English">Tiếng Anh</system:String>
+    <system:String x:Key="LANG_GLO_Vietnamese">Tiếng Việt</system:String>
     <system:String x:Key="LANG_HOM_Setting">Cấu hình</system:String>
     <system:String x:Key="LANG_HOM_Data">Dữ liệu</system:String>
     <system:String x:Key="LANG_ACL_TimeRangeDownData">Thời gian tải dữ liệu</system:String>

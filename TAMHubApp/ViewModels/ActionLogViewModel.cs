@@ -107,38 +107,59 @@ namespace TAMHubApp.ViewModels
             }
             var lstDeviceIdSelected = SelectedDeviceItems.Select(x => x.Id).ToList();
             var lstQuery = await _unitOfWork.ActionLogRepository.GetAllAsync();
+            var listData = lstQuery.ToList();
             if (lstDeviceIdSelected.Any())
             {
-                lstQuery = lstQuery.Where(x => x.DeviceID != null && lstDeviceIdSelected.Contains(x.DeviceID.Value));
+                listData = lstQuery.Where(x => x.DeviceID != null && lstDeviceIdSelected.Contains(x.DeviceID.Value)).ToList();
             }
             if (DateFrom != null)
             {
-                lstQuery = lstQuery.Where(x => x.TimeLogTo >= DateFrom);
+                listData = listData.Where(x => x.TimeLogTo >= DateFrom).ToList();
             }
             if( DateTo != null)
             {
-                lstQuery = lstQuery.Where(x => x.TimeLogFrom <= DateTo);
+                listData = listData.Where(x => x.TimeLogFrom <= DateTo).ToList();
             }
-            TotalRow = lstQuery.Count();
-            lstQuery = lstQuery.OrderByDescending(x => x.TimeLogFrom).ToList();
-            lstQuery = lstQuery.Skip((CurrentPage - 1) * PageSize).Take(PageSize);
-            var lstData = lstQuery.Select(x => new ActionLogModel()
-            {
-                Id = x.Id,
-                TimeLog = $"{x.TimeLogFrom.ToString("dd/MM/yyyy HH:mm:ss")} - {x.TimeLogTo.ToString("dd/MM/yyyy HH:mm:ss")}",
-                DateDownData = $"{x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")} - {x.DateDownDataTo.Value.ToString("dd/MM/yyyy")}",
-                TAMName = x.Device.Name,
-                Status = x.Status,
-                StatusView = x.Status.TranslateString(),
-                TotalNewlyData = x.TotalNewlyData,
-                TotalDataAdded = x.TotalDataAdded,
-                TotalRowDownload = x.TotalRowDownload,
-                Message = x.Message,
-                DownloadType = x.DownloadType.TranslateString(),
-                TimeRun = x.TimeRun == null ? null : x.TimeRun.ToString(),
-            }).ToList();
+            TotalRow = listData.Count();
+            listData = listData.OrderByDescending(x => x.TimeLogFrom).ToList();
+            listData = listData.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+            //var lstData = listData.Select(x => new ActionLogModel()
+            //{
+            //    Id = x.Id,
+            //    TimeLog = $"{x.TimeLogFrom.ToString("dd/MM/yyyy HH:mm:ss")} - {x.TimeLogTo.ToString("dd/MM/yyyy HH:mm:ss")}",
+            //    DateDownData = $"{x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")} - {x.DateDownDataTo.Value.ToString("dd/MM/yyyy")}",
+            //    TAMName = x.Device != null ? x.Device.Name : null,
+            //    Status = x.Status,
+            //    StatusView = x.Status.TranslateString(),
+            //    TotalNewlyData = x.TotalNewlyData,
+            //    TotalDataAdded = x.TotalDataAdded,
+            //    TotalRowDownload = x.TotalRowDownload,
+            //    Message = x.Message,
+            //    DownloadType = x.DownloadType.TranslateString(),
+            //    TimeRun = x.TimeRun == null ? null : x.TimeRun.ToString(),
+            //}).ToList();
 
-            ListActionLogs = new ObservableCollection<ActionLogModel>(lstData);
+            var lstDevice = (await _unitOfWork.DeviceRepository.GetAllAsync()).ToList();
+            var newlist = from x in listData
+                          join dvl in lstDevice on x.DeviceID equals dvl.Id into dv
+                          from devicelj in dv.DefaultIfEmpty()
+                          select new ActionLogModel()
+                          {
+                              Id = x.Id,
+                              TimeLog = $"{x.TimeLogFrom.ToString("dd/MM/yyyy HH:mm:ss")} - {x.TimeLogTo.ToString("dd/MM/yyyy HH:mm:ss")}",
+                              DateDownData = $"{x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")} - {x.DateDownDataTo.Value.ToString("dd/MM/yyyy")}",
+                              TAMName = devicelj?.Name ?? "",
+                              Status = x.Status,
+                              StatusView = x.Status.TranslateString(),
+                              TotalNewlyData = x.TotalNewlyData,
+                              TotalDataAdded = x.TotalDataAdded,
+                              TotalRowDownload = x.TotalRowDownload,
+                              Message = x.Message,
+                              DownloadType = x.DownloadType.TranslateString(),
+                              TimeRun = x.TimeRun == null ? null : x.TimeRun.ToString(),
+                          };
+
+            ListActionLogs = new ObservableCollection<ActionLogModel>(newlist);
             _mainViewModel.IsLoading = false;
         }
         private async void RemoveDataCommandExcute(object obj)

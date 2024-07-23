@@ -6,6 +6,10 @@ using TAMHubApp.Models;
 using TAMHubApp.Services.TAMServices;
 using TAMHubApp.Infrastructures.Helpers;
 using TAMHubApp.Data.Entities;
+using TAMHubApp.Services;
+using System.Collections.Concurrent;
+using System.Windows.Threading;
+using Riss.Devices;
 
 namespace TAMHubApp.ViewModels.UserControls
 {
@@ -25,7 +29,7 @@ namespace TAMHubApp.ViewModels.UserControls
             DateFrom = DateTime.Now.Date;
             DateTo = DateTime.Now.Date;
             CloseOverlayCommand = new RelayCommand<object>(x => { return true; }, CloseOverlayCommandExcute);
-            DownloadDataCommand = new RelayCommand<object>(x => { return DateFrom <= DateTo; }, x => { DownLoadLogData(false); });
+            DownloadDataCommand = new RelayCommand<object>(x => { return DateFrom <= DateTo; }, x => { DownLoadLogData(); });
             OnlyPushDataCommand = new RelayCommand<object>(x => { return true; }, x => { OnlyPushLogData(); });
 
 
@@ -73,7 +77,7 @@ namespace TAMHubApp.ViewModels.UserControls
             _dataViewModel.IsOverlayPopupOpen = false;
         }
 
-        public void DownLoadLogData(bool isGetAll = true)
+        public async void DownLoadLogData()
         {
             var listIdSelected = SelectedItems.Select(x => x.Id).ToList();
 
@@ -83,36 +87,48 @@ namespace TAMHubApp.ViewModels.UserControls
             {
                 var listTask = new List<Task>();
                 _mainWindow.IsLoading = true;
-                foreach(var device in lstDevice)
+
+                var lstSDK = lstDevice.Select(x => x.DeviceSDKType).ToList();
+                if (lstSDK.Contains(TAMSDKTypes.E_ZKTECO))
+                {
+                    await GlobalEnumInOutConverter.InitUpdateEnumConverter("ZKTeco");
+                }
+                if (lstSDK.Contains(TAMSDKTypes.E_REALAND))
+                {
+                    await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
+                }
+                var numdevice = lstDevice.Count();
+                var lstDeviceRunDone = new ConcurrentBag<Guid>();
+                foreach (var device in lstDevice)
                 {
                     var task = Task.Run(async () =>
                     {
-                        using (var service = new TAMCommonService())
+                        var service = new TAMCommonService();
+                        var result = false;
+                        result = await service.Action_GetDataByDate(service, device, DateFrom, DateTo, EnrollNumber);
+                        lstDeviceRunDone.Add(device.Id);
+                        System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
-                            //var servic2e = new TAMCommonService();
-                            var result = false;
-                            if (isGetAll)
-                            {
-                                //result = await service.Action_GetAllData(device);
-                            }
-                            else
-                            {
-
-                            }
-                            result = await service.Action_GetDataByDate(device, DateFrom, DateTo, EnrollNumber);
-                            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                            if(lstDeviceRunDone.Count == numdevice)
                             {
                                 _mainWindow.IsLoading = false;
                                 _dataViewModel.IsOverlayPopupOpen = false;
-                                if (result)
-                                    _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadSuccess.TranslateString(), device.Name), ToastNotifyType.Success);
-                                else
-                                    _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadError.TranslateString(), device.Name), ToastNotifyType.Error);
-                            });
-                        }
+                            }
+                            if (result)
+                                _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadSuccess.TranslateString(), device.Name), ToastNotifyType.Success);
+                            else
+                                _mainWindow.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_GLO_DeviceDownloadError.TranslateString(), device.Name), ToastNotifyType.Error);
+                        });
                     });
                     listTask.Add(task);
                 }
+            }
+            else
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(ConstantDisplay.LANG_DAT_PleaseSelectDevice.TranslateString(), ToastNotifyType.Warning);
+                });
             }
         }
 

@@ -5,7 +5,7 @@
         public Guid Id { get; set; }
         public string TimeLog { get; set; }
         public string DateDownData { get; set; }
-        public string TAMName { get; set; }
+        public string? TAMName { get; set; }
         public string StatusView { get; set; }
         public string Status { get; set; }
         public string DownloadType { get; set; }

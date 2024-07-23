@@ -18,7 +18,6 @@ namespace TAMHubApp.ScheduleTasks.Jobs
             var unitOfWork = ServiceLocator.Instance.GetRequiredService<IUnitOfWork>();
             var scheduletasksevice = ServiceLocator.Instance.GetRequiredService<ScheduleTaskService>();
             await scheduletaskService.UpdateScheduleRuningStatus();
-            var TAMService = new TAMCommonService();
 
             var idstring = schedulekey.Split("__")[1];
             var scheduleDB = await unitOfWork.ScheduleTaskRepository.FindAsync( x => x.Id.ToString() == idstring);
@@ -32,11 +31,20 @@ namespace TAMHubApp.ScheduleTasks.Jobs
             {
                 scheduletask.LastTimeRun = DateTime.Now;
             }
-
+            var lstSDK = TAMSInstance.TAMs.Select(x => x.DeviceSDKType).ToList();
+            if (lstSDK.Contains(TAMSDKTypes.E_ZKTECO))
+            {
+                await GlobalEnumInOutConverter.InitUpdateEnumConverter("ZKTeco");
+            }
+            if (lstSDK.Contains(TAMSDKTypes.E_REALAND))
+            {
+                await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
+            }
             foreach (var device in TAMSInstance.TAMs)
             {
                 await Task.Run(async () =>
                 {
+                    var TAMService = new TAMCommonService();
                     var datestart = DateTime.MinValue;
                     var configmindate = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
                     if(configmindate != null && !string.IsNullOrEmpty(configmindate.Value))
@@ -53,7 +61,7 @@ namespace TAMHubApp.ScheduleTasks.Jobs
                         datestart = lastrecord.TimeLog;
                     }
 
-                    await TAMService.Action_GetDataByDate(device, datestart, DateTime.Now, string.Empty, "Schedule", true);
+                    await TAMService.Action_GetDataByDate(TAMService, device, datestart, DateTime.Now, string.Empty, "Schedule", true);
                 });
             }
         }

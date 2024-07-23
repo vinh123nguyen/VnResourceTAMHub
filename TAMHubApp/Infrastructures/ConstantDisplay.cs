@@ -19,6 +19,7 @@
         public const string LANG_SCH_CycleType = "LANG_SCH_CycleType";
         public const string LANG_SCH_DayInMonth = "LANG_SCH_DayInMonth";
         public const string LANG_SCH_ScheduleIsRuningCanNotDoAction = "LANG_SCH_ScheduleIsRuningCanNotDoAction";
+        public const string LANG_DEV_DeviceIsConnectedCanNotDoAction = "LANG_DEV_DeviceIsConnectedCanNotDoAction";
         public const string LANG_GLO_ActionSuccess = "LANG_GLO_ActionSuccess";
         public const string LANG_GLO_DeviceDownloadSuccess = "LANG_GLO_DeviceDownloadSuccess";
         public const string LANG_GLO_DeviceDownloadError = "LANG_GLO_DeviceDownloadError";
@@ -29,5 +30,8 @@
         public const string LANG_GLO_GoodAfternoon = "LANG_GLO_GoodAfternoon";
         public const string LANG_GLO_GoodNight = "LANG_GLO_GoodNight";
         public const string LANG_GLO_GoodMidNight = "LANG_GLO_GoodMidNight";
+        public const string LANG_DAT_PleaseSelectDevice = "LANG_DAT_PleaseSelectDevice";
+        public const string LANG_GLO_English = "LANG_GLO_English";
+        public const string LANG_GLO_Vietnamese = "LANG_GLO_Vietnamese";
     }
 }

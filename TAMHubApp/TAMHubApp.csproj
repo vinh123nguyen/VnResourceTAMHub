@@ -75,6 +75,8 @@
 		<Resource Include="Resources\Images\image-afternoon.png" />
 		<Resource Include="Resources\Images\image-night.png" />
 		<Resource Include="Resources\Images\image-midnight.png" />
+		<Resource Include="Resources\Images\image-language-vi.png" />
+		<Resource Include="Resources\Images\image-language-en.png" />
 	</ItemGroup>
 	<ItemGroup>
 		<Resource Include="Resources\Images\windowicon.png" />

@@ -4,18 +4,16 @@ using Quartz;
 using Quartz.Impl;
 using Quartz.Spi;
 using Serilog;
-using System.ComponentModel;
 using System.Windows;
 using System.Windows.Forms;
 using TAMHubApp.Data;
+using TAMHubApp.Infrastructures.Helpers;
 using TAMHubApp.ScheduleTasks;
-using TAMHubApp.ScheduleTasks.Jobs;
 using TAMHubApp.Services;
 using TAMHubApp.Services.TAMServices;
 using TAMHubApp.ViewModels;
 using TAMHubApp.ViewModels.UserControls;
 using TAMHubApp.Views;
-using TAMHubApp.Views.UserControls;
 
 namespace TAMHubApp
 {
@@ -75,7 +73,7 @@ namespace TAMHubApp
             services.AddDbContext<AppDbContext>(opts =>
             {
                 opts.UseSqlite($"Data Source=Data/AppDB.db");
-            }, ServiceLifetime.Transient, ServiceLifetime.Transient);
+            }, ServiceLifetime.Transient);
 
             services.AddSingleton<MainWindow>(provider => new MainWindow
             {
@@ -85,7 +83,7 @@ namespace TAMHubApp
             //services.AddTransient<IUnitOfWork, UnitOfWork>();
 
             services.AddSingleton<SingletonTAMInstance>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
+            services.AddTransient<IUnitOfWork, UnitOfWork>();
 
         }
         private async Task InitializeScheduler()
@@ -97,6 +95,8 @@ namespace TAMHubApp
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            LocalizationHelper.SetLanguage();
+
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()
             .WriteTo.File("logs\\myapp.txt", rollingInterval: RollingInterval.Day)
@@ -110,7 +110,7 @@ namespace TAMHubApp
             TrayBarService.CreateTrayIcon(notifyIcon);
             //AutoUpdaterService.CheckForUpdate();
             DataBaseService.EnsureUpdateDatabase(serviceProvider);
-            //LocalizationHelper.SetLanguage("vi-VN");
+            
 
             base.OnStartup(e);
         }

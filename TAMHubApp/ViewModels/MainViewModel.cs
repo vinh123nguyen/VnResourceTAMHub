@@ -1,10 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Input;
-using System.Windows.Media;
+﻿using System.Windows.Media;
 using TAMHubApp.Commands;
 using TAMHubApp.Infrastructures.Enums;
 using TAMHubApp.Services;
-using TAMHubApp.Views.UserControls;
 
 namespace TAMHubApp.ViewModels
 {
@@ -78,14 +75,42 @@ namespace TAMHubApp.ViewModels
             IsShowingToast = false;
         }
 
-
+        //public ObservableCollection<LanguageOption> ListLanguages { get; set; }
+        //private LanguageOption _selectedLanguages { get; set; }
+        //public LanguageOption SelectedLanguages
+        //{
+        //    get => _selectedLanguages;
+        //    set
+        //    {
+        //        if(Properties.Settings.Default.Language != value.Key)
+        //        {
+        //            _selectedLanguages = value;
+        //            OnPropertyChanged();
+        //            LocalizationHelper.SetLanguage(value.Key);
+        //            Properties.Settings.Default.Language = value.Key;
+        //        }
+        //    }
+        //}
         public MainViewModel(ITabNavigationService navigationService)
         {
             ToastColor = Brushes.LightGreen;
             _navigationService = navigationService;
-            //TabActive = "HomeView";
 
-
+            //ListLanguages = new ObservableCollection<LanguageOption>()
+            //{
+            //    new LanguageOption()
+            //    {
+            //        Key = "en",
+            //        Language = ConstantDisplay.LANG_GLO_English.TranslateString(),
+            //        ImagePath = new BitmapImage(new Uri("/Resources/Images/image-language-en.png", UriKind.RelativeOrAbsolute))
+            //    },
+            //    new LanguageOption()
+            //    {
+            //        Key = "vi",
+            //        Language = ConstantDisplay.LANG_GLO_Vietnamese.TranslateString(),
+            //        ImagePath = new BitmapImage(new Uri("/Resources/Images/image-language-vi.png", UriKind.RelativeOrAbsolute))
+            //    },
+            //};
 
             NavigateHomeCommand = new RelayCommand<BaseViewModel>(x => { return true; }, x => { MainViewNavigate.NavigateTo<HomeViewModel>(); TabActive = "HomeView"; });
             NavigateDeviceCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DeviceView"; }, x => { MainViewNavigate.NavigateTo<DeviceViewModel>(); TabActive = "DeviceView"; });

@@ -27,6 +27,7 @@
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="Auto"></ColumnDefinition>
                         <ColumnDefinition></ColumnDefinition>
+                        <ColumnDefinition></ColumnDefinition>
                     </Grid.ColumnDefinitions>
 
                     <Button Style="{StaticResource style_navButton}" Template="{StaticResource NoMouseOverButtonTemplate}" Background="White" Command="{Binding NavigateHomeCommand}" Grid.Column="0">
@@ -92,6 +93,24 @@
                             </Border>
                         </Popup>
                     </StackPanel>
+
+                    <!--<ComboBox Style="{StaticResource style_ComboBoxNoBorder}" Grid.Column="2">-->
+
+                    <!--<ComboBox Grid.Column="2"
+                        Style="{StaticResource style_ComboBoxNoBorder}"
+                        Height="32" 
+                        Margin="4"
+                        ItemsSource="{Binding ListLanguages}" 
+                        SelectedItem="{Binding SelectedLanguages, Mode=TwoWay}">
+                        <ComboBox.ItemTemplate>
+                            <DataTemplate>
+                                <StackPanel Orientation="Horizontal">
+                                    <Image Margin="8" Grid.Column="0" Width="20" Height="20" Source="{Binding ImagePath}" />
+                                    <TextBlock Text="{Binding Language}"/>
+                                </StackPanel>
+                            </DataTemplate>
+                        </ComboBox.ItemTemplate>
+                    </ComboBox>-->
                 </Grid>
             </Border>
             <ContentControl Grid.Row="1" Content="{Binding MainViewNavigate.CurrentView}">

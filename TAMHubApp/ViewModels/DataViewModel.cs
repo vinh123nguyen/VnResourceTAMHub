@@ -168,7 +168,7 @@ namespace TAMHubApp.ViewModels
                         InOutModeView = x.InOutModeView,
                         TimeLog = x.TimeLog,
                         TimeLogView = x.TimeLog.ToString("dd/MM/yyyy HH:mm:ss"),
-                        DeviceName = x.Device.Name
+                        //DeviceName = x.Device.Name
                     }).ToList();
                 }
                 else
@@ -183,7 +183,7 @@ namespace TAMHubApp.ViewModels
                         InOutModeView = x.InOutModeView,
                         TimeLog = x.TimeLog,
                         TimeLogView = x.TimeLog.ToString("dd/MM/yyyy HH:mm:ss"),
-                        DeviceName = x.Device.Name
+                        //DeviceName = x.Device.Name
                     }).ToList();
                 }
 
@@ -193,8 +193,8 @@ namespace TAMHubApp.ViewModels
                 }
                 if(SelectedDevices != null && SelectedDevices.Any())
                 {
-                    var selectedId = SelectedDevices.Select(x => x.Id);
-                    lstlog = lstlog.Where(x => selectedId.Contains(x.Id)).ToList();
+                    var selectedId = SelectedDevices.Select(x => x.Id).ToList();
+                    lstlog = lstlog.Where(x => selectedId.Contains(x.DeviceID)).ToList();
                 }
                 if(DateFrom != null)
                 {
@@ -209,9 +209,23 @@ namespace TAMHubApp.ViewModels
 
                 lstlog = lstlog.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
 
-                ListTAMScanLogs = new ObservableCollection<TAMScanLogModel>(lstlog);
+                var lstDevice = (await _unitOfWork.DeviceRepository.GetAllAsync()).ToList();
 
-                //OnPropertyChanged(nameof(CurrentPage));
+                var newlist = from l in lstlog
+                              join dvl in lstDevice on l.DeviceID equals dvl.Id into dv
+                              from devicelj in dv.DefaultIfEmpty()
+                              select new TAMScanLogModel()
+                              {
+                                  Id = l.Id,
+                                  DeviceID = l.DeviceID,
+                                  EnrollNumber = l.EnrollNumber,
+                                  VerifyMode = l.VerifyMode,
+                                  InOutModeView = l.InOutModeView,
+                                  TimeLog = l.TimeLog,
+                                  TimeLogView = l.TimeLogView,
+                                  DeviceName = devicelj?.Name ?? "",
+                              };
+                ListTAMScanLogs = new ObservableCollection<TAMScanLogModel>(newlist);
 
                 _mainViewModel.IsLoading = false;
             });
@@ -241,8 +255,8 @@ namespace TAMHubApp.ViewModels
                 }
                 if (SelectedDevices != null && SelectedDevices.Any())
                 {
-                    var selectedId = SelectedDevices.Select(x => x.Id);
-                    lstQuery = lstQuery.Where(x => selectedId.Contains(x.Id)).ToList();
+                    var selectedId = SelectedDevices.Select(x => x.Id).ToList();
+                    lstQuery = lstQuery.Where(x => selectedId.Contains(x.DeviceID)).ToList();
                 }
                 if (DateFrom != null)
                 {

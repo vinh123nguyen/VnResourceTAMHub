@@ -9,8 +9,21 @@ namespace TAMHubApp.Data
 {
     public class AppDbContext : DbContext 
     {
+        public AppDbContext() : base()
+        {
+        }
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
+
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            base.OnConfiguring(optionsBuilder);
+
+            string dbPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Data", "AppDB.db");
+
+            optionsBuilder.UseSqlite($"Data Source={dbPath}");
 
         }
 
