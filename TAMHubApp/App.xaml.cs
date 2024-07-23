@@ -95,7 +95,7 @@ namespace TAMHubApp
 
         protected override void OnStartup(StartupEventArgs e)
         {
-            LocalizationHelper.SetLanguage();
+            //LocalizationHelper.SetLanguage();
 
             Log.Logger = new LoggerConfiguration()
             .MinimumLevel.Information()

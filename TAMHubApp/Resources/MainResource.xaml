@@ -4,7 +4,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Resources/Styles/MainStyle.xaml"/>
         <ResourceDictionary Source="/Resources/Styles/IconPath.xaml"/>
-        <!--<ResourceDictionary Source="/Resources/Localizations/LocalizationResources.vi-VN.xaml"/>-->
+        <ResourceDictionary Source="/Resources/Localizations/LocalizationResources.vi.xaml"/>
         
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>
