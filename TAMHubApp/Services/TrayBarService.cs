@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
 using System.Windows;
 using System.Windows.Forms;
-using TAMHubApp.Views;
 
 namespace TAMHubApp.Services
 {
@@ -10,7 +9,7 @@ namespace TAMHubApp.Services
         public static void CreateTrayIcon(NotifyIcon notifyIcon)
         {
             notifyIcon.Icon = new Icon("Resources/Images/icon.ico");
-            notifyIcon.Text = "SingletonSean";
+            notifyIcon.Text = "VnResource TAM Hub";
             notifyIcon.Visible = true;
             notifyIcon.ContextMenuStrip = new ContextMenuStrip();
 
