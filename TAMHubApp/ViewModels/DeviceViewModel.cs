@@ -60,7 +60,7 @@ namespace TAMHubApp.ViewModels
 
         private void Action_OpenPopupAddOrUpdateDevice(object obj)
         {
-            if (obj != null && obj is Guid)
+            if (obj != null && obj is Guid) 
             {
                 var itemdeviceAction = DeviceItems.FirstOrDefault(x => x.Id == (Guid)obj);
                 if(itemdeviceAction != null && itemdeviceAction.IsConnected)
@@ -69,12 +69,18 @@ namespace TAMHubApp.ViewModels
                     {
                         _mainViewModel.Action_ShowToastNotify(ConstantDisplay.LANG_DEV_DeviceIsConnectedCanNotDoAction.TranslateString(), ToastNotifyType.Warning);
                     });
-                } 
+                }
+                else
+                {
+                    IsCreateOrUpdatePopupOpen = true;
+                    OverlayNavigate.NavigateTo<DeviceItemInfoUCViewModel>();
+                }
             }
-
-            IsCreateOrUpdatePopupOpen = true;
-            OverlayNavigate.NavigateTo<DeviceItemInfoUCViewModel>();
-
+            else
+            {
+                IsCreateOrUpdatePopupOpen = true;
+                OverlayNavigate.NavigateTo<DeviceItemInfoUCViewModel>();
+            }
             var daw = (DeviceItemInfoUCViewModel)OverlayNavigate.CurrentView;
             daw.Id = obj == null ? null : obj.ToString();
 

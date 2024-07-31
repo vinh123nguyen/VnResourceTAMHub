@@ -111,6 +111,7 @@ namespace TAMHubApp.Services.TAMServices
                         deviceins.IpAddress = device.IPAddress;
                         deviceins.IpPort = device.Port;
                         deviceins.CommunicationType = CommunicationType.Tcp;
+                        deviceins.ConnectionModel = 5;
 
                         var deviceConnectionIns = DeviceConnection.CreateConnection(ref deviceins);
 
@@ -133,6 +134,7 @@ namespace TAMHubApp.Services.TAMServices
                                 dbDevice.NewLogCount = (int)extraData;
                             }
                             extraProperty = false;
+                            extraData = dtList;
                             resultRiss = deviceConnectionIns.GetProperty(DeviceProperty.AttRecordsCount, extraProperty, ref deviceins, ref extraData);
                             if (result)
                             {
@@ -376,6 +378,8 @@ namespace TAMHubApp.Services.TAMServices
 
         public async Task<bool> Action_GetDataByDate(TAMCommonService service, BaseTAMService device, DateTime datefrom, DateTime dateend, string EnrollNumber, string DownloadType = "Manual", bool IsDownSchedule = false)
         {
+            Log.Information($"[Start Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
+            
             using (var dbContext = new AppDbContext())
             {
                 UnitOfWork unitOfWork = new UnitOfWork(dbContext);
@@ -388,10 +392,13 @@ namespace TAMHubApp.Services.TAMServices
                 actionLog.TimeLogFrom = DateTime.Now;
                 actionLog.DownloadType = DownloadType;
                 actionLog.DeviceID = device.Id;
+
+                Log.Information($"[{device.IPAddress}]:" + "actionLog Start: {@actionLog}", actionLog);
+
                 try
                 {
-                    var dbDesvice = await unitOfWork.TAMScanLogRepository.GetAllAsync();
-                    var d = dbDesvice.ToList();
+                    //var dbDesvice = await unitOfWork.TAMScanLogRepository.GetAllAsync();
+                    //var d = dbDesvice.ToList();
 
                     if (!device.IsConnected)
                     {
@@ -408,11 +415,14 @@ namespace TAMHubApp.Services.TAMServices
 
                             await unitOfWork.SaveChanageAsync();
 
+                            Log.Information($"[End Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
                             return false;
                         }
                     }
 
                     var dbDevice = await unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
+
+                    Log.Information($"[{device.IPAddress}]:" + "Start Get Data");
 
                     var listAttRecord = new List<TAMScanLog>();
                     if (device.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
@@ -442,7 +452,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
+                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                             });
 
@@ -464,7 +474,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
+                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                             });
 
@@ -493,7 +503,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
+                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                             });
                                         }
@@ -514,7 +524,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : "",
+                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                             });
 
@@ -553,33 +563,33 @@ namespace TAMHubApp.Services.TAMServices
 
                         try
                         {
-                            if (IsDownSchedule)
-                            {
-                                extraData = Global.DeviceBusy;
-                                var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                            //if (IsDownSchedule)
+                            //{
+                            //    extraData = Global.DeviceBusy;
+                            //    var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
 
-                                extraProperty = true;
-                                extraData = dtList;
+                            //    extraProperty = true;
+                            //    extraData = dtList;
 
-                                resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
-                                if (resultRiss)
-                                {
-                                    List<Record> recordList = (List<Record>)extraData;
-                                    listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend).Select(x => new TAMScanLog()
-                                    {
-                                        Id = Guid.NewGuid(),
-                                        DeviceID = device.Id,
-                                        EnrollNumber = (int)x.DIN,
-                                        VerifyModeView = GlobalUtilities.VerifyType(x.Action),
-                                        VerifyModeOrigin = x.Action,
-                                        InOutModeOrigin = x.Verify,
-                                        InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
-                                        TimeLog = x.Clock
-                                    }).ToList();
-                                }
-                            }
-                            else
-                            {
+                            //    resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                            //    if (resultRiss)
+                            //    {
+                            //        List<Record> recordList = (List<Record>)extraData;
+                            //        listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
+                            //        {
+                            //            Id = Guid.NewGuid(),
+                            //            DeviceID = device.Id,
+                            //            EnrollNumber = (int)x.DIN,
+                            //            VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                            //            VerifyModeOrigin = x.Action,
+                            //            InOutModeOrigin = x.Verify,
+                            //            InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                            //            TimeLog = x.Clock
+                            //        }).ToList();
+                            //    }
+                            //}
+                            //else
+                            //{
                                 extraData = Global.DeviceBusy;
                                 var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
 
@@ -590,7 +600,7 @@ namespace TAMHubApp.Services.TAMServices
                                 if (resultRiss)
                                 {
                                     List<Record> recordList = (List<Record>)extraData;
-                                    listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend).Select(x => new TAMScanLog()
+                                    listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
                                     {
                                         Id = Guid.NewGuid(),
                                         DeviceID = device.Id,
@@ -598,11 +608,11 @@ namespace TAMHubApp.Services.TAMServices
                                         VerifyModeView = GlobalUtilities.VerifyType(x.Action),
                                         VerifyModeOrigin = x.Action,
                                         InOutModeOrigin = x.Verify,
-                                        InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : "",
+                                        InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
                                         TimeLog = x.Clock
                                     }).ToList();
                                 }
-                            }
+                            //}
                         }
                         catch (Exception ex)
                         {
@@ -623,6 +633,7 @@ namespace TAMHubApp.Services.TAMServices
                     {
                         listAttRecord.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
                     }
+                    Log.Information($"[{device.IPAddress}]:" + "End Get Data, Num row: " + listAttRecord.Count.ToString());
                     if (listAttRecord.Any())
                     {
                         actionLog.TotalRowDownload = listAttRecord.Count;
@@ -639,6 +650,8 @@ namespace TAMHubApp.Services.TAMServices
 
                         var listInsertscanlog = listAttRecord.Where(item => !hsetDataDbTAMScanLog.Contains((item.EnrollNumber, item.TimeLog))).ToList();
 
+                        Log.Information($"[{device.IPAddress}]:" + "Insert Data, Num row: " + listInsertscanlog.Count.ToString());
+
                         actionLog.TotalNewlyData = 0;
 
                         if (listInsertscanlog != null && listInsertscanlog.Any())
@@ -650,10 +663,10 @@ namespace TAMHubApp.Services.TAMServices
 
                         actionLog.Status = "Success";
 
-                        actionLog.TimeLogTo = DateTime.Now;
-
-                        actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
                         await unitOfWork.SaveChanageAsync();
+
+                        Log.Information($"[{device.IPAddress}]:" + " Start Sync Data");
+
                         if (synctype != null && synctype.Value == "DB")
                         {
                             await service.SyncDataToDb(dbDevice, actionLog, datefrom, dateend);
@@ -663,14 +676,23 @@ namespace TAMHubApp.Services.TAMServices
                             await service.SyncDataByApi(dbDevice, actionLog, datefrom, dateend);
                         }
 
+                        Log.Information($"[{device.IPAddress}]:" + " End Sync Data");
+
+                        actionLog.TimeLogTo = DateTime.Now;
+
+                        actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+
                         await unitOfWork.ActionLogRepository.AddAsync(actionLog);
 
                         await unitOfWork.SaveChanageAsync();
                     }
+                    Log.Information($"[End Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
                     return true;
                 }
                 catch (Exception ex)
                 {
+                    Log.Error($"[{device.IPAddress}]:" + " Have Exception: " + ex.Message);
+
                     actionLog.Status = "Error";
 
                     actionLog.TimeLogTo = DateTime.Now;
@@ -681,9 +703,11 @@ namespace TAMHubApp.Services.TAMServices
 
                     await unitOfWork.SaveChanageAsync();
 
+                    Log.Information($"[End Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
                     return false;
                 }
             }
+                
         }
 
         public void Action_ConnectAll()
@@ -723,6 +747,7 @@ namespace TAMHubApp.Services.TAMServices
         // Đặc thù taisun
         public async Task<bool> SyncDataToDb(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend)
         {
+            Log.Information($"[{devicedb.IPAddress}]:" + " Start Sync Data to DB");
             using (var dbContext = new AppDbContext())
             {
                 UnitOfWork unitOfWork = new UnitOfWork(dbContext);
@@ -750,7 +775,7 @@ namespace TAMHubApp.Services.TAMServices
 
                         string connectionString = DbCStringBuilder.ToString();
 
-                        Log.Information("Connection string: " + connectionString);
+                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "Connection string: " + connectionString);
 
                         var strDateStart = datefrom.ToString("yyyy-MM-dd HH:mm:ss.fff");
                         var strDateEnd = dateend.ToString("yyyy-MM-dd HH:mm:ss.fff");
@@ -781,7 +806,7 @@ namespace TAMHubApp.Services.TAMServices
                             }
                         }
 
-                        Log.Information("listDataAlready count: " + listDataAlready.Count);
+                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "listDataAlready count: " + listDataAlready.Count);
 
                         using (var sqlConnection = new SqlConnection(connectionString))
                         {
@@ -802,7 +827,7 @@ namespace TAMHubApp.Services.TAMServices
                             }
                         }
 
-                        Log.Information("ListUserIF count: " + ListUserIF.Count);
+                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "ListUserIF count: " + ListUserIF.Count);
 
                         if (!ListUserIF.Any())
                         {
@@ -813,7 +838,7 @@ namespace TAMHubApp.Services.TAMServices
 
                         var lstAdd = new List<CHECKINOUTModel>();
 
-                        Log.Information("listData join count: " + listData.Count());
+                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "listData join count: " + listData.Count());
 
                         var ds = from d in listData
                                  join u in ListUserIF on d.EnrollNumber.ToString() equals u.BADGENUMBER
@@ -831,7 +856,7 @@ namespace TAMHubApp.Services.TAMServices
                                      BADGENUMBER = u.BADGENUMBER,
                                  };
 
-                        Log.Information("data after join count: " + ds.Count());
+                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "data after join count: " + ds.Count());
 
                         using (var sqlConnection = new SqlConnection(connectionString))
                         {
@@ -851,7 +876,7 @@ namespace TAMHubApp.Services.TAMServices
                                 cm3.Dispose();
                                 count++;
                             }
-                            Log.Information("new data count: " + count);
+                            Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "new data count: " + count);
                             log.Status = "Success";
                             log.TotalDataAdded = count;
                         }
@@ -859,6 +884,8 @@ namespace TAMHubApp.Services.TAMServices
                     }
                     catch (Exception ex)
                     {
+                        Log.Error($"[{devicedb.IPAddress}]:" + " Sync data to DB have Error: " + ex.Message);
+
                         log.Status = "Error";
                         log.Message = ex.Message;
                         return false;
@@ -867,6 +894,8 @@ namespace TAMHubApp.Services.TAMServices
                 }
                 else
                 {
+                    Log.Error($"[{devicedb.IPAddress}]:" + " Sync data to DB have Error: Missing Db connection info");
+
                     log.Status = "Error";
                     log.Message = "Missing Db connection info";
                     return false;

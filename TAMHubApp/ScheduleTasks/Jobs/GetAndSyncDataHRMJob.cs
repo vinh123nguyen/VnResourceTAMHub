@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Quartz;
+using Serilog;
 using System.Globalization;
 using TAMHubApp.Data;
 using TAMHubApp.Infrastructures.Enums;
@@ -13,6 +14,7 @@ namespace TAMHubApp.ScheduleTasks.Jobs
         public async Task Execute(IJobExecutionContext context)
         {
             var schedulekey = context.JobDetail.Key.Name;  // job__idjob
+            Log.Information($"[Start Schedule] + {DateTime.Now} + JobKey: {schedulekey}");
             var scheduletaskService = ServiceLocator.Instance.GetRequiredService<ScheduleTaskService>();
             var TAMSInstance = ServiceLocator.Instance.GetRequiredService<SingletonTAMInstance>();
             var unitOfWork = ServiceLocator.Instance.GetRequiredService<IUnitOfWork>();

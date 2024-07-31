@@ -88,25 +88,25 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("a4a6b619-dd5d-414e-b2b6-af8792bd4a28"),
+                            Id = new Guid("fdd54365-c24d-45ae-a969-03dd96dbbb5c"),
                             Name = "ENUM_INOUT_ZKTECO_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("94cfc8cb-decc-424e-b5c2-c7ffd9c790e9"),
+                            Id = new Guid("82257de2-1b51-411b-9872-3f014f95d627"),
                             Name = "ENUM_INOUT_ZKTECO_OUT_KEY",
                             Value = "E_OUT"
                         },
                         new
                         {
-                            Id = new Guid("6917bbe7-b2b2-4fa5-815d-302dfdd9d552"),
+                            Id = new Guid("52546e06-0ec7-4207-8135-238fe84f374c"),
                             Name = "ENUM_INOUT_REALAND_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("8688d515-f63a-43f9-824c-665eac4d7c52"),
+                            Id = new Guid("65285a78-d3db-46e6-8ddc-efb99d2155ff"),
                             Name = "ENUM_INOUT_REALAND_OUT_KEY",
                             Value = "E_OUT"
                         });
@@ -219,7 +219,6 @@ namespace TAMHubApp.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("InOutModeView")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TimeLog")
@@ -229,7 +228,6 @@ namespace TAMHubApp.Migrations
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("VerifyModeView")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

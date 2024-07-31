@@ -25,6 +25,26 @@ namespace TAMHubApp.ViewModels
             DeviceItems = singletonTAMInstance.TAMs;
             _mainViewModel = mainViewModel;
             _unitOfWork = unitOfWork;
+            var optionnull = new Option
+            {
+                Key = "",
+                Name = "Vui lòng chọn...",
+            };
+            ActionTypeSelected = optionnull;
+            ActionTypes = new ObservableCollection<Option>(new List<Option>()
+            {
+                optionnull,
+                new Option
+                {
+                    Key = "Manual",
+                    Name = "Manual".TranslateString(),
+                },
+                new Option
+                {
+                    Key = "Schedule",
+                    Name = "Schedule".TranslateString(),
+                }
+            });
         }
 
 
@@ -49,12 +69,21 @@ namespace TAMHubApp.ViewModels
         private string _dataRowInfo { get; set; }
         public string DataRowInfo { get => _dataRowInfo; set { _dataRowInfo = value; OnPropertyChanged(); } }
 
+        private Option _actionTypeSelected { get; set; }
+        private ObservableCollection<Option> _actionTypes { get; set; }
+        public ObservableCollection<Option> ActionTypes
+        {
+            get => _actionTypes ?? (_actionTypes = new ObservableCollection<Option>());
+            set => _actionTypes = value;
+        }
+        public Option ActionTypeSelected { get => _actionTypeSelected; set { _actionTypeSelected = value; OnPropertyChanged(); } }
+
         private ObservableCollection<ActionLogModel> _listActionLogs { get; set; }
         public ObservableCollection<ActionLogModel> ListActionLogs { get => _listActionLogs; set { _listActionLogs = value; OnPropertyChanged(); } }
 
 
-        private ObservableCollection<BaseTAMService> _deviceItems;
-        private ObservableCollection<BaseTAMService> _selectedDeviceItems;
+        private ObservableCollection<BaseTAMService> _deviceItems { get; set; }
+        private ObservableCollection<BaseTAMService> _selectedDeviceItems { get; set; }
         public ObservableCollection<BaseTAMService> DeviceItems
         {
             get => _deviceItems ?? (_deviceItems = new ObservableCollection<BaseTAMService>());
@@ -119,6 +148,10 @@ namespace TAMHubApp.ViewModels
             if( DateTo != null)
             {
                 listData = listData.Where(x => x.TimeLogFrom <= DateTo).ToList();
+            }
+            if(ActionTypeSelected != null && !string.IsNullOrEmpty(ActionTypeSelected.Key))
+            {
+                listData = listData.Where(x => x.DownloadType == ActionTypeSelected.Key).ToList();
             }
             TotalRow = listData.Count();
             listData = listData.OrderByDescending(x => x.TimeLogFrom).ToList();
