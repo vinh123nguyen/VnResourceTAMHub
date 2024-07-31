@@ -130,8 +130,8 @@ namespace TAMHubApp.Migrations
                     DeviceID = table.Column<Guid>(type: "TEXT", nullable: false),
                     EnrollNumber = table.Column<int>(type: "INTEGER", nullable: false),
                     VerifyModeOrigin = table.Column<int>(type: "INTEGER", nullable: false),
-                    VerifyModeView = table.Column<string>(type: "TEXT", nullable: false),
-                    InOutModeView = table.Column<string>(type: "TEXT", nullable: false),
+                    VerifyModeView = table.Column<string>(type: "TEXT", nullable: true),
+                    InOutModeView = table.Column<string>(type: "TEXT", nullable: true),
                     InOutModeOrigin = table.Column<int>(type: "INTEGER", nullable: false),
                     TimeLog = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
@@ -151,10 +151,10 @@ namespace TAMHubApp.Migrations
                 columns: new[] { "Id", "Name", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("6917bbe7-b2b2-4fa5-815d-302dfdd9d552"), "ENUM_INOUT_REALAND_IN_KEY", "E_IN" },
-                    { new Guid("8688d515-f63a-43f9-824c-665eac4d7c52"), "ENUM_INOUT_REALAND_OUT_KEY", "E_OUT" },
-                    { new Guid("94cfc8cb-decc-424e-b5c2-c7ffd9c790e9"), "ENUM_INOUT_ZKTECO_OUT_KEY", "E_OUT" },
-                    { new Guid("a4a6b619-dd5d-414e-b2b6-af8792bd4a28"), "ENUM_INOUT_ZKTECO_IN_KEY", "E_IN" }
+                    { new Guid("52546e06-0ec7-4207-8135-238fe84f374c"), "ENUM_INOUT_REALAND_IN_KEY", "E_IN" },
+                    { new Guid("65285a78-d3db-46e6-8ddc-efb99d2155ff"), "ENUM_INOUT_REALAND_OUT_KEY", "E_OUT" },
+                    { new Guid("82257de2-1b51-411b-9872-3f014f95d627"), "ENUM_INOUT_ZKTECO_OUT_KEY", "E_OUT" },
+                    { new Guid("fdd54365-c24d-45ae-a969-03dd96dbbb5c"), "ENUM_INOUT_ZKTECO_IN_KEY", "E_IN" }
                 });
 
             migrationBuilder.CreateIndex(

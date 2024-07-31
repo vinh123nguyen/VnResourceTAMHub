@@ -225,11 +225,11 @@ namespace TAMHubApp.ViewModels.UserControls
                 result = false;
                 message = ConstantDisplay.LANG_DEV_IPAddress.TranslateString() + " " + ConstantDisplay.LANG_GLO_CanNotBeBlank.TranslateString();
             }
-            else if (!string.IsNullOrEmpty(IPAddress) && !GlobalUtilities.IsCorrenctIP(IPAddress))
-            {
-                result = false;
-                message = ConstantDisplay.LANG_DEV_IPAddress.TranslateString() + " " + ConstantDisplay.LANG_GLO_NotMatchDataType.TranslateString();
-            }
+            //else if (!string.IsNullOrEmpty(IPAddress) && !GlobalUtilities.IsCorrenctIP(IPAddress))
+            //{
+            //    result = false;
+            //    message = ConstantDisplay.LANG_DEV_IPAddress.TranslateString() + " " + ConstantDisplay.LANG_GLO_NotMatchDataType.TranslateString();
+            //}
             else if (string.IsNullOrEmpty(Port))
             {
                 result = false;
