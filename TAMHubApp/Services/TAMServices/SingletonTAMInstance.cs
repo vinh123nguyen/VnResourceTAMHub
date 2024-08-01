@@ -98,94 +98,100 @@ namespace TAMHubApp.Services.TAMServices
 
         public async void UpdateDeviceFromDb(Guid deviceId)
         {
-            //TAMs = 
-            var devicedb = await _unitOfWork.DeviceRepository.GetByIdAsync(deviceId);
-            if(devicedb != null)
+            using (var dbContext = new AppDbContext())
             {
-                var existDevice = TAMs.FirstOrDefault(x => x.Id == deviceId);
-                if (existDevice != null)
-                {
-                    existDevice.DeviceSDKType = devicedb.DeviceSDKType;
-                    existDevice.Id = devicedb.Id;
-                    existDevice.Name = devicedb.Name;
-                    existDevice.MachineNo = devicedb.MachineNo;
-                    existDevice.IPAddress = devicedb.IPAddress;
-                    existDevice.Port = devicedb.Port;
-                    existDevice.CommPassword = devicedb.CommPassword;
-                    existDevice.IsConnectLoading = false;
-                    existDevice.IsConnected = false;
-                    existDevice.AllLogCount = devicedb.AllLogCount;
-                    existDevice.NewLogCount = devicedb.NewLogCount;
-                    existDevice.DeviceSDKTypeView = "Realand";
-                    existDevice.CompanyCode = devicedb.CompanyCode;
-                    existDevice.SerialNumber = devicedb.SerialNumber;
-                    existDevice.ProductName = devicedb.ProductName;
+                UnitOfWork unitOfWork = new UnitOfWork(dbContext);
 
-                    if (existDevice.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
-                    {
-                        existDevice.DeviceSDKTypeView = "ZKTeco";
-                        ((ZKTecoDeviceItem)existDevice).ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value;
-                        ((ZKTecoDeviceItem)existDevice).ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value;
-                        ((ZKTecoDeviceItem)existDevice).ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime;
-                    }
-                }
-                else
+                var devicedb = await unitOfWork.DeviceRepository.GetByIdAsync(deviceId);
+                if (devicedb != null)
                 {
-                    if (devicedb.DeviceSDKType == TAMSDKTypes.E_REALAND)
+                    var existDevice = TAMs.FirstOrDefault(x => x.Id == deviceId);
+                    if (existDevice != null)
                     {
-                        var zkdevice = new RealandDeviceItem()
+                        existDevice.DeviceSDKType = devicedb.DeviceSDKType;
+                        existDevice.Id = devicedb.Id;
+                        existDevice.Name = devicedb.Name;
+                        existDevice.MachineNo = devicedb.MachineNo;
+                        existDevice.IPAddress = devicedb.IPAddress;
+                        existDevice.Port = devicedb.Port;
+                        existDevice.CommPassword = devicedb.CommPassword;
+                        existDevice.IsConnectLoading = false;
+                        existDevice.IsConnected = false;
+                        existDevice.AllLogCount = devicedb.AllLogCount;
+                        existDevice.NewLogCount = devicedb.NewLogCount;
+                        existDevice.DeviceSDKTypeView = "Realand";
+                        existDevice.CompanyCode = devicedb.CompanyCode;
+                        existDevice.SerialNumber = devicedb.SerialNumber;
+                        existDevice.ProductName = devicedb.ProductName;
+
+                        if (existDevice.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
                         {
-                            DeviceSDKType = devicedb.DeviceSDKType,
-                            Id = devicedb.Id,
-                            Name = devicedb.Name,
-                            MachineNo = devicedb.MachineNo,
-                            IPAddress = devicedb.IPAddress,
-                            Port = devicedb.Port,
-                            CommPassword = devicedb.CommPassword,
-                            IsConnectLoading = false,
-                            IsConnected = false,
-                            AllLogCount = devicedb.AllLogCount,
-                            NewLogCount = devicedb.NewLogCount,
-                            SerialNumber = devicedb.SerialNumber,
-                            ProductName = devicedb.ProductName,
-                            CompanyCode = devicedb.CompanyCode,
-                            DeviceSDKTypeView = "Realand",
-                        };
-                        Application.Current.Dispatcher.Invoke(() =>
-                        {
-                            TAMs.Add(zkdevice);
-                        });
+                            existDevice.DeviceSDKTypeView = "ZKTeco";
+                            ((ZKTecoDeviceItem)existDevice).ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value;
+                            ((ZKTecoDeviceItem)existDevice).ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value;
+                            ((ZKTecoDeviceItem)existDevice).ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime;
+                        }
                     }
-                    else if(devicedb.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
+                    else
                     {
-                        var zkdevice = new ZKTecoDeviceItem()
+                        if (devicedb.DeviceSDKType == TAMSDKTypes.E_REALAND)
                         {
-                            DeviceSDKType = devicedb.DeviceSDKType,
-                            Id = devicedb.Id,
-                            Name = devicedb.Name,
-                            MachineNo = devicedb.MachineNo,
-                            IPAddress = devicedb.IPAddress,
-                            Port = devicedb.Port,
-                            CommPassword = devicedb.CommPassword,
-                            IsConnectLoading = false,
-                            IsConnected = false,
-                            AllLogCount = devicedb.AllLogCount,
-                            DeviceSDKTypeView = "ZKTeco",
-                            NewLogCount = devicedb.NewLogCount,
-                            SerialNumber = devicedb.SerialNumber,
-                            ProductName = devicedb.ProductName,
-                            CompanyCode = devicedb.CompanyCode,
-                            ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime,
-                            ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value,
-                            ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value
-                        };
-                        Application.Current.Dispatcher.Invoke(() =>
+                            var zkdevice = new RealandDeviceItem()
+                            {
+                                DeviceSDKType = devicedb.DeviceSDKType,
+                                Id = devicedb.Id,
+                                Name = devicedb.Name,
+                                MachineNo = devicedb.MachineNo,
+                                IPAddress = devicedb.IPAddress,
+                                Port = devicedb.Port,
+                                CommPassword = devicedb.CommPassword,
+                                IsConnectLoading = false,
+                                IsConnected = false,
+                                AllLogCount = devicedb.AllLogCount,
+                                NewLogCount = devicedb.NewLogCount,
+                                SerialNumber = devicedb.SerialNumber,
+                                ProductName = devicedb.ProductName,
+                                CompanyCode = devicedb.CompanyCode,
+                                DeviceSDKTypeView = "Realand",
+                            };
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                TAMs.Add(zkdevice);
+                            });
+                        }
+                        else if (devicedb.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
                         {
-                            TAMs.Add(zkdevice);
-                        });
+                            var zkdevice = new ZKTecoDeviceItem()
+                            {
+                                DeviceSDKType = devicedb.DeviceSDKType,
+                                Id = devicedb.Id,
+                                Name = devicedb.Name,
+                                MachineNo = devicedb.MachineNo,
+                                IPAddress = devicedb.IPAddress,
+                                Port = devicedb.Port,
+                                CommPassword = devicedb.CommPassword,
+                                IsConnectLoading = false,
+                                IsConnected = false,
+                                AllLogCount = devicedb.AllLogCount,
+                                DeviceSDKTypeView = "ZKTeco",
+                                NewLogCount = devicedb.NewLogCount,
+                                SerialNumber = devicedb.SerialNumber,
+                                ProductName = devicedb.ProductName,
+                                CompanyCode = devicedb.CompanyCode,
+                                ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime,
+                                ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value,
+                                ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value
+                            };
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                TAMs.Add(zkdevice);
+                            });
+                        }
                     }
                 }
             }
+                //TAMs = 
+            
         }
 
         public void RemoveDeviceToSingletonInstance(Guid deviceId)
