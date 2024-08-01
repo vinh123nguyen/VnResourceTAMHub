@@ -631,7 +631,7 @@ namespace TAMHubApp.Services.TAMServices
                     }
                     if (!string.IsNullOrEmpty(EnrollNumber))
                     {
-                        listAttRecord.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                        listAttRecord = listAttRecord.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
                     }
                     Log.Information($"[{device.IPAddress}]:" + "End Get Data, Num row: " + listAttRecord.Count.ToString());
                     if (listAttRecord.Any())
@@ -669,11 +669,11 @@ namespace TAMHubApp.Services.TAMServices
 
                         if (synctype != null && synctype.Value == "DB")
                         {
-                            await service.SyncDataToDb(dbDevice, actionLog, datefrom, dateend);
+                            await service.SyncDataToDb(dbDevice, actionLog, datefrom, dateend, EnrollNumber);
                         }
                         if (synctype != null && synctype.Value == "API")
                         {
-                            await service.SyncDataByApi(dbDevice, actionLog, datefrom, dateend);
+                            await service.SyncDataByApi(dbDevice, actionLog, datefrom, dateend, EnrollNumber);
                         }
 
                         Log.Information($"[{device.IPAddress}]:" + " End Sync Data");
@@ -745,7 +745,7 @@ namespace TAMHubApp.Services.TAMServices
         }
 
         // Đặc thù taisun
-        public async Task<bool> SyncDataToDb(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend)
+        public async Task<bool> SyncDataToDb(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend, string EnrollNumber)
         {
             Log.Information($"[{devicedb.IPAddress}]:" + " Start Sync Data to DB");
             using (var dbContext = new AppDbContext())
@@ -766,6 +766,10 @@ namespace TAMHubApp.Services.TAMServices
                     try
                     {
                         var listData = await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == devicedb.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend);
+                        if (!string.IsNullOrEmpty(EnrollNumber))
+                        {
+                            listData = listData.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                        }
 
                         var DbCStringBuilder = new SqlConnectionStringBuilder();
                         DbCStringBuilder["Server"] = servercf.Value;
@@ -904,7 +908,7 @@ namespace TAMHubApp.Services.TAMServices
         }
 
 
-        public async Task<bool> SyncDataByApi(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend)
+        public async Task<bool> SyncDataByApi(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend, string EnrollNumber)
         {
             using (var dbContext = new AppDbContext())
             {
@@ -935,6 +939,11 @@ namespace TAMHubApp.Services.TAMServices
                 try
                 {
                     var listData = await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == devicedb.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend);
+
+                    if (!string.IsNullOrEmpty(EnrollNumber))
+                    {
+                        listData = listData.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                    }
 
                     foreach (var listDataChunk in listData.Chunk(maxrow))
                     {
@@ -1024,11 +1033,11 @@ namespace TAMHubApp.Services.TAMServices
                     actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
                     if (synctype != null && synctype.Value == "DB")
                     {
-                        res = await SyncDataToDb(dbDevice, actionLog, datefrom, dateend);
+                        res = await SyncDataToDb(dbDevice, actionLog, datefrom, dateend, EnrollNumber);
                     }
                     if (synctype != null && synctype.Value == "API")
                     {
-                        res = await SyncDataByApi(dbDevice, actionLog, datefrom, dateend);
+                        res = await SyncDataByApi(dbDevice, actionLog, datefrom, dateend, EnrollNumber);
                     }
 
                     await unitOfWork.ActionLogRepository.AddAsync(actionLog);

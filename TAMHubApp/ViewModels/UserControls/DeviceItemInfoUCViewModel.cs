@@ -145,29 +145,14 @@ namespace TAMHubApp.ViewModels.UserControls
                 return;
 
             _mainViewModel.IsLoading = true;
-            await Task.Run(async () =>
-            {
-                var ObjectId = Guid.Empty;
-                if (parameter != null && Guid.TryParse(parameter.ToString(), out ObjectId))
-                {
-                    var currentObject = await _unitOfWork.DeviceRepository.GetByIdAsync(ObjectId);
 
-                    if (currentObject != null)
-                    {
-                        currentObject.Name = DeviceName;
-                        currentObject.MachineNo = int.Parse(DeviceNumber);
-                        currentObject.IPAddress = IPAddress;
-                        currentObject.Port = int.Parse(Port);
-                        currentObject.CommPassword = string.IsNullOrEmpty(Password) ? null : int.Parse(Password);
-                        currentObject.DeviceSDKType = (TAMSDKTypes)Enum.Parse(typeof(TAMSDKTypes), SDKSelected.Key);
-                        currentObject.CompanyCode = CompanyCode;
-                        currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
-                    }
-                }
-                else
+            var ObjectId = Guid.Empty;
+            if (parameter != null && Guid.TryParse(parameter.ToString(), out ObjectId))
+            {
+                var currentObject = await _unitOfWork.DeviceRepository.GetByIdAsync(ObjectId);
+
+                if (currentObject != null)
                 {
-                    var currentObject = new Device();
-                    currentObject.Id = Guid.NewGuid();
                     currentObject.Name = DeviceName;
                     currentObject.MachineNo = int.Parse(DeviceNumber);
                     currentObject.IPAddress = IPAddress;
@@ -176,18 +161,31 @@ namespace TAMHubApp.ViewModels.UserControls
                     currentObject.DeviceSDKType = (TAMSDKTypes)Enum.Parse(typeof(TAMSDKTypes), SDKSelected.Key);
                     currentObject.CompanyCode = CompanyCode;
                     currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
-                    await _unitOfWork.DeviceRepository.AddAsync(currentObject);
-                    ObjectId = currentObject.Id;
                 }
+            }
+            else
+            {
+                var currentObject = new Device();
+                currentObject.Id = Guid.NewGuid();
+                currentObject.Name = DeviceName;
+                currentObject.MachineNo = int.Parse(DeviceNumber);
+                currentObject.IPAddress = IPAddress;
+                currentObject.Port = int.Parse(Port);
+                currentObject.CommPassword = string.IsNullOrEmpty(Password) ? null : int.Parse(Password);
+                currentObject.DeviceSDKType = (TAMSDKTypes)Enum.Parse(typeof(TAMSDKTypes), SDKSelected.Key);
+                currentObject.CompanyCode = CompanyCode;
+                currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
+                await _unitOfWork.DeviceRepository.AddAsync(currentObject);
+                ObjectId = currentObject.Id;
+            }
 
-                await _unitOfWork.SaveChanageAsync();
-                _singletonTAMInstance.UpdateDeviceFromDb(ObjectId);
-                _mainViewModel.IsLoading = false;
-                _deviceViewModel.IsCreateOrUpdatePopupOpen = false;
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    _mainViewModel.Action_ShowToastNotify(ConstantDisplay.LANG_GLO_ActionSuccess.TranslateString(), ToastNotifyType.Success);
-                });
+            await _unitOfWork.SaveChanageAsync();
+            _singletonTAMInstance.UpdateDeviceFromDb(ObjectId);
+            _mainViewModel.IsLoading = false;
+            _deviceViewModel.IsCreateOrUpdatePopupOpen = false;
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                _mainViewModel.Action_ShowToastNotify(ConstantDisplay.LANG_GLO_ActionSuccess.TranslateString(), ToastNotifyType.Success);
             });
         }
 
