@@ -1,4 +1,5 @@
-﻿using System.Collections.ObjectModel;
+﻿using Serilog;
+using System.Collections.ObjectModel;
 using System.Windows;
 using TAMHubApp.Data;
 using TAMHubApp.Infrastructures.Enums;
@@ -115,8 +116,6 @@ namespace TAMHubApp.Services.TAMServices
                         existDevice.IPAddress = devicedb.IPAddress;
                         existDevice.Port = devicedb.Port;
                         existDevice.CommPassword = devicedb.CommPassword;
-                        existDevice.IsConnectLoading = false;
-                        existDevice.IsConnected = false;
                         existDevice.AllLogCount = devicedb.AllLogCount;
                         existDevice.NewLogCount = devicedb.NewLogCount;
                         existDevice.DeviceSDKTypeView = "Realand";
