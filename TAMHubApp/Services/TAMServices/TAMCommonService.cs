@@ -96,6 +96,7 @@ namespace TAMHubApp.Services.TAMServices
                             zkdevice.IsConnected = result;
 
                             await unitOfWork.SaveChanageAsync();
+                            _singletonTAMInstance.UpdateDeviceFromDb(device.Id);
                         }
                     }
                     else if (device.DeviceSDKType == TAMSDKTypes.E_REALAND)
@@ -117,64 +118,17 @@ namespace TAMHubApp.Services.TAMServices
 
                         if (deviceConnectionIns.Open() > 0)
                         {
-                            object extraProperty = new object();
-                            object extraData = new object();
-                            //extraData = Global.DeviceBusy;
-                            //bool resultRiss = deviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, deviceins, extraData);
-
-                            List<DateTime> dtList = new List<DateTime>();
-                            dtList.Add(DateTime.MinValue);
-                            dtList.Add(DateTime.MaxValue);
-                            extraProperty = true;
-                            extraData = dtList;
-                            bool resultRiss = deviceConnectionIns.GetProperty(DeviceProperty.AttRecordsCount, extraProperty, ref deviceins, ref extraData);
-                            if (result)
-                            {
-                                rissdevice.NewLogCount = (int)extraData;
-                                dbDevice.NewLogCount = (int)extraData;
-                            }
-                            extraProperty = false;
-                            extraData = dtList;
-                            resultRiss = deviceConnectionIns.GetProperty(DeviceProperty.AttRecordsCount, extraProperty, ref deviceins, ref extraData);
-                            if (result)
-                            {
-                                rissdevice.AllLogCount = (int)extraData;
-                                dbDevice.AllLogCount = (int)extraData;
-                            }
-
-                            if (string.IsNullOrEmpty(device.SerialNumber))
-                            {
-                                object extraProperty1 = new object();
-                                object extraData1 = Zd2911Utils.DeviceSerialNo;
-                                result = deviceConnectionIns.GetProperty(DeviceProperty.SerialNo, extraProperty1, ref deviceins, ref extraData1);
-                                if (result)
-                                {
-                                    rissdevice.SerialNumber = (string)extraData1;
-                                    dbDevice.SerialNumber = (string)extraData1;
-                                }
-                            }
-                            if (string.IsNullOrEmpty(device.ProductName))
-                            {
-                                object extraProperty1 = new object();
-                                object extraData1 = Zd2911Utils.DeviceModel;
-                                result = deviceConnectionIns.GetProperty(DeviceProperty.Model, extraProperty1, ref deviceins, ref extraData1);
-                                if (result)
-                                {
-                                    rissdevice.ProductName = (string)extraData1;
-                                    dbDevice.ProductName = (string)extraData1;
-                                }
-                            }
-                            //extraData = Global.DeviceIdle;
-                            //resultRiss = deviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, deviceins, extraData);
-
                             rissdevice.DeviceIns = deviceins;
                             rissdevice.DeviceConnectionIns = deviceConnectionIns;
                             rissdevice.IsConnected = true;
+                            result = true;
+                            _ = Task.Run(async () =>
+                            {
+                                await Action_Realand_GetDeviceInfo(deviceins, deviceConnectionIns, rissdevice, device.Id);
+                                _singletonTAMInstance.UpdateDeviceFromDb(device.Id);
+                            });
                         }
                     }
-
-                    await unitOfWork.SaveChanageAsync();
-                    _singletonTAMInstance.UpdateDeviceFromDb(device.Id);
                 }
                 catch (Exception ex)
                 {
@@ -186,6 +140,81 @@ namespace TAMHubApp.Services.TAMServices
                 }
                 device.IsConnected = result;
                 return result;
+            }
+        }
+
+        public async Task Action_Realand_GetDeviceInfo(Riss.Devices.Device deviceins, DeviceConnection deviceConnectionIns, RealandDeviceItem rissdevice, Guid DeviceID)
+        {
+            using (var dbContext = new AppDbContext())
+            {
+                UnitOfWork unitOfWork = new UnitOfWork(dbContext);
+                var result = true;
+
+                var dbDevice = await unitOfWork.DeviceRepository.GetByIdAsync(DeviceID);
+                if (dbDevice == null)
+                    return;
+
+                //object extraProperty = new object();
+                //object extraData = new object();
+                //List<DateTime> dtList = new List<DateTime>();
+                //dtList.Add(DateTime.MinValue);
+                //dtList.Add(DateTime.MaxValue);
+                //extraProperty = true;
+                //extraData = dtList;
+                //bool resultRiss = deviceConnectionIns.GetProperty(DeviceProperty.AttRecordsCount, extraProperty, ref deviceins, ref extraData);
+                //if (result)
+                //{
+                //    rissdevice.NewLogCount = (int)extraData;
+                //    dbDevice.NewLogCount = (int)extraData;
+                //}
+
+                //extraProperty = false;
+                //extraData = dtList;
+                //resultRiss = deviceConnectionIns.GetProperty(DeviceProperty.AttRecordsCount, extraProperty, ref deviceins, ref extraData);
+                //if (result)
+                //{
+                //    rissdevice.AllLogCount = (int)extraData;
+                //    dbDevice.AllLogCount = (int)extraData;
+                //}
+
+                object extraProperty2 = new object();
+                object extraData2 = new object();
+                var result1 = deviceConnectionIns.GetProperty(DeviceProperty.Status, extraProperty2, ref deviceins, ref extraData2);
+
+                if (result1)
+                {
+                    UInt32[] count = (UInt32[])extraData2;
+
+                    rissdevice.NewLogCount = (int)count[6];
+                    dbDevice.NewLogCount = (int)count[6];
+
+                    rissdevice.AllLogCount = (int)count[8];
+                    dbDevice.AllLogCount = (int)count[8];
+                }
+
+                if (string.IsNullOrEmpty(rissdevice.SerialNumber))
+                {
+                    object extraProperty1 = new object();
+                    object extraData1 = Zd2911Utils.DeviceSerialNo;
+                    result = deviceConnectionIns.GetProperty(DeviceProperty.SerialNo, extraProperty1, ref deviceins, ref extraData1);
+                    if (result)
+                    {
+                        rissdevice.SerialNumber = (string)extraData1;
+                        dbDevice.SerialNumber = (string)extraData1;
+                    }
+                }
+                if (string.IsNullOrEmpty(rissdevice.ProductName))
+                {
+                    object extraProperty1 = new object();
+                    object extraData1 = Zd2911Utils.DeviceModel;
+                    result = deviceConnectionIns.GetProperty(DeviceProperty.Model, extraProperty1, ref deviceins, ref extraData1);
+                    if (result)
+                    {
+                        rissdevice.ProductName = (string)extraData1;
+                        dbDevice.ProductName = (string)extraData1;
+                    }
+                }
+                await unitOfWork.SaveChanageAsync();
             }
         }
 
@@ -733,7 +762,7 @@ namespace TAMHubApp.Services.TAMServices
             var listdevice = _singletonTAMInstance.TAMs;
             foreach (var devive in listdevice)
             {
-                if (devive.IsConnected)
+                if (!devive.IsConnected)
                     continue;
                 Task.Run(() =>
                 {
@@ -741,6 +770,13 @@ namespace TAMHubApp.Services.TAMServices
                     service.Action_Dicconnect(devive);
                     devive.IsConnected = false;
                 });
+                //Task.Run(() =>
+                //{
+                //    var service = new TAMCommonService();
+                //    service.Action_Dicconnect(itemdeviceAction);
+                //    itemdeviceAction.IsConnectLoading = false;
+                //    itemdeviceAction.IsConnected = false;
+                //});
             }
         }
 
