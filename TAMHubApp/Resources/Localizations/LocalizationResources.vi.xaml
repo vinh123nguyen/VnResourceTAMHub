@@ -44,6 +44,7 @@
     <system:String x:Key="LANG_DAT_TAMDevice">Máy chấm công</system:String>
     <system:String x:Key="LANG_DAT_DateFrom">Từ ngày</system:String>
     <system:String x:Key="LANG_DAT_DateTo">Đến ngày</system:String>
+    <system:String x:Key="LANG_DAT_DownloadType">Loại tải</system:String>
     <system:String x:Key="LANG_DAT_AlreadySyncData">Dữ liệu đã đồng bộ</system:String>
     <system:String x:Key="LANG_DAT_DownDataManual">Tải thủ công</system:String>
     <system:String x:Key="LANG_DAT_GRID_EnrollNumber">Mã chấm công</system:String>

@@ -265,6 +265,9 @@
                             EnableAutoComplete="False"
                             />
 
+                        <TextBlock Grid.Column="2" Grid.Row="0" FontSize="16" 
+                            Text="{StaticResource LANG_DAT_DownloadType}" VerticalAlignment="Center"/>
+                        
                         <ComboBox HorizontalAlignment="Stretch" Grid.Column="3" Grid.Row="0" 
                               Height="26" Margin="4" 
                               ItemsSource="{Binding ActionTypes}" 
