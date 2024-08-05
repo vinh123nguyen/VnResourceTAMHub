@@ -7,7 +7,6 @@
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>SdlCommunity.snk</AssemblyOriginatorKeyFile>
     <DelaySign>false</DelaySign>
-    <Platforms>AnyCPU;x86</Platforms>
   </PropertyGroup>
 
 </Project>
