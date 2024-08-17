@@ -14,23 +14,37 @@
         </Grid.ColumnDefinitions>
 
         <StackPanel Background="White">
+            
+        </StackPanel>
+
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
             <uc:NavigationButtonUC
+                Grid.Row="0"
                 Background="White"
                 Icon="{DynamicResource Icon_Home}"
                 Title="{DynamicResource LANG_SET_General}"
                 NavigateCommand="{Binding NavigateGeneralCommand}"
                 TabActive="{Binding TabActive}"
                 NameTab="General"
-                />
+            />
             <uc:NavigationButtonUC
+                Grid.Row="1"
                 Background="White"
                 Icon="{DynamicResource Icon_Device}"
                 Title="{DynamicResource LANG_SET_ZKTeco}"
                 NavigateCommand="{Binding NavigateZKTecoCommand}"
                 TabActive="{Binding TabActive}"
                 NameTab="ZKTeco"
-                />
+                />  
             <uc:NavigationButtonUC
+                Grid.Row="2"
                 Background="White"
                 Icon="{DynamicResource Icon_Device}"
                 Title="{DynamicResource LANG_SET_Realand}"
@@ -38,7 +52,14 @@
                 TabActive="{Binding TabActive}"
                 NameTab="Realand"
                 />
-        </StackPanel>
+
+            <StackPanel Grid.Row="4" Margin="4" Orientation="Horizontal">
+                <TextBlock Text="{Binding AppVersion}" Margin= "0,0,4,0"/>
+                <TextBlock Text="{Binding ReleaseDate}"/>
+            </StackPanel>
+
+        </Grid>
+        
 
         <ContentControl Grid.Column="1" Content="{Binding SettingNavigate.CurrentView}">
         </ContentControl>
