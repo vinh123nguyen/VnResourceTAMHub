@@ -939,7 +939,7 @@ namespace TAMHubApp.Services.TAMServices
                 }
                 else
                 {
-                    url = Path.Combine(baseapiaddressconf.Value, "Att_GetData", "SyncDataFromTAMHub");
+                    url = Path.Combine(baseapiaddressconf.Value, "Att_GetData", "SyncDataFromTAMHub").Replace(@"\", "/");
                 }
                 if (maxrowconf != null && !string.IsNullOrEmpty(maxrowconf.Value) && int.TryParse(maxrowconf.Value, out int maxrowcon))
                 {
@@ -1002,6 +1002,7 @@ namespace TAMHubApp.Services.TAMServices
                         {
                             log.Status = "Error";
                             log.Message = ex.Message;
+                            return false;
                         }
                     }
                     log.Status = "Success";
