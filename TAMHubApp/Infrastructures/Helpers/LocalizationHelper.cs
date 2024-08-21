@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System.Windows;
+using TAMHubApp.ViewModels;
 
 namespace TAMHubApp.Infrastructures.Helpers
 {
@@ -32,6 +34,8 @@ namespace TAMHubApp.Infrastructures.Helpers
         {
             try
             {
+                if (Properties.Settings.Default.Language == languageCode)
+                    return;
                 Application.Current.Resources.MergedDictionaries.Where(x => x.Source.OriginalString.Contains("LocalizationResources")).ToList().ForEach(x =>
                 {
                     Application.Current.Resources.MergedDictionaries.Remove(x);
@@ -40,6 +44,9 @@ namespace TAMHubApp.Infrastructures.Helpers
                 ResourceDictionary newDic = new ResourceDictionary();
                 newDic.Source = new Uri($"/Resources/Localizations/LocalizationResources.{languageCode}.xaml", UriKind.RelativeOrAbsolute);
                 Application.Current.Resources.MergedDictionaries.Add(newDic);
+                Properties.Settings.Default.Language = languageCode;
+                var homeviewModel = ServiceLocator.Instance.GetRequiredService<HomeViewModel>();
+                homeviewModel.ChangeImageWelcome();
             }
             catch (Exception ex)
             {

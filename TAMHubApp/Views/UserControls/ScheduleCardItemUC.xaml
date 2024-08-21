@@ -179,37 +179,37 @@
                 </Grid.ColumnDefinitions>
 
                 <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
-                    <TextBlock Text="{StaticResource LANG_SCH_TimeRun}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text="{DynamicResource LANG_SCH_TimeRun}" Padding="4,0,0,0" FontSize="10"/>
                     <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
                     <TextBlock Text="{Binding TimeRunView}" FontSize="10"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
-                    <TextBlock Text="{StaticResource LANG_SCH_CycleType}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text="{DynamicResource LANG_SCH_CycleType}" Padding="4,0,0,0" FontSize="10"/>
                     <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
                     <TextBlock Text="{Binding CycleTypeView}" FontSize="10"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal" Style="{StaticResource stle_hiddenbyCycleTypeViewWeekly}">
-                    <TextBlock Text="{StaticResource LANG_SCH_DayOfWeek}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text="{DynamicResource LANG_SCH_DayOfWeek}" Padding="4,0,0,0" FontSize="10"/>
                     <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
                     <TextBlock Text="{Binding DayOfWeekView}" FontSize="10"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="0" Grid.Row="3" Orientation="Horizontal" Style="{StaticResource stle_hiddenbyCycleTypeViewMonthly}">
-                    <TextBlock Text="{StaticResource LANG_SCH_DayInMonth}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text="{DynamicResource LANG_SCH_DayInMonth}" Padding="4,0,0,0" FontSize="10"/>
                     <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
                     <TextBlock Text="{Binding DayInMonth}" FontSize="10"/>
                 </StackPanel>
 
                 <StackPanel Grid.Column="0" Grid.Row="4" Orientation="Horizontal">
-                    <TextBlock Text="{StaticResource LANG_SCH_LastTimeRun}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text="{DynamicResource LANG_SCH_LastTimeRun}" Padding="4,0,0,0" FontSize="10"/>
                     <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
                     <TextBlock Text="{Binding LastTimeRunView}" FontSize="10"/>
                 </StackPanel>
                 
                 <StackPanel Grid.Column="0" Grid.Row="5" Orientation="Horizontal">
-                    <TextBlock Text="{StaticResource LANG_SCH_NextTimeRun}" Padding="4,0,0,0" FontSize="10"/>
+                    <TextBlock Text="{DynamicResource LANG_SCH_NextTimeRun}" Padding="4,0,0,0" FontSize="10"/>
                     <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
                     <TextBlock Text="{Binding NextTimeRunView}" FontSize="10"/>
                 </StackPanel>
