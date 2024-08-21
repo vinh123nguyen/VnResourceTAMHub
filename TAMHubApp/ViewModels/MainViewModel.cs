@@ -1,6 +1,11 @@
-﻿using System.Windows.Media;
+﻿using System.Collections.ObjectModel;
+using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using TAMHubApp.Commands;
+using TAMHubApp.Infrastructures;
 using TAMHubApp.Infrastructures.Enums;
+using TAMHubApp.Infrastructures.Helpers;
+using TAMHubApp.Models;
 using TAMHubApp.Services;
 
 namespace TAMHubApp.ViewModels
@@ -75,42 +80,63 @@ namespace TAMHubApp.ViewModels
             IsShowingToast = false;
         }
 
-        //public ObservableCollection<LanguageOption> ListLanguages { get; set; }
-        //private LanguageOption _selectedLanguages { get; set; }
-        //public LanguageOption SelectedLanguages
-        //{
-        //    get => _selectedLanguages;
-        //    set
-        //    {
-        //        if(Properties.Settings.Default.Language != value.Key)
-        //        {
-        //            _selectedLanguages = value;
-        //            OnPropertyChanged();
-        //            LocalizationHelper.SetLanguage(value.Key);
-        //            Properties.Settings.Default.Language = value.Key;
-        //        }
-        //    }
-        //}
+        private ObservableCollection<LanguageOption> _listLanguages { get; set; }
+        public ObservableCollection<LanguageOption> ListLanguages 
+        {
+            get => _listLanguages;
+            set
+            {
+                _listLanguages = value;
+                OnPropertyChanged();
+            }
+        }
+        private LanguageOption _selectedLanguages { get; set; }
+        public LanguageOption SelectedLanguages
+        {
+            get => _selectedLanguages;
+            set
+            {
+                _selectedLanguages = value;
+                if (Properties.Settings.Default.Language != value.Key)
+                {
+                    OnPropertyChanged();
+                    LocalizationHelper.SetLanguage(value.Key);
+                    Properties.Settings.Default.Language = value.Key;
+                    var lsttemp = new ObservableCollection<LanguageOption>();
+                    foreach (var item in ListLanguages)
+                    {
+                        item.Language = item.LanguageKey.TranslateString();
+                        lsttemp.Add(item);
+                    }
+                    ListLanguages = lsttemp;
+                }
+            }
+        }
         public MainViewModel(ITabNavigationService navigationService)
         {
             ToastColor = Brushes.LightGreen;
             _navigationService = navigationService;
 
-            //ListLanguages = new ObservableCollection<LanguageOption>()
-            //{
-            //    new LanguageOption()
-            //    {
-            //        Key = "en",
-            //        Language = ConstantDisplay.LANG_GLO_English.TranslateString(),
-            //        ImagePath = new BitmapImage(new Uri("/Resources/Images/image-language-en.png", UriKind.RelativeOrAbsolute))
-            //    },
-            //    new LanguageOption()
-            //    {
-            //        Key = "vi",
-            //        Language = ConstantDisplay.LANG_GLO_Vietnamese.TranslateString(),
-            //        ImagePath = new BitmapImage(new Uri("/Resources/Images/image-language-vi.png", UriKind.RelativeOrAbsolute))
-            //    },
-            //};
+            ListLanguages = new ObservableCollection<LanguageOption>()
+            {
+                new LanguageOption()
+                {
+                    Key = "en",
+                    Language = ConstantDisplay.LANG_GLO_English.TranslateString(),
+                    LanguageKey = ConstantDisplay.LANG_GLO_English,
+                    ImagePath = new BitmapImage(new Uri("/Resources/Images/image-language-en.png", UriKind.RelativeOrAbsolute))
+                },
+                new LanguageOption()
+                {
+                    Key = "vi",
+                    Language = ConstantDisplay.LANG_GLO_Vietnamese.TranslateString(),
+                    LanguageKey = ConstantDisplay.LANG_GLO_Vietnamese,
+                    ImagePath = new BitmapImage(new Uri("/Resources/Images/image-language-vi.png", UriKind.RelativeOrAbsolute))
+                },
+            };
+            var defaultlang = Properties.Settings.Default.Language != null ? Properties.Settings.Default.Language : "vi";
+            SelectedLanguages = ListLanguages.FirstOrDefault(x => x.Key == defaultlang);
+            OnPropertyChanged("SelectedLanguages");
 
             NavigateHomeCommand = new RelayCommand<BaseViewModel>(x => { return true; }, x => { MainViewNavigate.NavigateTo<HomeViewModel>(); TabActive = "HomeView"; });
             NavigateDeviceCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "DeviceView"; }, x => { MainViewNavigate.NavigateTo<DeviceViewModel>(); TabActive = "DeviceView"; });
@@ -119,10 +145,7 @@ namespace TAMHubApp.ViewModels
             NavigateSettingCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "SettingView"; }, x => { MainViewNavigate.NavigateTo<SettingViewModel>(); TabActive = "SettingView"; });
             NavigateActionLogCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ActionLogView"; }, x => { MainViewNavigate.NavigateTo<ActionLogViewModel>(); TabActive = "ActionLogView"; });
 
-            Task.Run(() =>
-            {
-                MainViewNavigate.NavigateTo<HomeViewModel>();
-            });
+            Task.Run(MainViewNavigate.NavigateTo<HomeViewModel>);
         }
 
 

@@ -26,7 +26,7 @@
                 </Grid.ColumnDefinitions>
 
                 <uc:ButtonUC 
-                    Title="{StaticResource LANG_SCH_AddSchedule}"
+                    Title="{DynamicResource LANG_SCH_AddSchedule}"
                     Icon="{StaticResource Icon_Plus}"
                     ClickCommand="{Binding OpenInfoPopupCommand}"
                     ButtonBackground="#B5C9FF"
@@ -36,7 +36,7 @@
                     />
 
                 <uc:ButtonUC Grid.Column="1"
-                    Title="{StaticResource LANG_SCH_RunAllSchedule}"
+                    Title="{DynamicResource LANG_SCH_RunAllSchedule}"
                     Icon="{StaticResource Icon_Link}"
                     ClickCommand="{Binding StartAllCommand}"
                     ButtonBackground="#B6FFB5"
@@ -46,7 +46,7 @@
                     />
 
                 <uc:ButtonUC Grid.Column="2"
-                     Title="{StaticResource LANG_SCH_StopAllSchedule}"
+                     Title="{DynamicResource LANG_SCH_StopAllSchedule}"
                      Icon="{StaticResource Icon_Power}"
                      ClickCommand="{Binding StopAllCommand}"
                      ButtonBackground="#FFB5B9"

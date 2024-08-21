@@ -86,7 +86,7 @@
                                Text="{Binding ValidateMessage}"/>
 
                     <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
-                        <TextBlock Text="{StaticResource LANG_DEV_SKDType}" Margin="8,8,0,8" />
+                        <TextBlock Text="{DynamicResource LANG_DEV_SKDType}" Margin="8,8,0,8" />
                         <TextBlock Style="{StaticResource style_RequiredMark}"/>
                     </StackPanel>
                     <ComboBox HorizontalAlignment="Left" Grid.Column="2" Grid.Row="1" 
@@ -101,7 +101,7 @@
                     </ComboBox>
 
                     <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
-                        <TextBlock Text="{StaticResource LANG_DEV_DeviceName}" Margin="8,8,0,8" />
+                        <TextBlock Text="{DynamicResource LANG_DEV_DeviceName}" Margin="8,8,0,8" />
                         <TextBlock Style="{StaticResource style_RequiredMark}"/>
                     </StackPanel>
                     <TextBox Grid.Column="2" Grid.Row="2"
@@ -109,7 +109,7 @@
                         Text="{Binding DeviceName}"/>
 
                     <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
-                        <TextBlock Text="{StaticResource LANG_DEV_DeviceNumber}" Margin="8,8,0,8"/>
+                        <TextBlock Text="{DynamicResource LANG_DEV_DeviceNumber}" Margin="8,8,0,8"/>
                         <TextBlock Style="{StaticResource style_RequiredMark}"/>
                     </StackPanel>
                     <TextBox Grid.Column="2" Grid.Row="3"
@@ -117,7 +117,7 @@
                         Text="{Binding DeviceNumber}"/>
 
                     <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
-                        <TextBlock Text="{StaticResource LANG_DEV_IPAddress}" Margin="8,8,0,8"/>
+                        <TextBlock Text="{DynamicResource LANG_DEV_IPAddress}" Margin="8,8,0,8"/>
                         <TextBlock Style="{StaticResource style_RequiredMark}"/>
                     </StackPanel>
                     <TextBox Grid.Column="2" Grid.Row="4"
@@ -125,19 +125,19 @@
                         Text="{Binding IPAddress}"/>
 
                     <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal">
-                        <TextBlock Text="{StaticResource LANG_DEV_Port}" Margin="8,8,0,8"/>
+                        <TextBlock Text="{DynamicResource LANG_DEV_Port}" Margin="8,8,0,8"/>
                         <TextBlock Style="{StaticResource style_RequiredMark}"/>
                     </StackPanel>
                     <TextBox Grid.Column="2" Grid.Row="5"
                         Width="200" Height="25"
                         Text="{Binding Port}"/>
 
-                    <TextBlock Grid.Column="1" Grid.Row="6" Text="{StaticResource LANG_DEV_Password}" Margin="8"/>
+                    <TextBlock Grid.Column="1" Grid.Row="6" Text="{DynamicResource LANG_DEV_Password}" Margin="8"/>
                     <TextBox Grid.Column="2" Grid.Row="6"
                         Width="200" Height="25"
                         Text="{Binding Password}"/>
 
-                    <TextBlock Grid.Column="1" Grid.Row="7" Text="{StaticResource LANG_DEV_CompanyCode}" Margin="8"/>
+                    <TextBlock Grid.Column="1" Grid.Row="7" Text="{DynamicResource LANG_DEV_CompanyCode}" Margin="8"/>
                     <TextBox Grid.Column="2" Grid.Row="7"
                         Width="200" Height="25"
                         Text="{Binding CompanyCode}"/>
@@ -145,7 +145,7 @@
                     <!--<TextBox Grid.Column="2" Grid.Row="6"
                         Width="200" Height="25"/>-->
                     <CheckBox Style="{StaticResource style_IsCanGetLogByTime}" Grid.Column="2" Grid.Row="8"
-                              Content="{StaticResource LANG_DEV_SupportGetDataByDate}"
+                              Content="{DynamicResource LANG_DEV_SupportGetDataByDate}"
                               IsChecked="{Binding SupportGetDataByDate, Mode=TwoWay}"/>
                     
                 </Grid>
@@ -153,14 +153,14 @@
             <Grid Grid.Row="2" Margin="8">
                 <uc:ButtonUC Visibility="{Binding Id, Converter={StaticResource StringEmptyToVisibilityConverter}}"
                             HorizontalAlignment="Left" Width="Auto" 
-                             FontSize="10" Title="{StaticResource LANG_GLO_Remove}" 
+                             FontSize="10" Title="{DynamicResource LANG_GLO_Remove}" 
                              Icon="{StaticResource Icon_Trash}" 
                              IconBackground="#FF3C3C" 
                              ButtonBackground="#FFB5B9" Padding="1"
                              ClickCommand="{Binding RemmoveDeviceCommand}"
                              ClickCommandParameter="{Binding Id}" Height="24" VerticalAlignment="Top"/> 
                 <uc:ButtonUC HorizontalAlignment="Right" Width="Auto" 
-                             FontSize="10" Title="{StaticResource LANG_GLO_Save}" 
+                             FontSize="10" Title="{DynamicResource LANG_GLO_Save}" 
                              Icon="{StaticResource Icon_Download}" 
                              IconBackground="#1BBB48" 
                              ButtonBackground="#B6FFB5" Padding="1"

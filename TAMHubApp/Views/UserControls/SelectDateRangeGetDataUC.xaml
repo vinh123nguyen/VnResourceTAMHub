@@ -45,7 +45,7 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <TextBlock Margin="8" FontSize="14" FontWeight="DemiBold" Grid.Row="0" Text="{StaticResource LANG_DEV_DownloadData}"/>
+                    <TextBlock Margin="8" FontSize="14" FontWeight="DemiBold" Grid.Row="0" Text="{DynamicResource LANG_DEV_DownloadData}"/>
                     <Button Grid.Column="1" Margin="8" Style="{StaticResource style_CloseButton}" Command="{Binding CloseOverlayCommand}">
                         <Border CornerRadius="8">
                             <Path Data="{DynamicResource Icon_Close}" Stroke="Black" StrokeThickness="1" Height="14" Width="14" Stretch="Fill"/>
@@ -69,7 +69,7 @@
                 </Grid.RowDefinitions>
 
                 <StackPanel Grid.Column="1" Grid.Row="0" Orientation="Horizontal">
-                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{StaticResource LANG_DEV_Device}" Margin="8,8,0,8" />
+                    <TextBlock Grid.Column="1" Grid.Row="0" Text="{DynamicResource LANG_DEV_Device}" Margin="8,8,0,8" />
                     <TextBlock Style="{StaticResource style_RequiredMark}"/>
                 </StackPanel>
                 <sdl:MultiSelectComboBox
@@ -87,7 +87,7 @@
                     />
 
                 <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal">
-                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{StaticResource LANG_DEV_FromDate}" Margin="8,8,0,8" />
+                    <TextBlock Grid.Column="1" Grid.Row="1" Text="{DynamicResource LANG_DEV_FromDate}" Margin="8,8,0,8" />
                     <TextBlock Style="{StaticResource style_RequiredMark}"/>
                 </StackPanel>
                 <DatePicker Grid.Column="2" Grid.Row="1" Height="26" Width="200"
@@ -95,7 +95,7 @@
                     SelectedDate="{Binding DateFrom}"/>
 
                 <StackPanel Grid.Column="1" Grid.Row="2" Orientation="Horizontal">
-                    <TextBlock Grid.Column="1" Grid.Row="2" Text="{StaticResource LANG_DEV_ToDate}" Margin="8,8,0,8" />
+                    <TextBlock Grid.Column="1" Grid.Row="2" Text="{DynamicResource LANG_DEV_ToDate}" Margin="8,8,0,8" />
                     <TextBlock Style="{StaticResource style_RequiredMark}"/>
                 </StackPanel>
                 <DatePicker Grid.Column="2" Grid.Row="2" Height="26" Width="200"
@@ -103,7 +103,7 @@
                     SelectedDate="{Binding DateTo}"/>
 
                 <StackPanel Grid.Column="1" Grid.Row="3" Orientation="Horizontal">
-                    <TextBlock Text="{StaticResource LANG_DEV_EnrollNumber}" Margin="8,8,0,8" />
+                    <TextBlock Text="{DynamicResource LANG_DEV_EnrollNumber}" Margin="8,8,0,8" />
                 </StackPanel>
                 <TextBox Grid.Column="2" Grid.Row="3"
                     Width="200" Height="25"
@@ -124,7 +124,7 @@
                     ButtonBackground="#B6FFB5" Padding="8"
                     Icon="{StaticResource Icon_Download}" 
                     ClickCommand="{Binding OnlyPushDataCommand}"
-                    Title="{StaticResource LANG_DEV_OnlyPushData}"/>
+                    Title="{DynamicResource LANG_DEV_OnlyPushData}"/>
                 
                 <uc:ButtonUC
                     Grid.Column="2"
@@ -132,7 +132,7 @@
                     ButtonBackground="#B6FFB5" Padding="8"
                     Icon="{StaticResource Icon_Download}" 
                     ClickCommand="{Binding DownloadDataCommand}"
-                    Title="{StaticResource LANG_DEV_DownloadData}"/>
+                    Title="{DynamicResource LANG_DEV_DownloadData}"/>
             </Grid>
 
 

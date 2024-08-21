@@ -25,7 +25,7 @@
                 </Grid.ColumnDefinitions>
 
                 <uc:ButtonUC 
-                    Title="{StaticResource LANG_DEV_AddDevice}"
+                    Title="{DynamicResource LANG_DEV_AddDevice}"
                     Icon="{StaticResource Icon_Plus}"
                     ClickCommand="{Binding OpenInfoPopup}"
                     ButtonBackground="#B5C9FF"
@@ -35,7 +35,7 @@
                     />
 
                 <uc:ButtonUC Grid.Column="1"
-                    Title="{StaticResource LANG_DEV_ConnectAll}"
+                    Title="{DynamicResource LANG_DEV_ConnectAll}"
                     Icon="{StaticResource Icon_Link}"
                     ClickCommand="{Binding ConnectAllCommand}"
                     ButtonBackground="#B6FFB5"
@@ -45,7 +45,7 @@
                     />
 
                 <uc:ButtonUC Grid.Column="2"
-                     Title="{StaticResource LANG_DEV_DisconnectAll}"
+                     Title="{DynamicResource LANG_DEV_DisconnectAll}"
                      Icon="{StaticResource Icon_Power}"
                      ClickCommand="{Binding DisconnectAllCommand}"
                      ButtonBackground="#FFB5B9"

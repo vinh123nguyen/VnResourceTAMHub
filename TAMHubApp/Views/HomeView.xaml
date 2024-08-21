@@ -93,7 +93,7 @@
                         <RowDefinition/>
                         <RowDefinition Height="24"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{StaticResource LANG_HOM_Setting}" Margin="8"/>
+                    <TextBlock Text="{DynamicResource LANG_HOM_Setting}" Margin="8"/>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
 
@@ -102,7 +102,7 @@
                                 Command="{Binding NavigateSettingCommand}">
                             <StackPanel>
                                 <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_Setting.png" Margin="8,8,8,8" />
-                                <TextBlock Text="{StaticResource LANG_NAV_Setting}" FontSize="12" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource LANG_NAV_Setting}" FontSize="12" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -111,7 +111,7 @@
                                 Command="{Binding NavigateScheduleCommand}">
                             <StackPanel>
                                 <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_Schedule.png" Margin="8,8,8,8" />
-                                <TextBlock Text="{StaticResource LANG_NAV_Schedule}" FontSize="12" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource LANG_NAV_Schedule}" FontSize="12" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -120,7 +120,7 @@
                                 Command="{Binding NavigateDeviceCommand}">
                             <StackPanel>
                                 <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_Tamdevice.png" Margin="8,8,8,8" />
-                                <TextBlock Text="{StaticResource LANG_DEV_Device}" FontSize="12" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource LANG_DEV_Device}" FontSize="12" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -142,7 +142,7 @@
                         <RowDefinition/>
                         <RowDefinition Height="24"/>
                     </Grid.RowDefinitions>
-                    <TextBlock Text="{StaticResource LANG_HOM_Data}" Margin="8"/>
+                    <TextBlock Text="{DynamicResource LANG_HOM_Data}" Margin="8"/>
 
                     <StackPanel Grid.Row="1" Orientation="Horizontal">
 
@@ -151,7 +151,7 @@
                                 Command="{Binding NavigateActionLogCommand}">
                             <StackPanel>
                                 <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_History.png" Margin="8,8,8,8" />
-                                <TextBlock Text="{StaticResource LANG_NAV_ActionLog}" FontSize="12" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource LANG_NAV_ActionLog}" FontSize="12" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 
@@ -160,7 +160,7 @@
                                 Command="{Binding NavigateDataCommand}">
                             <StackPanel>
                                 <Image Width="30" Height="30" Grid.Column="0" Source="/Resources/Images/image_Data.png" Margin="8,8,8,8" />
-                                <TextBlock Text="{StaticResource LANG_NAV_Data}" FontSize="12" HorizontalAlignment="Center"/>
+                                <TextBlock Text="{DynamicResource LANG_NAV_Data}" FontSize="12" HorizontalAlignment="Center"/>
                             </StackPanel>
                         </Button>
 

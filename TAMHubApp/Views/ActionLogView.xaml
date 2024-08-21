@@ -250,7 +250,7 @@
                             <RowDefinition/>
                         </Grid.RowDefinitions>
 
-                        <TextBlock Grid.Column="0" Grid.Row="0" FontSize="16" Text="{StaticResource LANG_DAT_TAMDevice}" VerticalAlignment="Center"/>
+                        <TextBlock Grid.Column="0" Grid.Row="0" FontSize="16" Text="{DynamicResource LANG_DAT_TAMDevice}" VerticalAlignment="Center"/>
                         <sdl:MultiSelectComboBox
                             Grid.Column="1" Grid.Row="0"
                             VerticalAlignment="Center"
@@ -266,7 +266,7 @@
                             />
 
                         <TextBlock Grid.Column="2" Grid.Row="0" FontSize="16" 
-                            Text="{StaticResource LANG_DAT_DownloadType}" VerticalAlignment="Center"/>
+                            Text="{DynamicResource LANG_DAT_DownloadType}" VerticalAlignment="Center"/>
                         
                         <ComboBox HorizontalAlignment="Stretch" Grid.Column="3" Grid.Row="0" 
                               Height="26" Margin="4" 
@@ -280,12 +280,12 @@
                         </ComboBox>
 
                         <TextBlock Grid.Column="0" Grid.Row="1" FontSize="16" 
-                            Text="{StaticResource LANG_DAT_DateFrom}" VerticalAlignment="Center"/>
+                            Text="{DynamicResource LANG_DAT_DateFrom}" VerticalAlignment="Center"/>
                         <DatePicker Grid.Column="1" Grid.Row="1" Height="26" 
                             Margin="4" Background="White" 
                             SelectedDate="{Binding DateFrom}"/>
                         <TextBlock Grid.Column="2" Grid.Row="1" FontSize="16" 
-                            Text="{StaticResource LANG_DAT_DateTo}" VerticalAlignment="Center"/>
+                            Text="{DynamicResource LANG_DAT_DateTo}" VerticalAlignment="Center"/>
                         <DatePicker Grid.Column="3" Grid.Row="1" Height="26" Margin="4" Background="White" 
                             SelectedDate="{Binding DateTo}"/>
 
@@ -299,7 +299,7 @@
                     </Grid.ColumnDefinitions>
                     <uc:ButtonUC
                         Grid.Column="0"
-                        Title="{StaticResource LANG_GLO_Search}"
+                        Title="{DynamicResource LANG_GLO_Search}"
                         Icon="{StaticResource Icon_Search}"
                         ClickCommand="{Binding SearchCommand}"
                         ButtonBackground="#fcefcc"
@@ -311,7 +311,7 @@
                     <uc:ButtonUC
                         Grid.Column="3" 
                         TextFontSize="16"
-                        Title="{StaticResource LANG_GLO_Remove}" 
+                        Title="{DynamicResource LANG_GLO_Remove}" 
                         Icon="{StaticResource Icon_Trash}" 
                         IconBackground="#FF3C3C" 
                         ButtonBackground="#FFB5B9"
@@ -336,24 +336,24 @@
                                 </DataGridCheckBoxColumn.HeaderTemplate>
                             </DataGridCheckBoxColumn>
                             <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="auto"/>
-                            <DataGridTextColumn Header="{StaticResource LANG_ACL_TimeRangeDownData}" Binding="{Binding DateDownData}" IsReadOnly="True" Width="0.7*">
+                            <DataGridTextColumn Header="{DynamicResource LANG_ACL_TimeRangeDownData}" Binding="{Binding DateDownData}" IsReadOnly="True" Width="0.7*">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="{StaticResource LANG_ACL_Time}" Binding="{Binding TimeLog}" IsReadOnly="True" Width="*">
+                            <DataGridTextColumn Header="{DynamicResource LANG_ACL_Time}" Binding="{Binding TimeLog}" IsReadOnly="True" Width="*">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="{StaticResource LANG_ACL_Device}" Binding="{Binding TAMName}" IsReadOnly="True" Width="0.7*"/>
-                            <DataGridTextColumn Header="{StaticResource LANG_ACL_Status}" Binding="{Binding StatusView}" IsReadOnly="True" Width="0.7*"/>
-                            <DataGridTextColumn Header="{StaticResource LANG_ACL_DownloadMethod}" Binding="{Binding DownloadType}" IsReadOnly="True" Width="0.7*"/>
-                            <DataGridTemplateColumn Header="{StaticResource LANG_ACL_Description}" Width="*">
+                            <DataGridTextColumn Header="{DynamicResource LANG_ACL_Device}" Binding="{Binding TAMName}" IsReadOnly="True" Width="0.7*"/>
+                            <DataGridTextColumn Header="{DynamicResource LANG_ACL_Status}" Binding="{Binding StatusView}" IsReadOnly="True" Width="0.7*"/>
+                            <DataGridTextColumn Header="{DynamicResource LANG_ACL_DownloadMethod}" Binding="{Binding DownloadType}" IsReadOnly="True" Width="0.7*"/>
+                            <DataGridTemplateColumn Header="{DynamicResource LANG_ACL_Description}" Width="*">
                                 <DataGridTemplateColumn.CellTemplate>
                                     <DataTemplate>
                                         <DataTemplate.Resources>
@@ -376,19 +376,19 @@
                                         </DataTemplate.Resources>
                                         <StackPanel Orientation="Vertical">
                                             <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
-                                                <TextBlock Text="{StaticResource LANG_ACL_TotalRowDownload}"/>
+                                                <TextBlock Text="{DynamicResource LANG_ACL_TotalRowDownload}"/>
                                                 <TextBlock Text="{Binding TotalRowDownload}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
-                                                <TextBlock Text="{StaticResource LANG_ACL_TotalNewlyData}"/>
+                                                <TextBlock Text="{DynamicResource LANG_ACL_TotalNewlyData}"/>
                                                 <TextBlock Text="{Binding TotalNewlyData}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
-                                                <TextBlock Text="{StaticResource LANG_ACL_TotalDataAdded}"/>
+                                                <TextBlock Text="{DynamicResource LANG_ACL_TotalDataAdded}"/>
                                                 <TextBlock Text="{Binding TotalDataAdded}"/>
                                             </StackPanel>
                                             <StackPanel Orientation="Horizontal" Style="{StaticResource style_Success}">
-                                                <TextBlock Text="{StaticResource LANG_ACL_TimeRun}"/>
+                                                <TextBlock Text="{DynamicResource LANG_ACL_TimeRun}"/>
                                                 <TextBlock Text="{Binding TimeRun}"/>
                                             </StackPanel>
                                             <Grid Style="{StaticResource style_Error}">
@@ -396,7 +396,7 @@
                                                     <ColumnDefinition Width="Auto"/>
                                                     <ColumnDefinition  Width="*"/>
                                                 </Grid.ColumnDefinitions>
-                                                <TextBlock Grid.Column="0" Text="{StaticResource LANG_ACL_Error}"/>
+                                                <TextBlock Grid.Column="0" Text="{DynamicResource LANG_ACL_Error}"/>
                                                 <TextBlock Grid.Column="1" Text="{Binding Message}" TextWrapping="Wrap"/>
                                             </Grid>
                                         </StackPanel>
