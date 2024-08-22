@@ -22,7 +22,7 @@
             <Setter Property="Background" Value="Transparent" />
         </Style>
         <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate" DataType="models:LanguageItem">
-            <TextBlock Grid.Column="1" Text="{Binding Path=Name}"/>
+            <TextBlock Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,8,0" Text="{Binding Path=Name}"/>
         </DataTemplate>
         <Style x:Key="style_RequiredMark" TargetType="TextBlock">
             <Setter Property="Foreground" Value="Red"/>

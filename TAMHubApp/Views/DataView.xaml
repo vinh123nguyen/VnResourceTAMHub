@@ -13,7 +13,7 @@
         <converter:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
         <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate" DataType="models:LanguageItem">
-            <TextBlock Grid.Column="1" Text="{Binding Path=Name}"/>
+            <TextBlock Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,8,0" Text="{Binding Path=Name}"/>
         </DataTemplate>
 
         <SolidColorBrush x:Key="OptionMark.Static.Background" Color="#FFFFFFFF"/>
@@ -400,11 +400,11 @@
 
 
                     <uc:PaginationBarUC 
-            PaginationBackCommand="{Binding PaginationBackCommand}"
-            PaginationForwardCommand="{Binding PaginationForwardCommand}"
-            CurrentPage="{Binding CurrentPageView}"
-            TotalPagePage="{Binding DataRowInfo}"
-            Grid.Row="1"/>
+                        PaginationBackCommand="{Binding PaginationBackCommand}"
+                        PaginationForwardCommand="{Binding PaginationForwardCommand}"
+                        CurrentPage="{Binding CurrentPageView}"
+                        TotalPagePage="{Binding DataRowInfo}"
+                        Grid.Row="1"/>
                 </Grid>
             </Grid>
         </Grid>

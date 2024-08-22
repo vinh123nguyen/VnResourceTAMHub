@@ -4,6 +4,13 @@
     {
         Daily,
         Weekly,
-        Monthly
+        Monthly,
+        RepeatBy
+    }
+
+    public enum RepeatByType
+    {
+        ByMinute,
+        ByHour
     }
 }
