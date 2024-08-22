@@ -60,6 +60,7 @@
     <system:String x:Key="LANG_SCH_DayInMonth">Day in month</system:String>
     <system:String x:Key="LANG_SCH_DayOfWeek">Day of week</system:String>
     <system:String x:Key="LANG_SCH_TimeRun">Time run</system:String>
+    <system:String x:Key="LANG_SCH_Cycle">Cycle</system:String>
     <system:String x:Key="LANG_SCH_LastTimeRun">Last time run</system:String>
     <system:String x:Key="LANG_SCH_NextTimeRun">Next time run</system:String>
     <system:String x:Key="LANG_SCH_ScheduleIsRuningCanNotDoAction">Schedule is runing can not do action</system:String>
@@ -67,6 +68,12 @@
     <system:String x:Key="LANG_CYCLE_Daily">Daily</system:String>
     <system:String x:Key="LANG_CYCLE_Weekly">Weekly</system:String>
     <system:String x:Key="LANG_CYCLE_Monthly">Monthly</system:String>
+    <system:String x:Key="LANG_CYCLE_RepeatBy">Repeat By</system:String>
+    <system:String x:Key="LANG_REPEATTYPE_ByMinute">Minute</system:String>
+    <system:String x:Key="LANG_REPEATTYPE_ByHour">Hour</system:String>
+    <system:String x:Key="LANG_SCH_ExcludeDay">Exclude day</system:String>
+    <system:String x:Key="LANG_SCH_ExcludeTime">Exclude time</system:String>
+    <system:String x:Key="LANG_SCH_ExcludeTime2">Exclude time 2</system:String>
     <system:String x:Key="LANG_GLO_Month">Month</system:String>
     <system:String x:Key="LANG_GLO_Monday">Monday</system:String>
     <system:String x:Key="LANG_GLO_Tuesday">Tuesday</system:String>
@@ -112,4 +119,5 @@
     <system:String x:Key="LANG_GLO_DeviceDownloadError">Device: {0} download error</system:String>
     <system:String x:Key="LANG_GLO_DeviceDownloadSuccess">Device: {0} download success</system:String>
     <system:String x:Key="LANG_DAT_DeleteData">Remove {0} row success!</system:String>
+    <system:String x:Key="LANG_GLO_TimeFromMustBeEarlyThanTimeTo">Time from must be early than time to</system:String>
 </ResourceDictionary>

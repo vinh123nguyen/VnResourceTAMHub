@@ -4,7 +4,7 @@
     <ResourceDictionary.MergedDictionaries>
         <ResourceDictionary Source="/Resources/Styles/MainStyle.xaml"/>
         <ResourceDictionary Source="/Resources/Styles/IconPath.xaml"/>
-        <!--<ResourceDictionary Source="/Resources/Localizations/LocalizationResources.vi.xaml"/>--> <!--dong lai do da xu ly dymamic resouce, khi dev gd bo comment-->
+        <ResourceDictionary Source="/Resources/Localizations/LocalizationResources.vi.xaml"/> <!--dong lai do da xu ly dymamic resouce, khi dev gd bo comment-->
         
     </ResourceDictionary.MergedDictionaries>
 </ResourceDictionary>

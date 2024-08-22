@@ -37,6 +37,39 @@ namespace TAMHubApp.ViewModels.UserControls
             });
             CycleTypeOptions = new ObservableCollection<Option>(cycletype);
 
+            var repeattype = Enum.GetValues(typeof(RepeatByType)).Cast<RepeatByType>().Select(x => new Option()
+            {
+                Key = x.ToString(),
+                Name = $"LANG_REPEATTYPE_{x.ToString()}".TranslateString()
+            });
+            RepeatByTypeOptions = new ObservableCollection<Option>(repeattype);
+            RepeatByTypeSelected = RepeatByTypeOptions.First();
+
+
+            var times = new List<Option>();
+            var startTime = TimeSpan.Zero; // Start at 00:00
+            var endTime = new TimeSpan(23, 59, 59); // End at 23:59
+            var interval = TimeSpan.FromMinutes(30);
+            var dwd = interval.ToString(@"hh\:mm\:ss");
+            while (startTime <= endTime)
+            {
+                times.Add(new Option()
+                {
+                    Key = startTime.ToString(@"hh\:mm\:ss"),
+                    Name = startTime.ToString(@"hh\:mm"),
+                    Time = startTime
+                });
+                startTime = startTime.Add(interval);
+            }
+            times.Add(new Option()
+            {
+                Key = endTime.ToString(@"hh\:mm\:ss"),
+                Name = endTime.ToString(@"hh\:mm"),
+                Time = endTime
+            });
+            TimeInDayOptions = new ObservableCollection<Option>(times);
+
+
             _mainViewModel = mainViewModel;
             _unitOfWork = unitOfWork;
 
@@ -48,37 +81,6 @@ namespace TAMHubApp.ViewModels.UserControls
         public RelayCommand<object> RemmoveScheduleCommand { get; set; }
         public RelayCommand<object> CloseOverlayCommand { get; set; }
         public RelayCommand<object> SaveSchedulePopupInfoCommand { get; set; }
-
-        #region Observable Properties
-        private ObservableCollection<Option>? _options;
-        public ObservableCollection<Option>? CycleTypeOptions
-        {
-            get { return _options; }
-            set { _options = value; OnPropertyChanged(); }
-        }
-
-        private Option? _cycleTypeSelected;
-        public Option? CycleTypeSelected
-        {
-            get { return _cycleTypeSelected; }
-            set { _cycleTypeSelected = value; OnPropertyChanged(); Event_ChangeCycleType(value); }
-        }
-
-        private ObservableCollection<Option>? _optionDayInWeeks;
-        public ObservableCollection<Option>? DayInWeekOptions
-        {
-            get { return _optionDayInWeeks; }
-            set { _optionDayInWeeks = value; OnPropertyChanged(); }
-        }
-
-        private Option? _dayInWeekSelected;
-        public Option? DayInWeekSelected
-        {
-            get { return _dayInWeekSelected; }
-            set { _dayInWeekSelected = value; OnPropertyChanged(); }
-        }
-
-
 
         private string _id { get; set; }
         public string Id
@@ -104,7 +106,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 CycleHour = currentschedule.Hour.ToString();
                 CycleMinute = currentschedule.Minute.ToString();
 
-                if(CycleTypeSelected?.Key == ScheduleCycleType.Weekly.ToString())
+                if (CycleTypeSelected?.Key == ScheduleCycleType.Weekly.ToString())
                 {
                     DayInWeekSelected = DayInWeekOptions?.FirstOrDefault(x => x.Key == currentschedule?.DayOfWeek.ToString());
                 }
@@ -117,39 +119,65 @@ namespace TAMHubApp.ViewModels.UserControls
             }
         }
 
+        #region Observable Properties
+        private ObservableCollection<Option>? _options;
+        public ObservableCollection<Option>? CycleTypeOptions { get { return _options; } set { _options = value; OnPropertyChanged(); } }
+
+        private Option? _cycleTypeSelected;
+        public Option? CycleTypeSelected { get { return _cycleTypeSelected; } set { _cycleTypeSelected = value; OnPropertyChanged(); Event_ChangeCycleType(value); } }
+
+        private ObservableCollection<Option>? _optionDayInWeeks;
+        public ObservableCollection<Option>? DayInWeekOptions { get { return _optionDayInWeeks; } set { _optionDayInWeeks = value; OnPropertyChanged(); } }
+
+        private Option? _dayInWeekSelected;
+        public Option? DayInWeekSelected { get { return _dayInWeekSelected; } set { _dayInWeekSelected = value; OnPropertyChanged(); } }
+        private ObservableCollection<Option>? _repeatByTypeOptions;
+        public ObservableCollection<Option>? RepeatByTypeOptions { get => _repeatByTypeOptions; set { _repeatByTypeOptions = value; OnPropertyChanged(); } }
+
+        private Option? _repeatByTypeSelected;
+        public Option? RepeatByTypeSelected { get => _repeatByTypeSelected; set { _repeatByTypeSelected = value; OnPropertyChanged(); } }
+
+        private ObservableCollection<Option>? _excludeDaySelected;
+        public ObservableCollection<Option>? ExcludeDaySelected { get { return _excludeDaySelected; } set { _excludeDaySelected = value; OnPropertyChanged(); } }
+        
+        private string _excludeTime2Hour { get; set; }
+        public string ExcludeTime2Hour { get => _excludeTime2Hour; set { _excludeTime2Hour = value; OnPropertyChanged(); } }
+
         private string _cycleType { get; set; }
-        public string CycleType
-        {
-            get => _cycleType;
-            set { _cycleType = value; OnPropertyChanged(); }
-        }
+        public string CycleType { get => _cycleType; set { _cycleType = value; OnPropertyChanged(); } }
 
         private string _cycleHour { get; set; }
-        public string CycleHour
-        {
-            get => _cycleHour;
-            set { _cycleHour = value; OnPropertyChanged(); }
-        }
+        public string CycleHour { get => _cycleHour; set { _cycleHour = value; OnPropertyChanged(); } }
 
         private string _cycleMinute { get; set; }
-        public string CycleMinute
-        {
-            get => _cycleMinute;
-            set { _cycleMinute = value; OnPropertyChanged(); }
-        }
+        public string CycleMinute { get => _cycleMinute; set { _cycleMinute = value; OnPropertyChanged(); } }
+
+        private string _repeatByValue { get; set; }
+        public string RepeatByValue { get => _repeatByValue; set { _repeatByValue = value; OnPropertyChanged(); } }
 
         private string _dayInMonth { get; set; }
-        public string DayInMonth
-        {
-            get => _dayInMonth;
-            set { _dayInMonth = value; OnPropertyChanged(); }
-        }
+        public string DayInMonth { get => _dayInMonth; set { _dayInMonth = value; OnPropertyChanged(); } }
 
         private string _validateMessage { get; set; }
         public string ValidateMessage { get => _validateMessage; set { _validateMessage = value; OnPropertyChanged(); } }
 
         private string _scheduleName { get; set; }
         public string ScheduleName { get => _scheduleName; set { _scheduleName = value; OnPropertyChanged(); } }
+
+        private ObservableCollection<Option> _timeInDayOptions;
+        public ObservableCollection<Option> TimeInDayOptions { get => _timeInDayOptions; set { _timeInDayOptions = value; OnPropertyChanged(); } }
+
+        private Option? _excludeTimeFrom;
+        public Option? ExcludeTimeFrom { get => _excludeTimeFrom; set { _excludeTimeFrom = value; OnPropertyChanged(); } }
+
+        private Option? _excludeTimeTo;
+        public Option? ExcludeTimeTo { get => _excludeTimeTo; set { _excludeTimeTo = value; OnPropertyChanged(); } }
+
+        private Option? _excludeTime2From;
+        public Option? ExcludeTime2From { get => _excludeTime2From; set { _excludeTime2From = value; OnPropertyChanged(); } }
+
+        private Option? _excludeTime2To;
+        public Option? ExcludeTime2To { get => _excludeTime2To; set { _excludeTime2To = value; OnPropertyChanged(); } }
 
         #endregion
 
@@ -307,21 +335,42 @@ namespace TAMHubApp.ViewModels.UserControls
                 result = false;
                 message = ConstantDisplay.LANG_SCH_DayInMonth.TranslateString() + " " + ConstantDisplay.LANG_GLO_OutOfRange.TranslateString();
             }
-            else if (string.IsNullOrEmpty(CycleHour) || string.IsNullOrEmpty(CycleMinute))
+            else if ((string.IsNullOrEmpty(CycleHour) || string.IsNullOrEmpty(CycleMinute)) && CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString())
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_TimeRun.TranslateString() + " " + ConstantDisplay.LANG_GLO_CanNotBeBlank.TranslateString();
             }
-            else if (!int.TryParse(CycleHour, out hour) || !int.TryParse(CycleMinute, out minute))
+            else if ((!int.TryParse(CycleHour, out hour) || !int.TryParse(CycleMinute, out minute)) && CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString())
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_TimeRun.TranslateString() + " " + ConstantDisplay.LANG_GLO_NotMatchDataType.TranslateString();
             }
-            else if (hour < 0 || hour > 23 || minute < 0 || minute > 59)
+            else if ((hour < 0 || hour > 23 || minute < 0 || minute > 59))
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_TimeRun.TranslateString() + " " + ConstantDisplay.LANG_GLO_OutOfRange.TranslateString();
             }
+            else if(CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString() && (string.IsNullOrEmpty(RepeatByValue) || RepeatByTypeSelected == null))
+            {
+                result = false;
+                message = ConstantDisplay.LANG_SCH_Cycle.TranslateString() + " " + ConstantDisplay.LANG_GLO_CanNotBeBlank.TranslateString();
+            }
+            else if (CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString() && (!int.TryParse(RepeatByValue, out hour) || !int.TryParse(RepeatByValue, out minute)))
+            {
+                result = false;
+                message = ConstantDisplay.LANG_SCH_Cycle.TranslateString() + " " + ConstantDisplay.LANG_GLO_NotMatchDataType.TranslateString();
+            }
+            else if (CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString() && (ExcludeTimeFrom != null && ExcludeTimeTo != null) && ExcludeTimeFrom.Time >= ExcludeTimeTo.Time)
+            {
+                result = false;
+                message = ConstantDisplay.LANG_SCH_ExcludeTime.TranslateString() + " " + ConstantDisplay.LANG_GLO_TimeFromMustBeEarlyThanTimeTo.TranslateString();
+            }
+            else if (CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString() && (ExcludeTime2From != null && ExcludeTime2To != null) && ExcludeTime2From.Time >= ExcludeTime2To.Time)
+            {
+                result = false;
+                message = ConstantDisplay.LANG_SCH_ExcludeTime2.TranslateString() + " " + ConstantDisplay.LANG_GLO_TimeFromMustBeEarlyThanTimeTo.TranslateString();
+            }
+
             ValidateMessage = message;
             return result;
 

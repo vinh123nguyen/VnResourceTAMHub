@@ -33,5 +33,9 @@
         public const string LANG_DAT_PleaseSelectDevice = "LANG_DAT_PleaseSelectDevice";
         public const string LANG_GLO_English = "LANG_GLO_English";
         public const string LANG_GLO_Vietnamese = "LANG_GLO_Vietnamese";
+        public const string LANG_GLO_TimeFromMustBeEarlyThanTimeTo = "LANG_GLO_TimeFromMustBeEarlyThanTimeTo";
+        public const string LANG_SCH_Cycle = "LANG_SCH_Cycle";
+        public const string LANG_SCH_ExcludeTime = "LANG_SCH_ExcludeTime";
+        public const string LANG_SCH_ExcludeTime2 = "LANG_SCH_ExcludeTime2";
     }
 }

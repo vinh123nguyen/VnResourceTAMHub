@@ -5,11 +5,15 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TAMHubApp.Views.UserControls"
              xmlns:converter="clr-namespace:TAMHubApp.Converters"
-            xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
+             xmlns:uc="clr-namespace:TAMHubApp.Views.UserControls"
+             xmlns:sdl="http://schemas.sdl.com/xaml"
              mc:Ignorable="d" 
              d:DesignHeight="400" d:DesignWidth="400">
     <UserControl.Resources>
         <converter:StringEmptyToVisibilityConverter x:Key="StringEmptyToVisibilityConverter" />
+        <DataTemplate x:Key="MultiSelectComboBox.Dropdown.ListBox.ItemTemplate" DataType="models:LanguageItem">
+            <TextBlock Height="18" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="0,0,8,0" Text="{Binding Path=Name}"/>
+        </DataTemplate>
         <Style x:Key="style_masterBoder" TargetType="Border">
             <Setter Property="Background" Value="White"/>
             <Setter Property="CornerRadius" Value="12"/>
@@ -81,45 +85,45 @@
                     <ControlTemplate TargetType="ComboBox">
                         <Grid>
                             <ToggleButton x:Name="ToggleButton"
-                    Template="{StaticResource ComboBoxToggleButtonTemplate}" 
-                    Grid.Column="2"
-                    Focusable="False"
-                    IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
-                    ClickMode="Press"/>
+                                Template="{StaticResource ComboBoxToggleButtonTemplate}" 
+                                Grid.Column="2"
+                                Focusable="False"
+                                IsChecked="{Binding Path=IsDropDownOpen, Mode=TwoWay, RelativeSource={RelativeSource TemplatedParent}}"
+                                ClickMode="Press"/>
                             <ContentPresenter x:Name="ContentSite"
-                    IsHitTestVisible="False"
-                    Content="{TemplateBinding SelectionBoxItem}"
-                    ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
-                    ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
-                    Margin="3,3,23,3"
-                    VerticalAlignment="Center"
-                    HorizontalAlignment="Left"/>
+                                IsHitTestVisible="False"
+                                Content="{TemplateBinding SelectionBoxItem}"
+                                ContentTemplate="{TemplateBinding SelectionBoxItemTemplate}"
+                                ContentTemplateSelector="{TemplateBinding ItemTemplateSelector}"
+                                Margin="3,3,23,3"
+                                VerticalAlignment="Center"
+                                HorizontalAlignment="Left"/>
                             <TextBox x:Name="PART_EditableTextBox"
-                     Style="{x:Null}"
-                     Template="{StaticResource ComboBoxTextBoxTemplate}"
-                     HorizontalAlignment="Left"
-                     VerticalAlignment="Center"
-                     Margin="3,3,23,3"
-                     Focusable="True"
-                     Background="Transparent"
-                     Visibility="Hidden"
-                     IsReadOnly="{TemplateBinding IsReadOnly}"/>
+                                Style="{x:Null}"
+                                Template="{StaticResource ComboBoxTextBoxTemplate}"
+                                HorizontalAlignment="Left"
+                                VerticalAlignment="Center"
+                                Margin="3,3,23,3"
+                                Focusable="True"
+                                Background="Transparent"
+                                Visibility="Hidden"
+                                IsReadOnly="{TemplateBinding IsReadOnly}"/>
                             <Popup x:Name="Popup"
-                    Placement="Bottom"
-                    IsOpen="{TemplateBinding IsDropDownOpen}"
-                    AllowsTransparency="True"
-                    Focusable="False"
-                    PopupAnimation="Slide">
+                                Placement="Bottom"
+                                IsOpen="{TemplateBinding IsDropDownOpen}"
+                                AllowsTransparency="True"
+                                Focusable="False"
+                                PopupAnimation="Slide">
                                 <Grid x:Name="DropDown"
-                        SnapsToDevicePixels="True"
-                        MinWidth="{TemplateBinding ActualWidth}"
-                        MaxHeight="{TemplateBinding MaxDropDownHeight}">
+                                    SnapsToDevicePixels="True"
+                                    MinWidth="{TemplateBinding ActualWidth}"
+                                    MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
-                            Background="{StaticResource WindowBackgroundBrush}"
-                            BorderBrush="{StaticResource SolidBorderBrush}"
-                            BorderThickness="1"/>
+                                        Background="{StaticResource WindowBackgroundBrush}"
+                                        BorderBrush="{StaticResource SolidBorderBrush}"
+                                        BorderThickness="1"/>
                                     <ScrollViewer Margin="4,6,4,6"
-                            SnapsToDevicePixels="True">
+                                        SnapsToDevicePixels="True">
                                         <StackPanel IsItemsHost="True" KeyboardNavigation.DirectionalNavigation="Contained"/>
                                     </ScrollViewer>
                                 </Grid>
@@ -183,7 +187,7 @@
             </Border>
             <Grid Grid.Row="1">
 
-                <Grid>
+                <Grid Margin="10,-10,-10,10">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -196,6 +200,11 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" Margin="8"
@@ -259,7 +268,7 @@
                     <Grid Grid.Column="2" Grid.Row="4">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
-                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition Width="6"/>
                             <ColumnDefinition/>
                         </Grid.ColumnDefinitions>
                         <TextBox Grid.Column="0"
@@ -270,8 +279,115 @@
                             Text="{Binding CycleMinute}"/>
                     </Grid>
 
+                    <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal">
+                        <TextBlock Text="{DynamicResource LANG_SCH_Cycle}" Margin="8,8,0,8" />
+                        <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                    </StackPanel>
 
+                    <Grid Grid.Column="2" Grid.Row="5">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="6"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
+                            Height="25"
+                            Text="{Binding RepeatByValue}"/>
+                        <ComboBox HorizontalAlignment="Left" Grid.Column="2" Grid.Row="2" 
+                            Width="97" Height="25" 
+                            ItemsSource="{Binding RepeatByTypeOptions}" 
+                            SelectedItem="{Binding RepeatByTypeSelected, Mode=TwoWay}">      
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </Grid>
 
+                    <StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal">
+                        <TextBlock Text="{DynamicResource LANG_SCH_ExcludeDay}" Margin="8,8,0,8" />
+                    </StackPanel>
+                    <sdl:MultiSelectComboBox
+                        Grid.Column="2" Grid.Row="6"
+                        VerticalAlignment="Center"
+                        SelectedItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"
+                        DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"           
+                        Margin="0,2" Height="Auto"
+                        MinHeight="26"
+                        SelectionMode="Multiple"
+                        ItemsSource="{Binding DayInWeekOptions}" 
+                        SelectedItems="{Binding ExcludeDaySelected}"
+                        EnableFiltering="False"
+                        MaxDropDownHeight="300"
+                        EnableAutoComplete="False"
+                        />
+
+                    <StackPanel Grid.Column="1" Grid.Row="7" Orientation="Horizontal">
+                        <TextBlock Text="{DynamicResource LANG_SCH_ExcludeTime}" Margin="8,8,0,8" />
+                    </StackPanel>
+                    <Grid Grid.Column="2" Grid.Row="7">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox HorizontalAlignment="Left" Grid.Column="0"
+                            Width="97" Height="25"
+                            MaxDropDownHeight="200"
+                            ItemsSource="{Binding TimeInDayOptions}" 
+                            SelectedItem="{Binding ExcludeTimeFrom, Mode=TwoWay}">             
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <ComboBox HorizontalAlignment="Left" Grid.Column="2"
+                            Width="97" Height="25"
+                            MaxDropDownHeight="200"
+                            ItemsSource="{Binding TimeInDayOptions}" 
+                            SelectedItem="{Binding ExcludeTimeTo, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </Grid>
+
+                    <StackPanel Grid.Column="1" Grid.Row="8" Orientation="Horizontal">
+                        <TextBlock Text="{DynamicResource LANG_SCH_ExcludeTime2}" Margin="8,8,4,8" />
+                    </StackPanel>
+                    <Grid Grid.Column="2" Grid.Row="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition/>
+                            <ColumnDefinition Width="5"/>
+                            <ColumnDefinition/>
+                        </Grid.ColumnDefinitions>
+                        <ComboBox HorizontalAlignment="Left" Grid.Column="0"
+                            Width="97" Height="25" 
+                            MaxDropDownHeight="200"
+                            ItemsSource="{Binding TimeInDayOptions}" 
+                            SelectedItem="{Binding ExcludeTime2From, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                        <ComboBox HorizontalAlignment="Left" Grid.Column="2"
+                            Width="97" Height="25" 
+                            MaxDropDownHeight="200"
+                            ItemsSource="{Binding TimeInDayOptions}" 
+                            SelectedItem="{Binding ExcludeTime2To, Mode=TwoWay}">
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </Grid>
                 </Grid>
             </Grid>
             <Grid Grid.Row="2" Margin="8">
@@ -290,7 +406,7 @@
                          ButtonBackground="#B6FFB5" Padding="1"
                          ClickCommand="{Binding SaveSchedulePopupInfoCommand}"
                          ClickCommandParameter="{Binding Id}"/>
-
+                
             </Grid>
         </Grid>
     </Border>
