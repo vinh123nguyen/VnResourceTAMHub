@@ -62,6 +62,7 @@ namespace TAMHubApp.Services.TAMServices
                             ProductName = devicedb.ProductName,
                             AllLogCount = devicedb.AllLogCount,
                             ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime,
+                            IsInactive = devicedb.IsInactive,
                             ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value,
                             ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value
                         };
@@ -122,7 +123,7 @@ namespace TAMHubApp.Services.TAMServices
                         existDevice.CompanyCode = devicedb.CompanyCode;
                         existDevice.SerialNumber = devicedb.SerialNumber;
                         existDevice.ProductName = devicedb.ProductName;
-
+                        existDevice.IsInactive = devicedb.IsInactive;
                         if (existDevice.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
                         {
                             existDevice.DeviceSDKTypeView = "ZKTeco";
@@ -177,6 +178,7 @@ namespace TAMHubApp.Services.TAMServices
                                 SerialNumber = devicedb.SerialNumber,
                                 ProductName = devicedb.ProductName,
                                 CompanyCode = devicedb.CompanyCode,
+                                IsInactive = devicedb.IsInactive,
                                 ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime,
                                 ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value,
                                 ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value

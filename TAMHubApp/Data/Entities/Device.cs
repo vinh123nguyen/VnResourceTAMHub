@@ -17,8 +17,7 @@ namespace TAMHubApp.Data.Entities
         public string? SerialNumber { get; set; }
         public string? ProductName { get; set; }
         public string? CompanyCode { get; set; }
-
-
+        public bool IsInactive { get; set; }
         //ZKTeco prop
         public bool ZKTeco_IsCanGetLogByTime { get; set; }
         public bool? ZKTeco_IsTFTMachine { get; set; }

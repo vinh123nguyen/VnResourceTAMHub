@@ -16,7 +16,7 @@ namespace TAMHubApp.Models
         public DateTime? LastTimeRun { get => _lastTimeRun; set { _lastTimeRun = value; OnPropertyChanged(); LastTimeRunView = value != null ? ((DateTime)value).ToString("dd/MM/yyyy HH:mm") : null; } }
 
         private ScheduleCycleType _cycleType { get; set; }
-        public ScheduleCycleType CycleType { get => _cycleType; set { _cycleType = value; OnPropertyChanged(); CycleTypeView = $"LANG_CYCLE_{CycleType}".TranslateString(); } }
+        public ScheduleCycleType CycleType { get => _cycleType; set { _cycleType = value; OnPropertyChanged(); CycleTypeView = SetCycleTypeView(); } }
 
         private string _cycleTypeView { get; set; }
         public string CycleTypeView { get => _cycleTypeView; set { _cycleTypeView = value; OnPropertyChanged(); } }
@@ -59,6 +59,31 @@ namespace TAMHubApp.Models
 
         private DateTime? _nexttimerun { get; set; }
         public DateTime? NextTimeRun { get => _nexttimerun; set { _nexttimerun = value; OnPropertyChanged(); NextTimeRunView = value != null ? ((DateTime)value).ToString("dd/MM/yyyy HH:mm") : null; } }
+
+        private int? _repeatByValue { get; set; }
+        public int? RepeatByValue { get => _repeatByValue; set { _repeatByValue = value; OnPropertyChanged(); } }
+
+        private RepeatByType? _repeatByType { get; set; }
+        public RepeatByType? RepeatByType { get => _repeatByType; set { _repeatByType = value; OnPropertyChanged(); } }
+
+        private string SetCycleTypeView()
+        {
+            if (CycleType == ScheduleCycleType.RepeatBy && RepeatByValue != null && RepeatByType != null)
+            {
+                return $"LANG_CYCLE_{CycleType}".TranslateString() + $" {RepeatByValue} " + $"LANG_REPEATTYPE_{RepeatByType}".TranslateString();
+            }
+            else
+            {
+                return $"LANG_CYCLE_{CycleType}".TranslateString();
+            }
+        }
+
+        public TimeSpan? StartTime { get; set; }
+        public string? ExcludeDayOfWeek { get; set; }
+        public TimeSpan? ExcludeTimeFrom { get; set; }
+        public TimeSpan? ExcludeTimeTo { get; set; }
+        public TimeSpan? ExcludeTime2From { get; set; }
+        public TimeSpan? ExcludeTime2To { get; set; }
 
         public event PropertyChangedEventHandler? PropertyChanged;
         protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)

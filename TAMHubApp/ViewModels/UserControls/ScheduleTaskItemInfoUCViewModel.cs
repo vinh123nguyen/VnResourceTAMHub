@@ -1,6 +1,8 @@
 ﻿using Quartz;
+using Riss.Devices;
 using System.Collections.ObjectModel;
 using System.Data;
+using System.Linq;
 using System.Reflection.Metadata;
 using System.Xml.Linq;
 using TAMHubApp.Commands;
@@ -50,7 +52,12 @@ namespace TAMHubApp.ViewModels.UserControls
             var startTime = TimeSpan.Zero; // Start at 00:00
             var endTime = new TimeSpan(23, 59, 59); // End at 23:59
             var interval = TimeSpan.FromMinutes(30);
-            var dwd = interval.ToString(@"hh\:mm\:ss");
+            times.Add(new Option()
+            {
+                Key = "",
+                Name = "Please select...",
+                Time = null
+            });
             while (startTime <= endTime)
             {
                 times.Add(new Option()
@@ -115,31 +122,43 @@ namespace TAMHubApp.ViewModels.UserControls
                     DayInMonth = currentschedule?.DayInMonth?.ToString();
                 }
 
-
+                if (CycleTypeSelected?.Key == ScheduleCycleType.RepeatBy.ToString())
+                {
+                    RepeatByValue = currentschedule.RepeatByValue != null ? currentschedule.RepeatByValue.ToString() : "";
+                    RepeatByTypeSelected = currentschedule.RepeatByType != null ? RepeatByTypeOptions?.FirstOrDefault(x => x.Key == currentschedule.RepeatByType.ToString()) : null;
+                    ExcludeDaySelected = !string.IsNullOrEmpty(currentschedule.ExcludeDayOfWeek) ? new ObservableCollection<Option>(DayInWeekOptions.Where(x => currentschedule.ExcludeDayOfWeek.Split(",").Contains(x.Key))) : null;
+                    ExcludeTimeFrom = currentschedule.ExcludeTimeFrom != null ? TimeInDayOptions.FirstOrDefault(x => x.Time == currentschedule.ExcludeTimeFrom) : null;
+                    ExcludeTimeTo = currentschedule.ExcludeTimeTo != null ? TimeInDayOptions.FirstOrDefault(x => x.Time == currentschedule.ExcludeTimeTo) : null;
+                    ExcludeTime2From = currentschedule.ExcludeTime2From != null ? TimeInDayOptions.FirstOrDefault(x => x.Time == currentschedule.ExcludeTime2From) : null;
+                    ExcludeTime2To = currentschedule.ExcludeTime2To != null ? TimeInDayOptions.FirstOrDefault(x => x.Time == currentschedule.ExcludeTime2To) : null;
+                    StartTimeSelected = currentschedule.StartTime != null ? TimeInDayOptions.FirstOrDefault(x => x.Time == currentschedule.StartTime) : null;
+                }
             }
         }
 
         #region Observable Properties
-        private ObservableCollection<Option>? _options;
+        private ObservableCollection<Option>? _options { get; set; }
         public ObservableCollection<Option>? CycleTypeOptions { get { return _options; } set { _options = value; OnPropertyChanged(); } }
 
-        private Option? _cycleTypeSelected;
+        private Option? _cycleTypeSelected { get; set; }
         public Option? CycleTypeSelected { get { return _cycleTypeSelected; } set { _cycleTypeSelected = value; OnPropertyChanged(); Event_ChangeCycleType(value); } }
 
-        private ObservableCollection<Option>? _optionDayInWeeks;
-        public ObservableCollection<Option>? DayInWeekOptions { get { return _optionDayInWeeks; } set { _optionDayInWeeks = value; OnPropertyChanged(); } }
+        private ObservableCollection<Option> _optionDayInWeeks { get; set; }
+        public ObservableCollection<Option> DayInWeekOptions { get { return _optionDayInWeeks ?? (_optionDayInWeeks = new ObservableCollection<Option>()); } set { _optionDayInWeeks = value; OnPropertyChanged(); } }
 
-        private Option? _dayInWeekSelected;
+        private Option? _dayInWeekSelected { get; set; }
         public Option? DayInWeekSelected { get { return _dayInWeekSelected; } set { _dayInWeekSelected = value; OnPropertyChanged(); } }
-        private ObservableCollection<Option>? _repeatByTypeOptions;
-        public ObservableCollection<Option>? RepeatByTypeOptions { get => _repeatByTypeOptions; set { _repeatByTypeOptions = value; OnPropertyChanged(); } }
+        private ObservableCollection<Option> _repeatByTypeOptions;
+        public ObservableCollection<Option> RepeatByTypeOptions { get => _repeatByTypeOptions; set { _repeatByTypeOptions = value; OnPropertyChanged(); } }
 
-        private Option? _repeatByTypeSelected;
+        private Option? _repeatByTypeSelected { get; set; }
         public Option? RepeatByTypeSelected { get => _repeatByTypeSelected; set { _repeatByTypeSelected = value; OnPropertyChanged(); } }
 
-        private ObservableCollection<Option>? _excludeDaySelected;
-        public ObservableCollection<Option>? ExcludeDaySelected { get { return _excludeDaySelected; } set { _excludeDaySelected = value; OnPropertyChanged(); } }
-        
+        private ObservableCollection<Option> _excludeDaySelected;
+        public ObservableCollection<Option> ExcludeDaySelected { get { return _excludeDaySelected  ?? (_excludeDaySelected = new ObservableCollection<Option>()); }  set { _excludeDaySelected = value; OnPropertyChanged(); } }
+
+
+        //(_devices = new ObservableCollection<BaseTAMService>());
         private string _excludeTime2Hour { get; set; }
         public string ExcludeTime2Hour { get => _excludeTime2Hour; set { _excludeTime2Hour = value; OnPropertyChanged(); } }
 
@@ -167,17 +186,20 @@ namespace TAMHubApp.ViewModels.UserControls
         private ObservableCollection<Option> _timeInDayOptions;
         public ObservableCollection<Option> TimeInDayOptions { get => _timeInDayOptions; set { _timeInDayOptions = value; OnPropertyChanged(); } }
 
-        private Option? _excludeTimeFrom;
+        private Option? _excludeTimeFrom { get; set; }
         public Option? ExcludeTimeFrom { get => _excludeTimeFrom; set { _excludeTimeFrom = value; OnPropertyChanged(); } }
 
-        private Option? _excludeTimeTo;
+        private Option? _excludeTimeTo { get; set; }
         public Option? ExcludeTimeTo { get => _excludeTimeTo; set { _excludeTimeTo = value; OnPropertyChanged(); } }
 
-        private Option? _excludeTime2From;
+        private Option? _excludeTime2From { get; set; }
         public Option? ExcludeTime2From { get => _excludeTime2From; set { _excludeTime2From = value; OnPropertyChanged(); } }
 
-        private Option? _excludeTime2To;
+        private Option? _excludeTime2To { get; set; }
         public Option? ExcludeTime2To { get => _excludeTime2To; set { _excludeTime2To = value; OnPropertyChanged(); } }
+
+        private Option? _startTimeSelected { get; set; }
+        public Option? StartTimeSelected { get => _startTimeSelected; set { _startTimeSelected = value; OnPropertyChanged(); } }
 
         #endregion
 
@@ -250,11 +272,29 @@ namespace TAMHubApp.ViewModels.UserControls
                     currentObject.DayInMonth = _DayInMonth;
                     currentObjectDb.DayInMonth = _DayInMonth;
 
-                    currentObject.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected?.Key) : null;
-                    currentObjectDb.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected?.Key) : null;
+                    currentObject.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected.Key) : null;
+                    currentObjectDb.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected.Key) : null;
 
                     currentObject.CycleType = (ScheduleCycleType)Enum.Parse(typeof(ScheduleCycleType), CycleTypeSelected.Key);
                     currentObjectDb.CycleType = (ScheduleCycleType)Enum.Parse(typeof(ScheduleCycleType), CycleTypeSelected.Key);
+
+                    currentObjectDb.RepeatByValue = int.TryParse(RepeatByValue, out int value4) ? value4 : null;
+                    currentObjectDb.RepeatByType = RepeatByTypeSelected != null ? (RepeatByType)Enum.Parse(typeof(RepeatByType), RepeatByTypeSelected.Key) : null;
+                    currentObjectDb.ExcludeDayOfWeek = ExcludeDaySelected != null && ExcludeDaySelected.Any() ? string.Join(",", ExcludeDaySelected.Select(x => x.Key)) : null;
+                    currentObjectDb.ExcludeTimeFrom = ExcludeTimeFrom != null ? ExcludeTimeFrom.Time : null;
+                    currentObjectDb.ExcludeTimeTo = ExcludeTimeTo != null ? ExcludeTimeTo.Time : null;
+                    currentObjectDb.ExcludeTime2From = ExcludeTime2From != null ? ExcludeTime2From.Time : null;
+                    currentObjectDb.ExcludeTime2To = ExcludeTime2To != null ? ExcludeTime2To.Time : null;
+                    currentObjectDb.StartTime = StartTimeSelected != null ? StartTimeSelected.Time : null;
+
+                    currentObject.RepeatByValue = currentObjectDb.RepeatByValue;
+                    currentObject.RepeatByType = currentObjectDb.RepeatByType;
+                    currentObject.StartTime = currentObjectDb.StartTime;
+                    currentObject.ExcludeDayOfWeek = currentObjectDb.ExcludeDayOfWeek;
+                    currentObject.ExcludeTimeFrom = currentObjectDb.ExcludeTimeFrom;
+                    currentObject.ExcludeTimeTo = currentObjectDb.ExcludeTimeTo;
+                    currentObject.ExcludeTime2From = currentObjectDb.ExcludeTime2From;
+                    currentObject.ExcludeTime2To = currentObjectDb.ExcludeTime2To;
                 }
 
             }
@@ -271,10 +311,17 @@ namespace TAMHubApp.ViewModels.UserControls
                 currentObject.Minute = Minute;
                 int? _DayInMonth = int.TryParse(DayInMonth, out int value3) ? value3 : null;
                 currentObject.DayInMonth = _DayInMonth;
-                currentObject.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected?.Key) : null;
-
+                currentObject.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected.Key) : null;
                 currentObject.CycleType = (ScheduleCycleType)Enum.Parse(typeof(ScheduleCycleType), CycleTypeSelected.Key);
 
+                currentObject.RepeatByValue = int.TryParse(RepeatByValue, out int value4) ? value4 : null;
+                currentObject.RepeatByType = RepeatByTypeSelected != null ? (RepeatByType)Enum.Parse(typeof(RepeatByType), RepeatByTypeSelected.Key) : null;
+                currentObject.ExcludeDayOfWeek = ExcludeDaySelected != null && ExcludeDaySelected.Any() ? string.Join(",", ExcludeDaySelected.Select(x => x.Key)) : null;
+                currentObject.ExcludeTimeFrom = ExcludeTimeFrom != null ? ExcludeTimeFrom.Time : null;
+                currentObject.ExcludeTimeTo = ExcludeTimeTo != null ? ExcludeTimeTo.Time : null;
+                currentObject.ExcludeTime2From = ExcludeTime2From != null ? ExcludeTime2From.Time : null;
+                currentObject.ExcludeTime2To = ExcludeTime2To != null ? ExcludeTime2To.Time : null;
+                currentObject.StartTime = StartTimeSelected != null ? StartTimeSelected.Time : null;
 
                 var scheduleadd = new ScheduleTaskModel()
                 {
@@ -287,7 +334,15 @@ namespace TAMHubApp.ViewModels.UserControls
                     DayOfWeek = currentObject.DayOfWeek,
                     CycleType = currentObject.CycleType,
                     IsRuning = false,
-                    IsLoading = false
+                    IsLoading = false,
+                    RepeatByValue = currentObject.RepeatByValue,
+                    RepeatByType = currentObject.RepeatByType,
+                    StartTime = currentObject.StartTime,
+                    ExcludeDayOfWeek = currentObject.ExcludeDayOfWeek,
+                    ExcludeTimeFrom = currentObject.ExcludeTimeFrom,
+                    ExcludeTimeTo = currentObject.ExcludeTimeTo,
+                    ExcludeTime2From = currentObject.ExcludeTime2From,
+                    ExcludeTime2To = currentObject.ExcludeTime2To,
                 };
                 _scheduleViewModel.ScheduleTasks.Add(scheduleadd);
 
@@ -350,22 +405,27 @@ namespace TAMHubApp.ViewModels.UserControls
                 result = false;
                 message = ConstantDisplay.LANG_SCH_TimeRun.TranslateString() + " " + ConstantDisplay.LANG_GLO_OutOfRange.TranslateString();
             }
-            else if(CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString() && (string.IsNullOrEmpty(RepeatByValue) || RepeatByTypeSelected == null))
+            else if(CycleTypeSelected.Key == ScheduleCycleType.RepeatBy.ToString() && (string.IsNullOrEmpty(RepeatByValue) || RepeatByTypeSelected == null))
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_Cycle.TranslateString() + " " + ConstantDisplay.LANG_GLO_CanNotBeBlank.TranslateString();
             }
-            else if (CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString() && (!int.TryParse(RepeatByValue, out hour) || !int.TryParse(RepeatByValue, out minute)))
+            else if (CycleTypeSelected.Key == ScheduleCycleType.RepeatBy.ToString() && !int.TryParse(RepeatByValue, out hour))
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_Cycle.TranslateString() + " " + ConstantDisplay.LANG_GLO_NotMatchDataType.TranslateString();
             }
-            else if (CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString() && (ExcludeTimeFrom != null && ExcludeTimeTo != null) && ExcludeTimeFrom.Time >= ExcludeTimeTo.Time)
+            else if (CycleTypeSelected.Key == ScheduleCycleType.RepeatBy.ToString() && !int.TryParse(RepeatByValue, out hour) && hour < 0)
+            {
+                result = false;
+                message = ConstantDisplay.LANG_SCH_Cycle.TranslateString() + " " + ConstantDisplay.LANG_GLO_OutOfRange.TranslateString();
+            }
+            else if (CycleTypeSelected.Key == ScheduleCycleType.RepeatBy.ToString() && (ExcludeTimeFrom != null && ExcludeTimeTo != null) && ExcludeTimeFrom.Time >= ExcludeTimeTo.Time)
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_ExcludeTime.TranslateString() + " " + ConstantDisplay.LANG_GLO_TimeFromMustBeEarlyThanTimeTo.TranslateString();
             }
-            else if (CycleTypeSelected.Key != ScheduleCycleType.RepeatBy.ToString() && (ExcludeTime2From != null && ExcludeTime2To != null) && ExcludeTime2From.Time >= ExcludeTime2To.Time)
+            else if (CycleTypeSelected.Key == ScheduleCycleType.RepeatBy.ToString() && (ExcludeTime2From != null && ExcludeTime2To != null) && ExcludeTime2From.Time >= ExcludeTime2To.Time)
             {
                 result = false;
                 message = ConstantDisplay.LANG_SCH_ExcludeTime2.TranslateString() + " " + ConstantDisplay.LANG_GLO_TimeFromMustBeEarlyThanTimeTo.TranslateString();

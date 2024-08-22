@@ -131,26 +131,6 @@ namespace TAMHubApp.Services.TAMServices
             }
         }
 
-        //public void RegisEventZk(ZKTecoDeviceItem device)
-        //{
-        //    if (device.DeviceIns.RegEvent(device.MachineNo, 65535))
-        //    {
-        //        device.DeviceIns.OnConnected += objCZKEM_OnConnected;
-        //        device.DeviceIns.OnDisConnected += objCZKEM_OnDisConnected;
-        //    }
-        //}
-
-        //private void objCZKEM_OnDisConnected()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //private void objCZKEM_OnConnected()
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-
         public async Task Action_Realand_GetDeviceInfo(Riss.Devices.Device deviceins, DeviceConnection deviceConnectionIns, RealandDeviceItem rissdevice, Guid DeviceID)
         {
             using (var dbContext = new AppDbContext())
@@ -237,6 +217,13 @@ namespace TAMHubApp.Services.TAMServices
         public async Task<bool> Action_GetDataByDate(TAMCommonService service, BaseTAMService device, DateTime datefrom, DateTime dateend, string EnrollNumber, string DownloadType = "Manual", bool IsDownSchedule = false)
         {
             Log.Information($"[Start Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
+            
+            if(DownloadType != "Manual" && device.IsInactive)
+            {
+                Log.Information($"[{device.IPAddress}]:" + "Inactive skip device");
+                Log.Information($"[End Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
+                return true;
+            }
             
             using (var dbContext = new AppDbContext())
             {
@@ -562,56 +549,28 @@ namespace TAMHubApp.Services.TAMServices
 
                         try
                         {
-                            //if (IsDownSchedule)
-                            //{
-                            //    extraData = Global.DeviceBusy;
-                            //    var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                            extraData = Global.DeviceBusy;
+                            var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
 
-                            //    extraProperty = true;
-                            //    extraData = dtList;
+                            extraProperty = boolList;
+                            extraData = dtList;
 
-                            //    resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
-                            //    if (resultRiss)
-                            //    {
-                            //        List<Record> recordList = (List<Record>)extraData;
-                            //        listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
-                            //        {
-                            //            Id = Guid.NewGuid(),
-                            //            DeviceID = device.Id,
-                            //            EnrollNumber = (int)x.DIN,
-                            //            VerifyModeView = GlobalUtilities.VerifyType(x.Action),
-                            //            VerifyModeOrigin = x.Action,
-                            //            InOutModeOrigin = x.Verify,
-                            //            InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
-                            //            TimeLog = x.Clock
-                            //        }).ToList();
-                            //    }
-                            //}
-                            //else
-                            //{
-                                extraData = Global.DeviceBusy;
-                                var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
-
-                                extraProperty = boolList;
-                                extraData = dtList;
-
-                                resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
-                                if (resultRiss)
+                            resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                            if (resultRiss)
+                            {
+                                List<Record> recordList = (List<Record>)extraData;
+                                listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
                                 {
-                                    List<Record> recordList = (List<Record>)extraData;
-                                    listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
-                                    {
-                                        Id = Guid.NewGuid(),
-                                        DeviceID = device.Id,
-                                        EnrollNumber = (int)x.DIN,
-                                        VerifyModeView = GlobalUtilities.VerifyType(x.Action),
-                                        VerifyModeOrigin = x.Action,
-                                        InOutModeOrigin = x.Verify,
-                                        InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
-                                        TimeLog = x.Clock
-                                    }).ToList();
-                                }
-                            //}
+                                    Id = Guid.NewGuid(),
+                                    DeviceID = device.Id,
+                                    EnrollNumber = (int)x.DIN,
+                                    VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                    VerifyModeOrigin = x.Action,
+                                    InOutModeOrigin = x.Verify,
+                                    InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                                    TimeLog = x.Clock
+                                }).ToList();
+                            }
                         }
                         catch (Exception ex)
                         {

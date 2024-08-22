@@ -154,13 +154,43 @@
                 </DataTrigger>
             </Style.Triggers>
         </Style>
-
-
         <Style x:Key="style_RequiredMark" TargetType="TextBlock">
             <Setter Property="Foreground" Value="Red"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Text" Value="*"/>
             <Setter Property="Margin" Value="0,0,8,0"/>
+        </Style>
+        <Style x:Key="style_HiddenRepeatByStackPanel" TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding CycleType}" Value="RepeatBy">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="style_HiddenRepeatByGrid" TargetType="Grid">
+            <Setter Property="Visibility" Value="Collapsed"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding CycleType}" Value="RepeatBy">
+                    <Setter Property="Visibility" Value="Visible"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="style_ShowRepeatByStackPanel" TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding CycleType}" Value="RepeatBy">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+        <Style x:Key="style_ShowRepeatByGrid" TargetType="Grid">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding CycleType}" Value="RepeatBy">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
         </Style>
     </UserControl.Resources>
     <Border Style="{StaticResource style_masterBoder}">
@@ -187,7 +217,7 @@
             </Border>
             <Grid Grid.Row="1">
 
-                <Grid Margin="10,-10,-10,10">
+                <Grid>
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="Auto"/>
@@ -204,11 +234,12 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                         <RowDefinition Height="*"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" Margin="8"
-                           HorizontalAlignment="Center" VerticalAlignment="Center" 
+                           HorizontalAlignment="Center" VerticalAlignment="Center"
                            FontSize="10" Foreground="Red" 
                            Text="{Binding ValidateMessage}"/>
 
@@ -260,12 +291,12 @@
                         Width="200" Height="25"
                         Text="{Binding DayInMonth}"/>
 
-                    <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal">
+                    <StackPanel Grid.Column="1" Grid.Row="4" Orientation="Horizontal" Style="{DynamicResource style_ShowRepeatByStackPanel}">
                         <TextBlock Text="{DynamicResource LANG_SCH_TimeRun}" Margin="8,8,0,8" />
                         <TextBlock Style="{StaticResource style_RequiredMark}"/>
                     </StackPanel>
 
-                    <Grid Grid.Column="2" Grid.Row="4">
+                    <Grid Grid.Column="2" Grid.Row="4" Style="{DynamicResource style_ShowRepeatByGrid}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="6"/>
@@ -279,12 +310,12 @@
                             Text="{Binding CycleMinute}"/>
                     </Grid>
 
-                    <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal">
+                    <StackPanel Grid.Column="1" Grid.Row="5" Orientation="Horizontal" Style="{StaticResource style_HiddenRepeatByStackPanel}">
                         <TextBlock Text="{DynamicResource LANG_SCH_Cycle}" Margin="8,8,0,8" />
                         <TextBlock Style="{StaticResource style_RequiredMark}"/>
                     </StackPanel>
 
-                    <Grid Grid.Column="2" Grid.Row="5">
+                    <Grid Grid.Column="2" Grid.Row="5" Style="{StaticResource style_HiddenRepeatByGrid}" >
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="6"/>
@@ -305,28 +336,47 @@
                         </ComboBox>
                     </Grid>
 
-                    <StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal">
+                    <StackPanel Grid.Column="1" Grid.Row="6" Orientation="Horizontal" Style="{StaticResource style_HiddenRepeatByStackPanel}">
+                        <TextBlock Text="{DynamicResource LANG_SCH_StartTime}" Margin="8,8,0,8" />
+                        <TextBlock Style="{StaticResource style_RequiredMark}"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="2" Grid.Row="6" Style="{StaticResource style_HiddenRepeatByStackPanel}">
+                        <ComboBox HorizontalAlignment="Left"
+                            Height="25"
+                            Width="200"
+                            ItemsSource="{Binding TimeInDayOptions}" 
+                            SelectedItem="{Binding StartTimeSelected, Mode=TwoWay}">         
+                            <ComboBox.ItemTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding Name}"/>
+                                </DataTemplate>
+                            </ComboBox.ItemTemplate>
+                        </ComboBox>
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Grid.Row="7" Orientation="Horizontal" Style="{StaticResource style_HiddenRepeatByStackPanel}">
                         <TextBlock Text="{DynamicResource LANG_SCH_ExcludeDay}" Margin="8,8,0,8" />
                     </StackPanel>
-                    <sdl:MultiSelectComboBox
-                        Grid.Column="2" Grid.Row="6"
-                        VerticalAlignment="Center"
-                        SelectedItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"
-                        DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"           
-                        Margin="0,2" Height="Auto"
-                        MinHeight="26"
-                        SelectionMode="Multiple"
-                        ItemsSource="{Binding DayInWeekOptions}" 
-                        SelectedItems="{Binding ExcludeDaySelected}"
-                        EnableFiltering="False"
-                        MaxDropDownHeight="300"
-                        EnableAutoComplete="False"
-                        />
 
-                    <StackPanel Grid.Column="1" Grid.Row="7" Orientation="Horizontal">
+                    <StackPanel Grid.Column="2" Grid.Row="7" Style="{StaticResource style_HiddenRepeatByStackPanel}">
+                        <sdl:MultiSelectComboBox
+                            VerticalAlignment="Center"
+                            SelectedItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"
+                            DropdownItemTemplate="{StaticResource MultiSelectComboBox.Dropdown.ListBox.ItemTemplate}"           
+                            Margin="0,2" Height="Auto"
+                            SelectionMode="Multiple"
+                            ItemsSource="{Binding DayInWeekOptions}" 
+                            SelectedItems="{Binding ExcludeDaySelected}"
+                            EnableFiltering="False"
+                            MaxDropDownHeight="300"
+                            EnableAutoComplete="False"
+                            />
+                    </StackPanel>
+
+                    <StackPanel Grid.Column="1" Grid.Row="8" Orientation="Horizontal" Style="{StaticResource style_HiddenRepeatByStackPanel}">
                         <TextBlock Text="{DynamicResource LANG_SCH_ExcludeTime}" Margin="8,8,0,8" />
                     </StackPanel>
-                    <Grid Grid.Column="2" Grid.Row="7">
+                    <Grid Grid.Column="2" Grid.Row="8" Style="{StaticResource style_HiddenRepeatByGrid}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="5"/>
@@ -356,10 +406,10 @@
                         </ComboBox>
                     </Grid>
 
-                    <StackPanel Grid.Column="1" Grid.Row="8" Orientation="Horizontal">
+                    <StackPanel Grid.Column="1" Grid.Row="9" Orientation="Horizontal" Style="{StaticResource style_HiddenRepeatByStackPanel}"> 
                         <TextBlock Text="{DynamicResource LANG_SCH_ExcludeTime2}" Margin="8,8,4,8" />
                     </StackPanel>
-                    <Grid Grid.Column="2" Grid.Row="8">
+                    <Grid Grid.Column="2" Grid.Row="9" Style="{StaticResource style_HiddenRepeatByGrid}">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition/>
                             <ColumnDefinition Width="5"/>

@@ -11,7 +11,7 @@ using TAMHubApp.Data;
 namespace TAMHubApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20240731104036_init")]
+    [Migration("20240822180018_init")]
     partial class init
     {
         /// <inheritdoc />
@@ -91,25 +91,25 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("fdd54365-c24d-45ae-a969-03dd96dbbb5c"),
+                            Id = new Guid("1270daf9-f8a8-4aaa-bfc1-3f78c119b5a2"),
                             Name = "ENUM_INOUT_ZKTECO_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("82257de2-1b51-411b-9872-3f014f95d627"),
+                            Id = new Guid("82c484fb-5f83-4a24-b171-0a02857790b2"),
                             Name = "ENUM_INOUT_ZKTECO_OUT_KEY",
                             Value = "E_OUT"
                         },
                         new
                         {
-                            Id = new Guid("52546e06-0ec7-4207-8135-238fe84f374c"),
+                            Id = new Guid("ac6028e0-f84a-46b9-92e5-fe8ee17f6804"),
                             Name = "ENUM_INOUT_REALAND_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("65285a78-d3db-46e6-8ddc-efb99d2155ff"),
+                            Id = new Guid("63da9690-8558-4aa3-a4c5-8faf88a63850"),
                             Name = "ENUM_INOUT_REALAND_OUT_KEY",
                             Value = "E_OUT"
                         });
@@ -136,6 +136,9 @@ namespace TAMHubApp.Migrations
                     b.Property<string>("IPAddress")
                         .IsRequired()
                         .HasColumnType("TEXT");
+
+                    b.Property<bool>("IsInactive")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime?>("LastTimeConnected")
                         .HasColumnType("TEXT");
@@ -188,6 +191,21 @@ namespace TAMHubApp.Migrations
                     b.Property<int?>("DayOfWeek")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("ExcludeDayOfWeek")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan?>("ExcludeTime2From")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan?>("ExcludeTime2To")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan?>("ExcludeTimeFrom")
+                        .HasColumnType("TEXT");
+
+                    b.Property<TimeSpan?>("ExcludeTimeTo")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Hour")
                         .HasColumnType("INTEGER");
 
@@ -199,6 +217,15 @@ namespace TAMHubApp.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<int?>("RepeatByType")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("RepeatByValue")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<TimeSpan?>("StartTime")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

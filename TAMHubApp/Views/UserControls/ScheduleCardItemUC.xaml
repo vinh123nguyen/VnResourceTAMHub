@@ -100,6 +100,15 @@
             </Style.Triggers>
         </Style>
 
+        <Style x:Key="stle_hiddenbyCycleTypeViewRepeatBy" TargetType="StackPanel">
+            <Setter Property="Visibility" Value="Visible"/>
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding CycleType}" Value="RepeatBy">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <Style x:Key="style_PathLoading" TargetType="Path">
             <Style.Triggers>
                 <EventTrigger RoutedEvent="FrameworkElement.Loaded">
@@ -178,7 +187,7 @@
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
                 </Grid.ColumnDefinitions>
 
-                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal">
+                <StackPanel Grid.Column="0" Grid.Row="0" Orientation="Horizontal" Style="{StaticResource stle_hiddenbyCycleTypeViewRepeatBy}">
                     <TextBlock Text="{DynamicResource LANG_SCH_TimeRun}" Padding="4,0,0,0" FontSize="10"/>
                     <TextBlock Text=":" FontSize="10" Padding="0,0,4,0"/>
                     <TextBlock Text="{Binding TimeRunView}" FontSize="10"/>

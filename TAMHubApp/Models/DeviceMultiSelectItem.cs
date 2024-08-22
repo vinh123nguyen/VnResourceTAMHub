@@ -5,11 +5,11 @@ namespace TAMHubApp.Models
 {
     public class DeviceMultiSelectItem : BaseViewModel, IItemEnabledAware, IItemGroupAware
     {
-        private string _id;
-        private string _name;
-        private bool _isEnabled;
-        private int _selectedOrder;
-        private IItemGroup _group;
+        private string _id { get; set; }
+        private string _name { get; set; }
+        private bool _isEnabled { get; set; }
+        private int _selectedOrder { get; set; }
+        private IItemGroup _group { get; set; }
 
         public DeviceMultiSelectItem()
         {

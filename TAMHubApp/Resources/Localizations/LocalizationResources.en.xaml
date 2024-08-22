@@ -19,6 +19,7 @@
     <system:String x:Key="LANG_DEV_Port">Port</system:String>
     <system:String x:Key="LANG_DEV_Password">Password</system:String>
     <system:String x:Key="LANG_DEV_SupportGetDataByDate">Support get data by date</system:String>
+    <system:String x:Key="LANG_DEV_Inactive">Inactive</system:String>
     <system:String x:Key="LANG_DEV_FromDate">Date from</system:String>
     <system:String x:Key="LANG_DEV_ToDate">Date to</system:String>
     <system:String x:Key="LANG_DEV_DownloadData">Download data</system:String>
@@ -60,6 +61,7 @@
     <system:String x:Key="LANG_SCH_DayInMonth">Day in month</system:String>
     <system:String x:Key="LANG_SCH_DayOfWeek">Day of week</system:String>
     <system:String x:Key="LANG_SCH_TimeRun">Time run</system:String>
+    <system:String x:Key="LANG_SCH_StartTime">StartTime</system:String>
     <system:String x:Key="LANG_SCH_Cycle">Cycle</system:String>
     <system:String x:Key="LANG_SCH_LastTimeRun">Last time run</system:String>
     <system:String x:Key="LANG_SCH_NextTimeRun">Next time run</system:String>

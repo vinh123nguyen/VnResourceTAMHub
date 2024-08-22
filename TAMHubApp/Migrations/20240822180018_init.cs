@@ -43,6 +43,7 @@ namespace TAMHubApp.Migrations
                     SerialNumber = table.Column<string>(type: "TEXT", nullable: true),
                     ProductName = table.Column<string>(type: "TEXT", nullable: true),
                     CompanyCode = table.Column<string>(type: "TEXT", nullable: true),
+                    IsInactive = table.Column<bool>(type: "INTEGER", nullable: false),
                     ZKTeco_IsCanGetLogByTime = table.Column<bool>(type: "INTEGER", nullable: false),
                     ZKTeco_IsTFTMachine = table.Column<bool>(type: "INTEGER", nullable: true),
                     ZKTeco_IsNewFirmwareMachine = table.Column<bool>(type: "INTEGER", nullable: true)
@@ -63,7 +64,15 @@ namespace TAMHubApp.Migrations
                     Hour = table.Column<int>(type: "INTEGER", nullable: false),
                     Minute = table.Column<int>(type: "INTEGER", nullable: false),
                     DayInMonth = table.Column<int>(type: "INTEGER", nullable: true),
-                    DayOfWeek = table.Column<int>(type: "INTEGER", nullable: true)
+                    DayOfWeek = table.Column<int>(type: "INTEGER", nullable: true),
+                    StartTime = table.Column<TimeSpan>(type: "TEXT", nullable: true),
+                    RepeatByValue = table.Column<int>(type: "INTEGER", nullable: true),
+                    RepeatByType = table.Column<int>(type: "INTEGER", nullable: true),
+                    ExcludeDayOfWeek = table.Column<string>(type: "TEXT", nullable: true),
+                    ExcludeTimeFrom = table.Column<TimeSpan>(type: "TEXT", nullable: true),
+                    ExcludeTimeTo = table.Column<TimeSpan>(type: "TEXT", nullable: true),
+                    ExcludeTime2From = table.Column<TimeSpan>(type: "TEXT", nullable: true),
+                    ExcludeTime2To = table.Column<TimeSpan>(type: "TEXT", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -151,10 +160,10 @@ namespace TAMHubApp.Migrations
                 columns: new[] { "Id", "Name", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("52546e06-0ec7-4207-8135-238fe84f374c"), "ENUM_INOUT_REALAND_IN_KEY", "E_IN" },
-                    { new Guid("65285a78-d3db-46e6-8ddc-efb99d2155ff"), "ENUM_INOUT_REALAND_OUT_KEY", "E_OUT" },
-                    { new Guid("82257de2-1b51-411b-9872-3f014f95d627"), "ENUM_INOUT_ZKTECO_OUT_KEY", "E_OUT" },
-                    { new Guid("fdd54365-c24d-45ae-a969-03dd96dbbb5c"), "ENUM_INOUT_ZKTECO_IN_KEY", "E_IN" }
+                    { new Guid("1270daf9-f8a8-4aaa-bfc1-3f78c119b5a2"), "ENUM_INOUT_ZKTECO_IN_KEY", "E_IN" },
+                    { new Guid("63da9690-8558-4aa3-a4c5-8faf88a63850"), "ENUM_INOUT_REALAND_OUT_KEY", "E_OUT" },
+                    { new Guid("82c484fb-5f83-4a24-b171-0a02857790b2"), "ENUM_INOUT_ZKTECO_OUT_KEY", "E_OUT" },
+                    { new Guid("ac6028e0-f84a-46b9-92e5-fe8ee17f6804"), "ENUM_INOUT_REALAND_IN_KEY", "E_IN" }
                 });
 
             migrationBuilder.CreateIndex(

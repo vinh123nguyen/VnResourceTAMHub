@@ -19,6 +19,7 @@
     <system:String x:Key="LANG_DEV_Port">Port</system:String>
     <system:String x:Key="LANG_DEV_Password">Password</system:String>
     <system:String x:Key="LANG_DEV_SupportGetDataByDate">Hỗ trợ lấy dữ liệu theo ngày</system:String>
+    <system:String x:Key="LANG_DEV_Inactive">Vô hiệu</system:String>
     <system:String x:Key="LANG_DEV_FromDate">Từ ngày</system:String>
     <system:String x:Key="LANG_DEV_ToDate">Đến ngày</system:String>
     <system:String x:Key="LANG_DEV_DownloadData">Tải dữ liệu</system:String>
@@ -61,6 +62,7 @@
     <system:String x:Key="LANG_SCH_DayOfWeek">Thứ trong tuần</system:String>
     <system:String x:Key="LANG_SCH_TimeRun">Thời gian chạy</system:String>
     <system:String x:Key="LANG_SCH_Cycle">Chu kỳ</system:String>
+    <system:String x:Key="LANG_SCH_StartTime">Thời gian bắt đầu</system:String>
     <system:String x:Key="LANG_SCH_ExcludeDay">Loại trừ các thứ</system:String>
     <system:String x:Key="LANG_SCH_ExcludeTime">Loại trừ thời gian</system:String>
     <system:String x:Key="LANG_SCH_ExcludeTime2">Loại trừ thời gian 2</system:String>

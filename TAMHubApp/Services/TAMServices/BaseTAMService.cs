@@ -39,6 +39,9 @@ namespace TAMHubApp.Services.TAMServices
         private bool _isConnected { get; set; }
         public bool IsConnected { get => _isConnected; set { _isConnected = value; OnPropertyChanged(); } }
 
+        private bool _isInactive { get; set; }
+        public bool IsInactive { get => _isInactive; set { _isInactive = value; OnPropertyChanged(); } }
+
         public string? SerialNumber { get; set; }
 
         private string? _productName { get; set; }

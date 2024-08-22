@@ -1,7 +1,9 @@
 ﻿using Quartz;
+using Quartz.Impl.Calendar;
 using Quartz.Impl.Matchers;
 using System.Collections.ObjectModel;
 using TAMHubApp.Data;
+using TAMHubApp.Infrastructures.Enums;
 using TAMHubApp.Models;
 using TAMHubApp.ScheduleTasks.Jobs;
 using TAMHubApp.ViewModels;
@@ -45,7 +47,7 @@ namespace TAMHubApp.Services
 
             var triggerBuilder = TriggerBuilder.Create();
 
-            if(model.CycleType == Infrastructures.Enums.ScheduleCycleType.Monthly)
+            if (model.CycleType == Infrastructures.Enums.ScheduleCycleType.Monthly)
             {
                 triggerBuilder = TriggerBuilder.Create()
                 .WithIdentity(triggerKey)
@@ -59,12 +61,69 @@ namespace TAMHubApp.Services
                 .WithSchedule(CronScheduleBuilder.WeeklyOnDayAndHourAndMinute(model.DayOfWeek == null ? DayOfWeek.Monday : model.DayOfWeek.Value, model.Hour, model.Minute))
                 .ForJob(job);
             }
-            else
+            else if (model.CycleType == Infrastructures.Enums.ScheduleCycleType.Daily)
             {
                 triggerBuilder = TriggerBuilder.Create()
                 .WithIdentity(triggerKey)
                 .WithSchedule(CronScheduleBuilder.DailyAtHourAndMinute(model.Hour, model.Minute))
                 .ForJob(job);
+            }
+            else if (model.CycleType == Infrastructures.Enums.ScheduleCycleType.RepeatBy)
+            {
+                WeeklyCalendar wcal = new WeeklyCalendar();
+
+                if ((model.ExcludeTimeFrom != null && model.ExcludeTimeTo != null) && (model.ExcludeTime2From != null && model.ExcludeTime2To != null))
+                {
+                    var dcal1 = new DailyCalendar(model.ExcludeTimeFrom.Value.Hours, model.ExcludeTimeFrom.Value.Minutes, model.ExcludeTimeFrom.Value.Seconds, model.ExcludeTimeFrom.Value.Milliseconds,
+                        model.ExcludeTimeTo.Value.Hours, model.ExcludeTimeTo.Value.Minutes, model.ExcludeTimeTo.Value.Seconds, model.ExcludeTimeTo.Value.Milliseconds);
+                    var dcal2 = new DailyCalendar(model.ExcludeTime2From.Value.Hours, model.ExcludeTime2From.Value.Minutes, model.ExcludeTime2From.Value.Seconds, model.ExcludeTime2From.Value.Milliseconds,
+                        model.ExcludeTime2To.Value.Hours, model.ExcludeTime2To.Value.Minutes, model.ExcludeTime2To.Value.Seconds, model.ExcludeTime2To.Value.Milliseconds);
+                    dcal2.CalendarBase = dcal1;
+                    wcal.CalendarBase = dcal2;
+                }
+                else if ((model.ExcludeTimeFrom != null && model.ExcludeTimeTo != null) && (model.ExcludeTime2From != null || model.ExcludeTime2To != null))
+                {
+                    var dcal1 = new DailyCalendar(model.ExcludeTimeFrom.Value.Hours, model.ExcludeTimeFrom.Value.Minutes, model.ExcludeTimeFrom.Value.Seconds, model.ExcludeTimeFrom.Value.Milliseconds,
+                        model.ExcludeTimeTo.Value.Hours, model.ExcludeTimeTo.Value.Minutes, model.ExcludeTimeTo.Value.Seconds, model.ExcludeTimeTo.Value.Milliseconds);
+                    wcal.CalendarBase = dcal1;
+                }
+                else if ((model.ExcludeTimeFrom != null || model.ExcludeTimeTo != null) && (model.ExcludeTime2From != null && model.ExcludeTime2To != null))
+                {
+                    var dcal2 = new DailyCalendar(model.ExcludeTime2From.Value.Hours, model.ExcludeTime2From.Value.Minutes, model.ExcludeTime2From.Value.Seconds, model.ExcludeTime2From.Value.Milliseconds,
+                        model.ExcludeTime2To.Value.Hours, model.ExcludeTime2To.Value.Minutes, model.ExcludeTime2To.Value.Seconds, model.ExcludeTime2To.Value.Milliseconds);
+                    wcal.CalendarBase = dcal2;
+                }
+
+                if (!string.IsNullOrEmpty(model.ExcludeDayOfWeek))
+                {
+                    var lstdayExclude = model.ExcludeDayOfWeek.Split(",").Select(x => (DayOfWeek)Enum.Parse(typeof(DayOfWeek), x)).ToList();
+                    if(lstdayExclude != null && lstdayExclude.Any())
+                    {
+                        var dayofweek = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().ToList();
+                        foreach (var dayinw in dayofweek)
+                        {
+                            if (lstdayExclude.Contains(dayinw))
+                            {
+                                wcal.SetDayExcluded(dayinw, true);
+                            }
+                            else
+                            {
+                                wcal.SetDayExcluded(dayinw, false);
+                            }
+                        }
+                    }
+                }
+                await scheduler.AddCalendar("WeeklyCalendar", wcal, true, false);
+                var tspstart = model.StartTime != null ? model.StartTime.Value : new TimeSpan(00, 00, 05);
+                var starttime = new DateTimeOffset(DateTime.Now.Date.Add(tspstart));
+                int value = model.RepeatByValue != null ? model.RepeatByValue.Value : model.RepeatByType == RepeatByType.ByHour ? 1 : 30;
+                int minutecycle = model.RepeatByType == RepeatByType.ByMinute ? value : value * 60;
+
+                triggerBuilder = TriggerBuilder.Create().WithIdentity(triggerKey)
+                    .WithSimpleSchedule(x => x.WithIntervalInMinutes(minutecycle).RepeatForever())
+                    .StartAt(starttime)
+                    .ModifiedByCalendar("WeeklyCalendar")
+                    .ForJob(job);
             }
 
             var trigger = triggerBuilder.Build();
@@ -124,9 +183,17 @@ namespace TAMHubApp.Services
                         Minute = schedule.Minute,
                         DayInMonth = schedule.DayInMonth,
                         DayOfWeek = schedule.DayOfWeek,
+                        RepeatByType = schedule.RepeatByType,
+                        RepeatByValue = schedule.RepeatByValue,
                         CycleType = schedule.CycleType,
                         IsRuning = false,
-                        IsLoading = false
+                        IsLoading = false,
+                        StartTime = schedule.StartTime,
+                        ExcludeDayOfWeek = schedule.ExcludeDayOfWeek,
+                        ExcludeTimeFrom = schedule.ExcludeTimeFrom,
+                        ExcludeTimeTo = schedule.ExcludeTimeTo,
+                        ExcludeTime2From = schedule.ExcludeTime2From,
+                        ExcludeTime2To = schedule.ExcludeTime2To,
                     };
                     lstScheduleDone.Add(scheduleadd);
                 }
@@ -148,9 +215,17 @@ namespace TAMHubApp.Services
                     Minute = schedule.Minute,
                     DayInMonth = schedule.DayInMonth,
                     DayOfWeek = schedule.DayOfWeek,
+                    RepeatByType = schedule.RepeatByType,
+                    RepeatByValue = schedule.RepeatByValue,
                     CycleType = schedule.CycleType,
                     IsRuning = false,
-                    IsLoading = false
+                    IsLoading = false,
+                    StartTime = schedule.StartTime,
+                    ExcludeDayOfWeek = schedule.ExcludeDayOfWeek,
+                    ExcludeTimeFrom = schedule.ExcludeTimeFrom,
+                    ExcludeTimeTo = schedule.ExcludeTimeTo,
+                    ExcludeTime2From = schedule.ExcludeTime2From,
+                    ExcludeTime2To = schedule.ExcludeTime2To,
                 };
                 ScheduleTasks.Add(scheduleadd);
             }

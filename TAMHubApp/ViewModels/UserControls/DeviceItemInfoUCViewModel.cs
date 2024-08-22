@@ -107,6 +107,9 @@ namespace TAMHubApp.ViewModels.UserControls
         private bool _supportGetDataByDate { get; set; }
         public bool SupportGetDataByDate { get => _supportGetDataByDate; set { _supportGetDataByDate = value; OnPropertyChanged(); } }
 
+        private bool _isInactive { get; set; }
+        public bool IsInactive { get => _isInactive; set { _isInactive = value; OnPropertyChanged(); } }
+
         private string _sdkType { get; set; }
         public string SDKType { get => _sdkType; set { _sdkType = value; OnPropertyChanged(); } }
 
@@ -133,6 +136,7 @@ namespace TAMHubApp.ViewModels.UserControls
             {
                 SupportGetDataByDate = ((ZKTecoDeviceItem)currentDevice).ZKTeco_IsCanGetLogByTime;
             }
+            IsInactive = currentDevice.IsInactive;
         }
         private void Event_ChangeSDKType(Option option)
         {
@@ -161,6 +165,7 @@ namespace TAMHubApp.ViewModels.UserControls
                     currentObject.DeviceSDKType = (TAMSDKTypes)Enum.Parse(typeof(TAMSDKTypes), SDKSelected.Key);
                     currentObject.CompanyCode = CompanyCode;
                     currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
+                    currentObject.IsInactive = IsInactive;
                 }
             }
             else
@@ -175,6 +180,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 currentObject.DeviceSDKType = (TAMSDKTypes)Enum.Parse(typeof(TAMSDKTypes), SDKSelected.Key);
                 currentObject.CompanyCode = CompanyCode;
                 currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
+                currentObject.IsInactive = IsInactive;
                 await _unitOfWork.DeviceRepository.AddAsync(currentObject);
                 ObjectId = currentObject.Id;
             }
