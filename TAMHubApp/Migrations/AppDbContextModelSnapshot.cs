@@ -88,25 +88,25 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("bfcd5ea4-2e6b-47ea-bf90-06bb6114daac"),
+                            Id = new Guid("3ec6369e-dc4b-4783-8b09-b0abe484d609"),
                             Name = "ENUM_INOUT_ZKTECO_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("8b88f539-f148-40e8-9322-05c2547f8934"),
+                            Id = new Guid("76500526-620e-4108-b1cc-49821ded423a"),
                             Name = "ENUM_INOUT_ZKTECO_OUT_KEY",
                             Value = "E_OUT"
                         },
                         new
                         {
-                            Id = new Guid("14d2d69d-5dd9-4cce-8d31-6f30ab9be91c"),
+                            Id = new Guid("9adb70e5-a674-4c3d-8385-68c072463799"),
                             Name = "ENUM_INOUT_REALAND_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("299c1d42-6320-44a3-9720-89a4e017fa04"),
+                            Id = new Guid("f7a8ff7e-859c-4f7a-be88-42ac10c97cf3"),
                             Name = "ENUM_INOUT_REALAND_OUT_KEY",
                             Value = "E_OUT"
                         });
@@ -236,6 +236,9 @@ namespace TAMHubApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("DeviceID")
                         .HasColumnType("TEXT");
 
@@ -270,25 +273,28 @@ namespace TAMHubApp.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("TEXT");
 
+                    b.Property<DateTime>("DateCreate")
+                        .HasColumnType("TEXT");
+
                     b.Property<Guid>("DeviceID")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("EnrollNumber")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("InOutModeOrigin")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("InOutModeOrigin")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("InOutModeView")
-                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("TimeLog")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("VerifyMode")
-                        .IsRequired()
+                    b.Property<int>("VerifyModeOrigin")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("VerifyModeView")
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");

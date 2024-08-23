@@ -45,6 +45,7 @@ namespace TAMHubApp.ViewModels
                     Name = "Schedule".TranslateString(),
                 }
             });
+            Event_UpdateCurrentPage();
         }
 
 
@@ -59,9 +60,9 @@ namespace TAMHubApp.ViewModels
 
         #region Paging prop
         private int _currentPage { get; set; }
-        public int CurrentPage { get => _currentPage; set { _currentPage = value; OnPropertyChanged(); Event_UpdateCurrentPage(value); } }
+        public int CurrentPage { get => _currentPage; set { _currentPage = value; OnPropertyChanged(); } }
         private int _totalRow { get; set; }
-        public int TotalRow { get => _totalRow; set { _totalRow = value; OnPropertyChanged(); TotalPages = (int)Math.Ceiling((double)TotalRow / PageSize); Event_UpdateCurrentPage(CurrentPage); } }
+        public int TotalRow { get => _totalRow; set { _totalRow = value; OnPropertyChanged(); TotalPages = (int)Math.Ceiling((double)TotalRow / PageSize); } }
         private int PageSize = 50;
         private int TotalPages = 0;
         private string _currentPageView { get; set; }
@@ -107,9 +108,9 @@ namespace TAMHubApp.ViewModels
 
         #endregion
 
-        public void Event_UpdateCurrentPage(int currentpage)
+        public void Event_UpdateCurrentPage()
         {
-            CurrentPageView = $"{currentpage}/{TotalPages}";
+            CurrentPageView = $"{CurrentPage}/{TotalPages}";
             var startitemcount = TotalRow != 0 ? (((CurrentPage - 1) * PageSize) + 1) : 0;
             var enditemcount = TotalRow != 0 ? ((CurrentPage - 1) * PageSize + (ListActionLogs != null ? ListActionLogs.Count : 0)) : 0;
             DataRowInfo = $"{startitemcount} - {enditemcount} of {TotalRow} items";
@@ -147,7 +148,7 @@ namespace TAMHubApp.ViewModels
             }
             if( DateTo != null)
             {
-                listData = listData.Where(x => x.TimeLogFrom <= DateTo).ToList();
+                listData = listData.Where(x => x.TimeLogFrom <= DateTo.Value.Date.AddDays(1).AddMicroseconds(-1)).ToList();
             }
             if(ActionTypeSelected != null && !string.IsNullOrEmpty(ActionTypeSelected.Key))
             {
@@ -156,21 +157,6 @@ namespace TAMHubApp.ViewModels
             TotalRow = listData.Count();
             listData = listData.OrderByDescending(x => x.TimeLogFrom).ToList();
             listData = listData.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
-            //var lstData = listData.Select(x => new ActionLogModel()
-            //{
-            //    Id = x.Id,
-            //    TimeLog = $"{x.TimeLogFrom.ToString("dd/MM/yyyy HH:mm:ss")} - {x.TimeLogTo.ToString("dd/MM/yyyy HH:mm:ss")}",
-            //    DateDownData = $"{x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")} - {x.DateDownDataTo.Value.ToString("dd/MM/yyyy")}",
-            //    TAMName = x.Device != null ? x.Device.Name : null,
-            //    Status = x.Status,
-            //    StatusView = x.Status.TranslateString(),
-            //    TotalNewlyData = x.TotalNewlyData,
-            //    TotalDataAdded = x.TotalDataAdded,
-            //    TotalRowDownload = x.TotalRowDownload,
-            //    Message = x.Message,
-            //    DownloadType = x.DownloadType.TranslateString(),
-            //    TimeRun = x.TimeRun == null ? null : x.TimeRun.ToString(),
-            //}).ToList();
 
             var lstDevice = (await _unitOfWork.DeviceRepository.GetAllAsync()).ToList();
             var newlist = from x in listData
@@ -180,7 +166,7 @@ namespace TAMHubApp.ViewModels
                           {
                               Id = x.Id,
                               TimeLog = $"{x.TimeLogFrom.ToString("dd/MM/yyyy HH:mm:ss")} - {x.TimeLogTo.ToString("dd/MM/yyyy HH:mm:ss")}",
-                              DateDownData = $"{x.DateDownDataFrom.Value.ToString("dd/MM/yyyy")} - {x.DateDownDataTo.Value.ToString("dd/MM/yyyy")}",
+                              DateDownData = $"{x.DateDownDataFrom.Value.ToString("dd/MM/yyyy HH:mm:ss")} - {x.DateDownDataTo.Value.ToString("dd/MM/yyyy HH:mm:ss")}",
                               TAMName = devicelj?.Name ?? "",
                               Status = x.Status,
                               StatusView = x.Status.TranslateString(),
@@ -194,6 +180,7 @@ namespace TAMHubApp.ViewModels
 
             ListActionLogs = new ObservableCollection<ActionLogModel>(newlist);
             _mainViewModel.IsLoading = false;
+            Event_UpdateCurrentPage();
         }
         private async void RemoveDataCommandExcute(object obj)
         {
@@ -206,11 +193,11 @@ namespace TAMHubApp.ViewModels
             }
             if (DateFrom != null)
             {
-                lstQuery = lstQuery.Where(x => x.TimeLogTo >= DateFrom);
+                lstQuery = lstQuery.Where(x => x.TimeLogTo >= DateFrom.Value.Date);
             }
             if (DateTo != null)
             {
-                lstQuery = lstQuery.Where(x => x.TimeLogFrom <= DateTo);
+                lstQuery = lstQuery.Where(x => x.TimeLogFrom <= DateTo.Value.Date.AddDays(1).AddMicroseconds(-1));
             }
             _unitOfWork.ActionLogRepository.RemoveRange(lstQuery);
 
