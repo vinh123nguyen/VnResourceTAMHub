@@ -218,7 +218,7 @@ namespace TAMHubApp.Services.TAMServices
         {
             Log.Information($"[Start Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
             
-            if(DownloadType != "Manual" && device.IsInactive)
+            if(IsDownSchedule && device.IsInactive)
             {
                 Log.Information($"[{device.IPAddress}]:" + "Inactive skip device");
                 Log.Information($"[End Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
@@ -230,7 +230,8 @@ namespace TAMHubApp.Services.TAMServices
                 UnitOfWork unitOfWork = new UnitOfWork(dbContext);
                 var actionLog = new ActionLog();
                 actionLog.Id = Guid.NewGuid();
-                datefrom = datefrom.Date;
+                if(!IsDownSchedule)
+                    datefrom = datefrom.Date;
                 dateend = dateend.Date.AddDays(1).AddMicroseconds(-1);
                 actionLog.DateDownDataFrom = datefrom;
                 actionLog.DateDownDataTo = dateend;
@@ -242,9 +243,6 @@ namespace TAMHubApp.Services.TAMServices
 
                 try
                 {
-                    //var dbDesvice = await unitOfWork.TAMScanLogRepository.GetAllAsync();
-                    //var d = dbDesvice.ToList();
-
                     if (!device.IsConnected)
                     {
 
@@ -273,7 +271,6 @@ namespace TAMHubApp.Services.TAMServices
                     if (device.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
                     {
                         var zkdevice = (ZKTecoDeviceItem)device;
-                        //await GlobalEnumInOutConverter.InitUpdateEnumConverter("ZKTeco");
                         var settingenumconvert = GlobalEnumInOutConverter.ZKEnumConverter;
                         try
                         {
@@ -300,6 +297,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 InOutModeOrigin = tInOutMode,
                                                 InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                DateCreate = DateTime.Now
                                             });
 
                                         }
@@ -322,6 +320,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 InOutModeOrigin = tInOutMode,
                                                 InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                DateCreate = DateTime.Now
                                             });
 
                                         }
@@ -329,9 +328,9 @@ namespace TAMHubApp.Services.TAMServices
                                 }
                                 else
                                 {
-                                    Action_Dicconnect(device);
+                                    service.Action_Dicconnect(device);
                                     device.IsConnected = false;
-                                    var conres = await Action_Connect(device);
+                                    var conres = await service.Action_Connect(device);
 
                                     Log.Information($"[{device.IPAddress}]:" + " Start Read Data Lần 2, Res Connect: " + conres.ToString());
 
@@ -358,6 +357,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         InOutModeOrigin = tInOutMode,
                                                         InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                        DateCreate = DateTime.Now
                                                     });
 
                                                 }
@@ -380,6 +380,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         InOutModeOrigin = tInOutMode,
                                                         InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                        DateCreate = DateTime.Now
                                                     });
 
                                                 }
@@ -422,6 +423,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 InOutModeOrigin = tInOutMode,
                                                 InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                DateCreate = DateTime.Now
                                             });
                                         }
                                     }
@@ -443,6 +445,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 InOutModeOrigin = tInOutMode,
                                                 InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                DateCreate = DateTime.Now
                                             });
 
                                         }
@@ -450,9 +453,9 @@ namespace TAMHubApp.Services.TAMServices
                                 }
                                 else
                                 {
-                                    Action_Dicconnect(device);
+                                    service.Action_Dicconnect(device);
                                     device.IsConnected = false;
-                                    var conres = await Action_Connect(device);
+                                    var conres = await service.Action_Connect(device);
 
                                     Log.Information($"[{device.IPAddress}]:" + " Start Read Data Lần 2, Res Connect: " + conres.ToString());
 
@@ -479,6 +482,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         InOutModeOrigin = tInOutMode,
                                                         InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                        DateCreate = DateTime.Now
                                                     });
                                                 }
                                             }
@@ -500,6 +504,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         InOutModeOrigin = tInOutMode,
                                                         InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                        DateCreate = DateTime.Now
                                                     });
 
                                                 }
@@ -532,8 +537,6 @@ namespace TAMHubApp.Services.TAMServices
                     }
                     else if (device.DeviceSDKType == TAMSDKTypes.E_REALAND)
                     {
-                        var rissdevice = (RealandDeviceItem)device;
-                        //await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
                         var settingenumconvert = GlobalEnumInOutConverter.RealandEnumConverter;
 
                         List<DateTime> dtList = new List<DateTime>();
@@ -549,9 +552,35 @@ namespace TAMHubApp.Services.TAMServices
 
                         try
                         {
+                            var rissdevice = (RealandDeviceItem)device;
                             extraData = Global.DeviceBusy;
                             var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                            if (!resultRiss)
+                            {
+                                Log.Information($"[{device.IPAddress}]: " + "Set DeviceBusy Fail");
 
+                                service.Action_Dicconnect(device);
+                                device.IsConnected = false;
+                                var conres = await service.Action_Connect(device);
+                                Log.Information($"[{device.IPAddress}]:" + " Set DeviceBusy lần 2, Res Connect: " + conres.ToString());
+                                if (conres)
+                                {
+                                    rissdevice = (RealandDeviceItem)device;
+                                    extraData = Global.DeviceBusy;
+                                    resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                                }
+                                else
+                                {
+                                    actionLog.Status = "Error";
+                                    actionLog.Message = "Reconnect fail";
+                                    actionLog.TimeLogTo = DateTime.Now;
+                                    actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+                                    await unitOfWork.ActionLogRepository.AddAsync(actionLog);
+                                    await unitOfWork.SaveChanageAsync();
+                                    Log.Information($"[End Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
+                                    return false;
+                                }
+                            }
                             extraProperty = boolList;
                             extraData = dtList;
 
@@ -568,21 +597,104 @@ namespace TAMHubApp.Services.TAMServices
                                     VerifyModeOrigin = x.Action,
                                     InOutModeOrigin = x.Verify,
                                     InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
-                                    TimeLog = x.Clock
+                                    TimeLog = x.Clock,
+                                    DateCreate = DateTime.Now
                                 }).ToList();
+                            }
+                            else
+                            {
+                                Log.Information($"[{device.IPAddress}]: " + "Get AttRecords Fail");
+
+                                service.Action_Dicconnect(device);
+                                device.IsConnected = false;
+                                var conres = await service.Action_Connect(device);
+                                rissdevice = (RealandDeviceItem)device;
+                                Log.Information($"[{device.IPAddress}]:" + "Connect Get AttRecords lần 2, Res Connect: " + conres.ToString());
+
+                                if (conres)
+                                {
+                                    extraProperty = boolList;
+                                    extraData = dtList;
+
+                                    resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                                    if (resultRiss)
+                                    {
+                                        List<Record> recordList = (List<Record>)extraData;
+                                        listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
+                                        {
+                                            Id = Guid.NewGuid(),
+                                            DeviceID = device.Id,
+                                            EnrollNumber = (int)x.DIN,
+                                            VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                            VerifyModeOrigin = x.Action,
+                                            InOutModeOrigin = x.Verify,
+                                            InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                                            TimeLog = x.Clock,
+                                            DateCreate = DateTime.Now
+                                        }).ToList();
+                                    }
+                                }
                             }
                         }
                         catch (Exception ex)
                         {
-                            device.IsConnected = false;
-                            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                            Log.Information($"[{device.IPAddress}]: " + "Get AttRecords Error: +" + ex.Message);
+
+                            try
                             {
-                                _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
-                            });
-                            return false;
+                                Log.Information($"[{device.IPAddress}]: " + "Start get in catch");
+
+                                service.Action_Dicconnect(device);
+                                device.IsConnected = false;
+                                var conres = await service.Action_Connect(device);
+                                var rissdevice = (RealandDeviceItem)device;
+                                Log.Information($"[{device.IPAddress}]:" + "Connect Get AttRecords lần 2 in catch, Res Connect: " + conres.ToString());
+
+                                if (conres)
+                                {
+                                    extraProperty = boolList;
+                                    extraData = dtList;
+
+                                    var resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                                    if (resultRiss)
+                                    {
+                                        List<Record> recordList = (List<Record>)extraData;
+                                        listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
+                                        {
+                                            Id = Guid.NewGuid(),
+                                            DeviceID = device.Id,
+                                            EnrollNumber = (int)x.DIN,
+                                            VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                            VerifyModeOrigin = x.Action,
+                                            InOutModeOrigin = x.Verify,
+                                            InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                                            TimeLog = x.Clock,
+                                            DateCreate = DateTime.Now
+                                        }).ToList();
+                                    }
+                                }
+                            }
+                            catch(Exception ex1)
+                            {
+                                device.IsConnected = false;
+                                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                                {
+                                    _mainWindow.Action_ShowToastNotify(ex1.Message, ToastNotifyType.Error);
+                                });
+
+                                actionLog.Status = "Error";
+                                actionLog.Message = ex1.Message;
+                                actionLog.TimeLogTo = DateTime.Now;
+                                actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+                                await unitOfWork.ActionLogRepository.AddAsync(actionLog);
+                                await unitOfWork.SaveChanageAsync();
+                                Log.Information($"[End Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
+                                return false;
+                            }
                         }
                         finally
                         {
+                            var rissdevice = (RealandDeviceItem)device;
                             extraData = Global.DeviceIdle;
                             var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
                         }
@@ -596,15 +708,13 @@ namespace TAMHubApp.Services.TAMServices
                     {
                         actionLog.TotalRowDownload = listAttRecord.Count;
 
-                        var lstDbTAMScanLog = (await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
-                        //var lstDbTAMScanLogHistory = (await unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
-                        var synctype = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
+                        var lstDbTAMScanLog = (await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id)).ToList();
+                        var lstDbTAMScanLogHistory = (await unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
 
-                        var lis1 = lstDbTAMScanLog.Select(item => (item.EnrollNumber, item.TimeLog));
-                        //var lis2 = lstDbTAMScanLogHistory.Select(item => (item.EnrollNumber, item.TimeLog));
+                        var lst1 = lstDbTAMScanLogHistory.Select(item => (item.EnrollNumber, item.TimeLog));
+                        var lst2 = lstDbTAMScanLog.Select(item => (item.EnrollNumber, item.TimeLog));
 
-                        //var hsetDataDbTAMScanLog = new HashSet<(int, DateTime)>(lis1.Concat(lis2));
-                        var hsetDataDbTAMScanLog = new HashSet<(int, DateTime)>(lis1);
+                        var hsetDataDbTAMScanLog = new HashSet<(int, DateTime)>(lst1.Concat(lst2));
 
                         var listInsertscanlog = listAttRecord.Where(item => !hsetDataDbTAMScanLog.Contains((item.EnrollNumber, item.TimeLog))).ToList();
 
@@ -625,19 +735,9 @@ namespace TAMHubApp.Services.TAMServices
 
                         Log.Information($"[{device.IPAddress}]:" + " Start Sync Data");
 
-                        if (synctype != null && synctype.Value == "DB")
-                        {
-                            await service.SyncDataToDb(dbDevice, actionLog, datefrom, dateend, EnrollNumber);
-                        }
-                        if (synctype != null && synctype.Value == "API")
-                        {
-                            await service.SyncDataByApi(dbDevice, actionLog, datefrom, dateend, EnrollNumber);
-                        }
+                        await service.SyncDataByApi(dbDevice, actionLog, datefrom, dateend, EnrollNumber, IsDownSchedule);
 
                         Log.Information($"[{device.IPAddress}]:" + " End Sync Data");
-
-
-
                     }
                     else
                     {
@@ -668,8 +768,7 @@ namespace TAMHubApp.Services.TAMServices
                     Log.Information($"[End Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
                     return false;
                 }
-            }
-                
+            }  
         }
 
         public void Action_ConnectAll()
@@ -703,181 +802,174 @@ namespace TAMHubApp.Services.TAMServices
                     service.Action_Dicconnect(devive);
                     devive.IsConnected = false;
                 });
-                //Task.Run(() =>
-                //{
-                //    var service = new TAMCommonService();
-                //    service.Action_Dicconnect(itemdeviceAction);
-                //    itemdeviceAction.IsConnectLoading = false;
-                //    itemdeviceAction.IsConnected = false;
-                //});
             }
         }
 
-        // Đặc thù taisun
-        public async Task<bool> SyncDataToDb(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend, string EnrollNumber)
-        {
-            Log.Information($"[{devicedb.IPAddress}]:" + " Start Sync Data to DB");
-            using (var dbContext = new AppDbContext())
-            {
-                UnitOfWork unitOfWork = new UnitOfWork(dbContext);
-                var config = await unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains(ConfigEnumConstant.SYNC_DB_.ToString()));
+        #region Đặc thù taisun
+        //public async Task<bool> SyncDataToDb(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend, string EnrollNumber)
+        //{
+        //    Log.Information($"[{devicedb.IPAddress}]:" + " Start Sync Data to DB");
+        //    using (var dbContext = new AppDbContext())
+        //    {
+        //        UnitOfWork unitOfWork = new UnitOfWork(dbContext);
+        //        var config = await unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains(ConfigEnumConstant.SYNC_DB_.ToString()));
 
-                var servercf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_SERVER.ToString());
-                var dbnamecf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_DBNAME.ToString());
-                var useridcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_USERID.ToString());
-                var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
+        //        var servercf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_SERVER.ToString());
+        //        var dbnamecf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_DBNAME.ToString());
+        //        var useridcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_USERID.ToString());
+        //        var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
 
-                if (servercf != null && !string.IsNullOrEmpty(servercf.Value)
-                    && dbnamecf != null && !string.IsNullOrEmpty(dbnamecf.Value)
-                    && useridcf != null && !string.IsNullOrEmpty(useridcf.Value)
-                    && pwdcf != null && !string.IsNullOrEmpty(pwdcf.Value))
-                {
-                    try
-                    {
-                        var listData = await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == devicedb.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend);
-                        if (!string.IsNullOrEmpty(EnrollNumber))
-                        {
-                            listData = listData.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
-                        }
+        //        if (servercf != null && !string.IsNullOrEmpty(servercf.Value)
+        //            && dbnamecf != null && !string.IsNullOrEmpty(dbnamecf.Value)
+        //            && useridcf != null && !string.IsNullOrEmpty(useridcf.Value)
+        //            && pwdcf != null && !string.IsNullOrEmpty(pwdcf.Value))
+        //        {
+        //            try
+        //            {
+        //                var listData = await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == devicedb.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend);
+        //                if (!string.IsNullOrEmpty(EnrollNumber))
+        //                {
+        //                    listData = listData.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+        //                }
 
-                        var DbCStringBuilder = new SqlConnectionStringBuilder();
-                        DbCStringBuilder["Server"] = servercf.Value;
-                        DbCStringBuilder["Database"] = dbnamecf.Value;
-                        DbCStringBuilder["User Id"] = useridcf.Value;
-                        DbCStringBuilder["Password"] = pwdcf.Value;
+        //                var DbCStringBuilder = new SqlConnectionStringBuilder();
+        //                DbCStringBuilder["Server"] = servercf.Value;
+        //                DbCStringBuilder["Database"] = dbnamecf.Value;
+        //                DbCStringBuilder["User Id"] = useridcf.Value;
+        //                DbCStringBuilder["Password"] = pwdcf.Value;
 
-                        string connectionString = DbCStringBuilder.ToString();
+        //                string connectionString = DbCStringBuilder.ToString();
 
-                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "Connection string: " + connectionString);
+        //                Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "Connection string: " + connectionString);
 
-                        var strDateStart = datefrom.ToString("yyyy-MM-dd HH:mm:ss.fff");
-                        var strDateEnd = dateend.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        //                var strDateStart = datefrom.ToString("yyyy-MM-dd HH:mm:ss.fff");
+        //                var strDateEnd = dateend.ToString("yyyy-MM-dd HH:mm:ss.fff");
 
-                        var listDataAlready = new List<CHECKINOUTModel>();
-                        var ListUserIF = new List<ZkUserInfo>();
+        //                var listDataAlready = new List<CHECKINOUTModel>();
+        //                var ListUserIF = new List<ZkUserInfo>();
 
-                        using (var sqlConnection = new SqlConnection(connectionString))
-                        {
-                            sqlConnection.Open();
+        //                using (var sqlConnection = new SqlConnection(connectionString))
+        //                {
+        //                    sqlConnection.Open();
 
-                            var commanGetData = $"Select co.*,BADGENUMBER from CHECKINOUT co " +
-                                "left join USERINFO us on co.USERID = us.USERID " +
-                                $"where CHECKTIME >= '{strDateStart}' " +
-                                $"and CHECKTIME <= '{strDateEnd}'";
+        //                    var commanGetData = $"Select co.*,BADGENUMBER from CHECKINOUT co " +
+        //                        "left join USERINFO us on co.USERID = us.USERID " +
+        //                        $"where CHECKTIME >= '{strDateStart}' " +
+        //                        $"and CHECKTIME <= '{strDateEnd}'";
 
-                            SqlCommand cm1 = new SqlCommand(commanGetData, sqlConnection);
+        //                    SqlCommand cm1 = new SqlCommand(commanGetData, sqlConnection);
 
-                            SqlDataReader sdr = cm1.ExecuteReader();
+        //                    SqlDataReader sdr = cm1.ExecuteReader();
 
-                            while (sdr.Read())
-                            {
-                                listDataAlready.Add(new CHECKINOUTModel()
-                                {
-                                    USERID = sdr["USERID"].ToString(),
-                                    CHECKTIME = DateTime.Parse(sdr["CHECKTIME"].ToString())
-                                });
-                            }
-                        }
+        //                    while (sdr.Read())
+        //                    {
+        //                        listDataAlready.Add(new CHECKINOUTModel()
+        //                        {
+        //                            USERID = sdr["USERID"].ToString(),
+        //                            CHECKTIME = DateTime.Parse(sdr["CHECKTIME"].ToString())
+        //                        });
+        //                    }
+        //                }
 
-                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "listDataAlready count: " + listDataAlready.Count);
+        //                Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "listDataAlready count: " + listDataAlready.Count);
 
-                        using (var sqlConnection = new SqlConnection(connectionString))
-                        {
-                            sqlConnection.Open();
-                            var commandgetuser = "select USERID, BADGENUMBER  from USERINFO";
+        //                using (var sqlConnection = new SqlConnection(connectionString))
+        //                {
+        //                    sqlConnection.Open();
+        //                    var commandgetuser = "select USERID, BADGENUMBER  from USERINFO";
 
-                            SqlCommand cm2 = new SqlCommand(commandgetuser, sqlConnection);
+        //                    SqlCommand cm2 = new SqlCommand(commandgetuser, sqlConnection);
 
-                            SqlDataReader sdr = cm2.ExecuteReader();
+        //                    SqlDataReader sdr = cm2.ExecuteReader();
 
-                            while (sdr.Read())
-                            {
-                                ListUserIF.Add(new ZkUserInfo()
-                                {
-                                    USERID = sdr["USERID"].ToString(),
-                                    BADGENUMBER = sdr["BADGENUMBER"].ToString(),
-                                });
-                            }
-                        }
+        //                    while (sdr.Read())
+        //                    {
+        //                        ListUserIF.Add(new ZkUserInfo()
+        //                        {
+        //                            USERID = sdr["USERID"].ToString(),
+        //                            BADGENUMBER = sdr["BADGENUMBER"].ToString(),
+        //                        });
+        //                    }
+        //                }
 
-                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "ListUserIF count: " + ListUserIF.Count);
+        //                Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "ListUserIF count: " + ListUserIF.Count);
 
-                        if (!ListUserIF.Any())
-                        {
-                            log.Status = "Error";
-                            log.Message = "Can not get userinfomation!";
-                            return false;
-                        }
+        //                if (!ListUserIF.Any())
+        //                {
+        //                    log.Status = "Error";
+        //                    log.Message = "Can not get userinfomation!";
+        //                    return false;
+        //                }
 
-                        var lstAdd = new List<CHECKINOUTModel>();
+        //                var lstAdd = new List<CHECKINOUTModel>();
 
-                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "listData join count: " + listData.Count());
+        //                Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "listData join count: " + listData.Count());
 
-                        var ds = from d in listData
-                                 join u in ListUserIF on d.EnrollNumber.ToString() equals u.BADGENUMBER
-                                 select new CHECKINOUTModel
-                                 {
-                                     USERID = u.USERID,
-                                     CHECKTIME = d.TimeLog,
-                                     CHECKTYPE = d.InOutModeView,
-                                     VERIFYCODE = d.VerifyModeOrigin,
-                                     SENSORID = devicedb.MachineNo.ToString(),
-                                     Memoinfo = null,
-                                     WorkCode = 0,
-                                     sn = devicedb.SerialNumber == null ? "" : devicedb.SerialNumber.ToString(),
-                                     UserExtFmt = 1,
-                                     BADGENUMBER = u.BADGENUMBER,
-                                 };
+        //                var ds = from d in listData
+        //                         join u in ListUserIF on d.EnrollNumber.ToString() equals u.BADGENUMBER
+        //                         select new CHECKINOUTModel
+        //                         {
+        //                             USERID = u.USERID,
+        //                             CHECKTIME = d.TimeLog,
+        //                             CHECKTYPE = d.InOutModeView,
+        //                             VERIFYCODE = d.VerifyModeOrigin,
+        //                             SENSORID = devicedb.MachineNo.ToString(),
+        //                             Memoinfo = null,
+        //                             WorkCode = 0,
+        //                             sn = devicedb.SerialNumber == null ? "" : devicedb.SerialNumber.ToString(),
+        //                             UserExtFmt = 1,
+        //                             BADGENUMBER = u.BADGENUMBER,
+        //                         };
 
-                        Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "data after join count: " + ds.Count());
+        //                Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "data after join count: " + ds.Count());
 
-                        using (var sqlConnection = new SqlConnection(connectionString))
-                        {
-                            sqlConnection.Open();
-                            int count = 0;
-                            foreach (var row in ds)
-                            {
-                                if (listDataAlready.Any(x => x.USERID == row.USERID && x.CHECKTIME == row.CHECKTIME))
-                                {
-                                    continue;
-                                }
-                                var commandins = "INSERT INTO CHECKINOUT (USERID, CHECKTIME, CHECKTYPE, VERIFYCODE, SENSORID, WorkCode, sn, UserExtFmt) " +
-                                    $"VALUES ({row.USERID}, '{row.CHECKTIME.ToString("yyyy-MM-dd HH:mm:ss.fff")}', '{row.CHECKTYPE}', {row.VERIFYCODE}, '{row.SENSORID}', {row.WorkCode}, '{row.sn}', {row.UserExtFmt});";
+        //                using (var sqlConnection = new SqlConnection(connectionString))
+        //                {
+        //                    sqlConnection.Open();
+        //                    int count = 0;
+        //                    foreach (var row in ds)
+        //                    {
+        //                        if (listDataAlready.Any(x => x.USERID == row.USERID && x.CHECKTIME == row.CHECKTIME))
+        //                        {
+        //                            continue;
+        //                        }
+        //                        var commandins = "INSERT INTO CHECKINOUT (USERID, CHECKTIME, CHECKTYPE, VERIFYCODE, SENSORID, WorkCode, sn, UserExtFmt) " +
+        //                            $"VALUES ({row.USERID}, '{row.CHECKTIME.ToString("yyyy-MM-dd HH:mm:ss.fff")}', '{row.CHECKTYPE}', {row.VERIFYCODE}, '{row.SENSORID}', {row.WorkCode}, '{row.sn}', {row.UserExtFmt});";
 
-                                SqlCommand cm3 = new SqlCommand(commandins, sqlConnection);
-                                cm3.ExecuteNonQuery();
-                                cm3.Dispose();
-                                count++;
-                            }
-                            Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "new data count: " + count);
-                            log.Status = "Success";
-                            log.TotalDataAdded = count;
-                        }
+        //                        SqlCommand cm3 = new SqlCommand(commandins, sqlConnection);
+        //                        cm3.ExecuteNonQuery();
+        //                        cm3.Dispose();
+        //                        count++;
+        //                    }
+        //                    Log.Information($"[{devicedb.IPAddress}]: Sync Data To DB" + "new data count: " + count);
+        //                    log.Status = "Success";
+        //                    log.TotalDataAdded = count;
+        //                }
 
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error($"[{devicedb.IPAddress}]:" + " Sync data to DB have Error: " + ex.Message);
+        //            }
+        //            catch (Exception ex)
+        //            {
+        //                Log.Error($"[{devicedb.IPAddress}]:" + " Sync data to DB have Error: " + ex.Message);
 
-                        log.Status = "Error";
-                        log.Message = ex.Message;
-                        return false;
-                    }
-                    return true;
-                }
-                else
-                {
-                    Log.Error($"[{devicedb.IPAddress}]:" + " Sync data to DB have Error: Missing Db connection info");
+        //                log.Status = "Error";
+        //                log.Message = ex.Message;
+        //                return false;
+        //            }
+        //            return true;
+        //        }
+        //        else
+        //        {
+        //            Log.Error($"[{devicedb.IPAddress}]:" + " Sync data to DB have Error: Missing Db connection info");
 
-                    log.Status = "Error";
-                    log.Message = "Missing Db connection info";
-                    return false;
-                }
-            }
-        }
+        //            log.Status = "Error";
+        //            log.Message = "Missing Db connection info";
+        //            return false;
+        //        }
+        //    }
+        //}
+        #endregion
 
-
-        public async Task<bool> SyncDataByApi(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend, string EnrollNumber)
+        public async Task<bool> SyncDataByApi(Data.Entities.Device devicedb, ActionLog log, DateTime datefrom, DateTime dateend, string EnrollNumber, bool IsDownSchedule = false)
         {
             using (var dbContext = new AppDbContext())
             {
@@ -897,18 +989,41 @@ namespace TAMHubApp.Services.TAMServices
                     return false;
                 }
                 else
-                {
-                    url = Path.Combine(baseapiaddressconf.Value, "Att_GetData", "SyncDataFromTAMHub").Replace(@"\", "/");
-                }
+                    url = Path.Combine(baseapiaddressconf.Value, "Att_GetData", "SyncDataFromTAMHubV2").Replace(@"\", "/");
+
                 if (maxrowconf != null && !string.IsNullOrEmpty(maxrowconf.Value) && int.TryParse(maxrowconf.Value, out int maxrowcon))
-                {
                     maxrow = maxrowcon;
-                }
 
                 try
                 {
-                    var listData = await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == devicedb.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend);
+                    var listData = new List<SyncTAMScanLogDTO>();
 
+                    var LstTAMScanLog = await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == devicedb.Id);
+                    var listDatanew = LstTAMScanLog.Select(x => new SyncTAMScanLogDTO()
+                    {
+                        ID = x.Id,
+                        EnrollNumber = x.EnrollNumber,
+                        InOutMode = x.InOutModeView,
+                        TimeLog = x.TimeLog,
+                        MachineNo = devicedb.MachineNo,
+                        CompanyCode = devicedb.CompanyCode
+                    });
+                    if (listDatanew.Any())
+                        listData.AddRange(listDatanew);
+                    if (!IsDownSchedule)
+                    {
+                        var listDatold = (await unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == devicedb.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).Select(x => new SyncTAMScanLogDTO()
+                        {
+                            ID = x.Id,
+                            EnrollNumber = x.EnrollNumber,
+                            InOutMode = x.InOutModeView,
+                            TimeLog = x.TimeLog,
+                            MachineNo = devicedb.MachineNo,
+                            CompanyCode = devicedb.CompanyCode
+                        });
+                        if (listDatold.Any())
+                            listData.AddRange(listDatold);
+                    }
                     if (!string.IsNullOrEmpty(EnrollNumber))
                     {
                         listData = listData.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
@@ -921,20 +1036,12 @@ namespace TAMHubApp.Services.TAMServices
                             using (var client = new HttpClient())
                             {
                                 client.Timeout = TimeSpan.FromSeconds(300);
-                                var lst = listDataChunk.Select(x => new SyncTAMScanLogDTO()
-                                {
-                                    ID = x.Id,
-                                    EnrollNumber = x.EnrollNumber,
-                                    InOutMode = x.InOutModeView,
-                                    TimeLog = x.TimeLog,
-                                    MachineNo = devicedb.MachineNo,
-                                    CompanyCode = devicedb.CompanyCode
-                                });
+
                                 var settings = new JsonSerializerSettings
                                 {
                                     ReferenceLoopHandling = ReferenceLoopHandling.Ignore
                                 };
-                                var json = JsonConvert.SerializeObject(lst, settings);
+                                var json = JsonConvert.SerializeObject(listDataChunk, settings);
 
                                 var payload = new
                                 {
@@ -951,9 +1058,40 @@ namespace TAMHubApp.Services.TAMServices
                                 {
                                     string responseBody = await response.Content.ReadAsStringAsync();
 
-                                    var ids = JsonConvert.DeserializeObject<List<Guid>>(responseBody);
+                                    var resparse = JsonConvert.DeserializeObject<SyncTAMScanLogResDTO>(responseBody);
 
-                                    log.TotalDataAdded += ids == null ? 0 : ids.Count;
+                                    log.TotalDataAdded += resparse != null && resparse.InsertedIds != null ? resparse.InsertedIds.Count : 0;
+                                    List<Guid> lstCheck = new List<Guid>();
+                                    if (resparse != null && resparse.InsertedIds != null && resparse.InsertedIds.Any())
+                                        lstCheck.AddRange(resparse.InsertedIds);
+                                    if(resparse != null && resparse.DuplicateIds != null && resparse.DuplicateIds.Any())
+                                        lstCheck.AddRange(resparse.DuplicateIds);
+
+                                    if (lstCheck.Any())
+                                    {
+                                        var lstRemove = LstTAMScanLog.Where(x => lstCheck.Contains(x.Id)).ToList();
+                                        var lstAdd = lstRemove.Select(x => new TAMScanLogHistory()
+                                        {
+                                            Id = Guid.NewGuid(),
+                                            DeviceID = x.DeviceID,
+                                            EnrollNumber = x.EnrollNumber,
+                                            VerifyModeOrigin = x.VerifyModeOrigin,
+                                            VerifyModeView = x.VerifyModeView,
+                                            InOutModeView = x.InOutModeView,
+                                            InOutModeOrigin = x.InOutModeOrigin,
+                                            TimeLog = x.TimeLog,
+                                            DateCreate = x.DateCreate,
+                                        });
+                                        unitOfWork.TAMScanLogRepository.RemoveRange(lstRemove);
+                                        await unitOfWork.TAMScanLogHistoryRepository.AddRangeAsync(lstAdd);
+                                        await unitOfWork.SaveChanageAsync();
+                                    }
+                                }
+                                else
+                                {
+                                    log.Status = "Error";
+                                    log.Message = "Status Code: " + response.StatusCode.ToString();
+                                    return false;
                                 }
                             }
                         }
@@ -977,7 +1115,6 @@ namespace TAMHubApp.Services.TAMServices
             }
         }
 
-
         public async Task<bool> Action_OnlyPushData(BaseTAMService device, DateTime datefrom, DateTime dateend, string EnrollNumber)
         {
             using (var dbContext = new AppDbContext())
@@ -995,20 +1132,13 @@ namespace TAMHubApp.Services.TAMServices
                 try
                 {
                     var dbDevice = await unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
-                    var synctype = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
                     actionLog.Status = "Success";
 
                     actionLog.TimeLogTo = DateTime.Now;
                     var res = true;
                     actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
-                    if (synctype != null && synctype.Value == "DB")
-                    {
-                        res = await SyncDataToDb(dbDevice, actionLog, datefrom, dateend, EnrollNumber);
-                    }
-                    if (synctype != null && synctype.Value == "API")
-                    {
-                        res = await SyncDataByApi(dbDevice, actionLog, datefrom, dateend, EnrollNumber);
-                    }
+
+                    res = await SyncDataByApi(dbDevice, actionLog, datefrom, dateend, EnrollNumber);
 
                     await unitOfWork.ActionLogRepository.AddAsync(actionLog);
 

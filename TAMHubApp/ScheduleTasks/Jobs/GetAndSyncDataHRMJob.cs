@@ -55,7 +55,7 @@ namespace TAMHubApp.ScheduleTasks.Jobs
                         if(dateconfig != null)
                             datestart = dateconfig.Value;
                     }
-                    var listrecord = await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id);
+                    var listrecord = await unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id);
                     var lastrecord = listrecord.OrderByDescending(x => x.TimeLog).FirstOrDefault();
 
                     if (lastrecord != null)

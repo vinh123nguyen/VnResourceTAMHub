@@ -115,10 +115,12 @@ namespace TAMHubApp.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     DeviceID = table.Column<Guid>(type: "TEXT", nullable: false),
                     EnrollNumber = table.Column<int>(type: "INTEGER", nullable: false),
-                    VerifyMode = table.Column<string>(type: "TEXT", nullable: false),
-                    InOutModeView = table.Column<string>(type: "TEXT", nullable: false),
-                    InOutModeOrigin = table.Column<string>(type: "TEXT", nullable: false),
-                    TimeLog = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    VerifyModeOrigin = table.Column<int>(type: "INTEGER", nullable: false),
+                    VerifyModeView = table.Column<string>(type: "TEXT", nullable: true),
+                    InOutModeView = table.Column<string>(type: "TEXT", nullable: true),
+                    InOutModeOrigin = table.Column<int>(type: "INTEGER", nullable: false),
+                    TimeLog = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateCreate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -142,7 +144,8 @@ namespace TAMHubApp.Migrations
                     VerifyModeView = table.Column<string>(type: "TEXT", nullable: true),
                     InOutModeView = table.Column<string>(type: "TEXT", nullable: true),
                     InOutModeOrigin = table.Column<int>(type: "INTEGER", nullable: false),
-                    TimeLog = table.Column<DateTime>(type: "TEXT", nullable: false)
+                    TimeLog = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    DateCreate = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -160,10 +163,10 @@ namespace TAMHubApp.Migrations
                 columns: new[] { "Id", "Name", "Value" },
                 values: new object[,]
                 {
-                    { new Guid("14d2d69d-5dd9-4cce-8d31-6f30ab9be91c"), "ENUM_INOUT_REALAND_IN_KEY", "E_IN" },
-                    { new Guid("299c1d42-6320-44a3-9720-89a4e017fa04"), "ENUM_INOUT_REALAND_OUT_KEY", "E_OUT" },
-                    { new Guid("8b88f539-f148-40e8-9322-05c2547f8934"), "ENUM_INOUT_ZKTECO_OUT_KEY", "E_OUT" },
-                    { new Guid("bfcd5ea4-2e6b-47ea-bf90-06bb6114daac"), "ENUM_INOUT_ZKTECO_IN_KEY", "E_IN" }
+                    { new Guid("3ec6369e-dc4b-4783-8b09-b0abe484d609"), "ENUM_INOUT_ZKTECO_IN_KEY", "E_IN" },
+                    { new Guid("76500526-620e-4108-b1cc-49821ded423a"), "ENUM_INOUT_ZKTECO_OUT_KEY", "E_OUT" },
+                    { new Guid("9adb70e5-a674-4c3d-8385-68c072463799"), "ENUM_INOUT_REALAND_IN_KEY", "E_IN" },
+                    { new Guid("f7a8ff7e-859c-4f7a-be88-42ac10c97cf3"), "ENUM_INOUT_REALAND_OUT_KEY", "E_OUT" }
                 });
 
             migrationBuilder.CreateIndex(

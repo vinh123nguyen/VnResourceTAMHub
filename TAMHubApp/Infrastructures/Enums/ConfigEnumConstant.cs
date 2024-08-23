@@ -14,13 +14,6 @@
         ENUM_INOUT_REALAND_IN_ITEM,
         ENUM_INOUT_REALAND_OUT_ITEM,
 
-        SYNC_TYPE,
-        SYNC_DB_,
-        SYNC_DB_SERVER,
-        SYNC_DB_DBNAME,
-        SYNC_DB_USERID,
-        SYNC_DB_PWD,
-
         SYNC_API_,
         SYNC_API_APIADDRESS,
         SYNC_API_MAX_DATAROW_PER_REQUEST,

@@ -43,7 +43,6 @@ namespace TAMHubApp.ViewModels
         public RelayCommand<object> ConnectAllCommand { get; set; }
         public RelayCommand<object> DisconnectAllCommand { get; set; }
         public RelayCommand<object> OpenInfoPopup { get; set; }
-        public RelayCommand<object> GetDataCommand { get; set; }
         public RelayCommand<object> TongleOnOffCommand { get; set; }
 
 
