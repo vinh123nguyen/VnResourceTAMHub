@@ -88,25 +88,25 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("1270daf9-f8a8-4aaa-bfc1-3f78c119b5a2"),
+                            Id = new Guid("bfcd5ea4-2e6b-47ea-bf90-06bb6114daac"),
                             Name = "ENUM_INOUT_ZKTECO_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("82c484fb-5f83-4a24-b171-0a02857790b2"),
+                            Id = new Guid("8b88f539-f148-40e8-9322-05c2547f8934"),
                             Name = "ENUM_INOUT_ZKTECO_OUT_KEY",
                             Value = "E_OUT"
                         },
                         new
                         {
-                            Id = new Guid("ac6028e0-f84a-46b9-92e5-fe8ee17f6804"),
+                            Id = new Guid("14d2d69d-5dd9-4cce-8d31-6f30ab9be91c"),
                             Name = "ENUM_INOUT_REALAND_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("63da9690-8558-4aa3-a4c5-8faf88a63850"),
+                            Id = new Guid("299c1d42-6320-44a3-9720-89a4e017fa04"),
                             Name = "ENUM_INOUT_REALAND_OUT_KEY",
                             Value = "E_OUT"
                         });

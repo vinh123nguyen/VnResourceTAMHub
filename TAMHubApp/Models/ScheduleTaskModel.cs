@@ -69,13 +69,9 @@ namespace TAMHubApp.Models
         private string SetCycleTypeView()
         {
             if (CycleType == ScheduleCycleType.RepeatBy && RepeatByValue != null && RepeatByType != null)
-            {
                 return $"LANG_CYCLE_{CycleType}".TranslateString() + $" {RepeatByValue} " + $"LANG_REPEATTYPE_{RepeatByType}".TranslateString();
-            }
             else
-            {
                 return $"LANG_CYCLE_{CycleType}".TranslateString();
-            }
         }
 
         public TimeSpan? StartTime { get; set; }

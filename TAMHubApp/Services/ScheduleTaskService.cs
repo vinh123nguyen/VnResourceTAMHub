@@ -81,13 +81,13 @@ namespace TAMHubApp.Services
                     dcal2.CalendarBase = dcal1;
                     wcal.CalendarBase = dcal2;
                 }
-                else if ((model.ExcludeTimeFrom != null && model.ExcludeTimeTo != null) && (model.ExcludeTime2From != null || model.ExcludeTime2To != null))
+                else if ((model.ExcludeTimeFrom != null && model.ExcludeTimeTo != null) && (model.ExcludeTime2From == null || model.ExcludeTime2To == null))
                 {
                     var dcal1 = new DailyCalendar(model.ExcludeTimeFrom.Value.Hours, model.ExcludeTimeFrom.Value.Minutes, model.ExcludeTimeFrom.Value.Seconds, model.ExcludeTimeFrom.Value.Milliseconds,
                         model.ExcludeTimeTo.Value.Hours, model.ExcludeTimeTo.Value.Minutes, model.ExcludeTimeTo.Value.Seconds, model.ExcludeTimeTo.Value.Milliseconds);
                     wcal.CalendarBase = dcal1;
                 }
-                else if ((model.ExcludeTimeFrom != null || model.ExcludeTimeTo != null) && (model.ExcludeTime2From != null && model.ExcludeTime2To != null))
+                else if ((model.ExcludeTimeFrom == null || model.ExcludeTimeTo == null) && (model.ExcludeTime2From != null && model.ExcludeTime2To != null))
                 {
                     var dcal2 = new DailyCalendar(model.ExcludeTime2From.Value.Hours, model.ExcludeTime2From.Value.Minutes, model.ExcludeTime2From.Value.Seconds, model.ExcludeTime2From.Value.Milliseconds,
                         model.ExcludeTime2To.Value.Hours, model.ExcludeTime2To.Value.Minutes, model.ExcludeTime2To.Value.Seconds, model.ExcludeTime2To.Value.Milliseconds);
@@ -103,19 +103,20 @@ namespace TAMHubApp.Services
                         foreach (var dayinw in dayofweek)
                         {
                             if (lstdayExclude.Contains(dayinw))
-                            {
                                 wcal.SetDayExcluded(dayinw, true);
-                            }
                             else
-                            {
                                 wcal.SetDayExcluded(dayinw, false);
-                            }
                         }
                     }
                 }
                 await scheduler.AddCalendar("WeeklyCalendar", wcal, true, false);
-                var tspstart = model.StartTime != null ? model.StartTime.Value : new TimeSpan(00, 00, 05);
-                var starttime = new DateTimeOffset(DateTime.Now.Date.Add(tspstart));
+                var starttime = DateTimeOffset.Now.Add(new TimeSpan(00, 00, 05));
+                if (model.StartTime != null)
+                {
+                    starttime = DateTimeOffset.Now.Date.Add(model.StartTime.Value);
+                    //starttime = new DateTimeOffset(DateTimeOffset.Now.Date.Add(model.StartTime.Value));
+                }
+
                 int value = model.RepeatByValue != null ? model.RepeatByValue.Value : model.RepeatByType == RepeatByType.ByHour ? 1 : 30;
                 int minutecycle = model.RepeatByType == RepeatByType.ByMinute ? value : value * 60;
 

@@ -275,9 +275,6 @@ namespace TAMHubApp.ViewModels.UserControls
                     currentObject.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected.Key) : null;
                     currentObjectDb.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected.Key) : null;
 
-                    currentObject.CycleType = (ScheduleCycleType)Enum.Parse(typeof(ScheduleCycleType), CycleTypeSelected.Key);
-                    currentObjectDb.CycleType = (ScheduleCycleType)Enum.Parse(typeof(ScheduleCycleType), CycleTypeSelected.Key);
-
                     currentObjectDb.RepeatByValue = int.TryParse(RepeatByValue, out int value4) ? value4 : null;
                     currentObjectDb.RepeatByType = RepeatByTypeSelected != null ? (RepeatByType)Enum.Parse(typeof(RepeatByType), RepeatByTypeSelected.Key) : null;
                     currentObjectDb.ExcludeDayOfWeek = ExcludeDaySelected != null && ExcludeDaySelected.Any() ? string.Join(",", ExcludeDaySelected.Select(x => x.Key)) : null;
@@ -295,6 +292,9 @@ namespace TAMHubApp.ViewModels.UserControls
                     currentObject.ExcludeTimeTo = currentObjectDb.ExcludeTimeTo;
                     currentObject.ExcludeTime2From = currentObjectDb.ExcludeTime2From;
                     currentObject.ExcludeTime2To = currentObjectDb.ExcludeTime2To;
+
+                    currentObject.CycleType = (ScheduleCycleType)Enum.Parse(typeof(ScheduleCycleType), CycleTypeSelected.Key);
+                    currentObjectDb.CycleType = (ScheduleCycleType)Enum.Parse(typeof(ScheduleCycleType), CycleTypeSelected.Key);
                 }
 
             }
@@ -312,8 +312,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 int? _DayInMonth = int.TryParse(DayInMonth, out int value3) ? value3 : null;
                 currentObject.DayInMonth = _DayInMonth;
                 currentObject.DayOfWeek = DayInWeekSelected != null ? (DayOfWeek)Enum.Parse(typeof(DayOfWeek), DayInWeekSelected.Key) : null;
-                currentObject.CycleType = (ScheduleCycleType)Enum.Parse(typeof(ScheduleCycleType), CycleTypeSelected.Key);
-
+                
                 currentObject.RepeatByValue = int.TryParse(RepeatByValue, out int value4) ? value4 : null;
                 currentObject.RepeatByType = RepeatByTypeSelected != null ? (RepeatByType)Enum.Parse(typeof(RepeatByType), RepeatByTypeSelected.Key) : null;
                 currentObject.ExcludeDayOfWeek = ExcludeDaySelected != null && ExcludeDaySelected.Any() ? string.Join(",", ExcludeDaySelected.Select(x => x.Key)) : null;
@@ -322,7 +321,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 currentObject.ExcludeTime2From = ExcludeTime2From != null ? ExcludeTime2From.Time : null;
                 currentObject.ExcludeTime2To = ExcludeTime2To != null ? ExcludeTime2To.Time : null;
                 currentObject.StartTime = StartTimeSelected != null ? StartTimeSelected.Time : null;
-
+                currentObject.CycleType = (ScheduleCycleType)Enum.Parse(typeof(ScheduleCycleType), CycleTypeSelected.Key);
                 var scheduleadd = new ScheduleTaskModel()
                 {
                     Id = currentObject.Id,
@@ -332,11 +331,11 @@ namespace TAMHubApp.ViewModels.UserControls
                     Minute = currentObject.Minute,
                     DayInMonth = currentObject.DayInMonth,
                     DayOfWeek = currentObject.DayOfWeek,
-                    CycleType = currentObject.CycleType,
                     IsRuning = false,
                     IsLoading = false,
                     RepeatByValue = currentObject.RepeatByValue,
                     RepeatByType = currentObject.RepeatByType,
+                    CycleType = currentObject.CycleType,
                     StartTime = currentObject.StartTime,
                     ExcludeDayOfWeek = currentObject.ExcludeDayOfWeek,
                     ExcludeTimeFrom = currentObject.ExcludeTimeFrom,
