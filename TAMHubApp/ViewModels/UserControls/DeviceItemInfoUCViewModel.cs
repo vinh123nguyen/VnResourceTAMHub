@@ -40,6 +40,7 @@ namespace TAMHubApp.ViewModels.UserControls
             _unitOfWork = unitOfWork;
             _singletonTAMInstance = singletonTAMInstance;
             _deviceViewModel = deviceViewModel;
+            IsSdkTypeEnable = true;
             CloseOverlayCommand = new RelayCommand<object>(x => { return true; }, CloseOverlayCommandExcute);
             SavePopupCommand = new RelayCommand<object>(x => { return true; }, SavePopupCommandExcute);
             RemmoveDeviceCommand = new RelayCommand<object>(x => { return !string.IsNullOrEmpty(Id); }, RemmoveDeviceCommandExcute);
@@ -116,6 +117,9 @@ namespace TAMHubApp.ViewModels.UserControls
         private string _companyCode { get; set; }
         public string CompanyCode { get => _companyCode; set { _companyCode = value; OnPropertyChanged(); } }
 
+        private bool _isSdkTypeEnable { get; set; }
+        public bool IsSdkTypeEnable { get => _isSdkTypeEnable; set { _isSdkTypeEnable = value; OnPropertyChanged(); } }
+
         #endregion
 
         private void Action_SetDataInfoPopup(string Id)
@@ -137,6 +141,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 SupportGetDataByDate = ((ZKTecoDeviceItem)currentDevice).ZKTeco_IsCanGetLogByTime;
             }
             IsInactive = currentDevice.IsInactive;
+            IsSdkTypeEnable = false;
         }
         private void Event_ChangeSDKType(Option option)
         {

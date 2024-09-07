@@ -231,5 +231,18 @@ namespace TAMHubApp.Services
                 ScheduleTasks.Add(scheduleadd);
             }
         }
+        public async Task RunAllSchduleTask()
+        {
+            foreach (var schedule in ScheduleTasks)
+            {
+                if (schedule.IsRuning)
+                    continue;
+                await Task.Run(async () =>
+                {
+                    await New_AddJob(schedule);
+                });
+            }
+            await UpdateScheduleRuningStatus();
+        }
     }
 }
