@@ -113,6 +113,15 @@ namespace TAMHubApp
             
 
             base.OnStartup(e);
+
+
+            Task.Run(async () =>
+            {
+                var service = new TAMCommonService();
+                service.Action_ConnectAll();
+                var _scheduleTaskServices = ServiceLocator.Instance.GetRequiredService<ScheduleTaskService>();
+                await _scheduleTaskServices.RunAllSchduleTask();
+            });
         }
         protected override void OnExit(ExitEventArgs e)
         {
