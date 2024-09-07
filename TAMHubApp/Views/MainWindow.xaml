@@ -117,12 +117,12 @@
             </ContentControl>
         </Grid>
 
-        <!--<Grid Background="#100000FF" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
+        <Grid Background="#100000FF" Visibility="{Binding IsLoading, Converter={StaticResource BooleanToVisibilityConverter}}">
             <uc:LoadingUC/>
         </Grid>
         <uc:ToastNotificationUC x:Name="ToastNotification" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10" 
                                 Message="{Binding ToastMessage}"
                                 IsShowingToast="{Binding IsShowingToast}"
-                                ToastColor ="{Binding ToastColor}"/>-->
+                                ToastColor ="{Binding ToastColor}"/>
     </Grid>
 </Window>
