@@ -26,7 +26,6 @@ namespace TAMHubApp.Views
         private void NavButton_MouseEnter(object sender, MouseEventArgs e)
         {
             NavPopup.IsOpen = true;
-            Debug.WriteLine("enter");
         }
 
         private void NavButton_MouseLeave(object sender, MouseEventArgs e)
@@ -35,7 +34,6 @@ namespace TAMHubApp.Views
             {
                 NavPopup.IsOpen = false;
             }
-            Debug.WriteLine("leave " + NavPopup.IsMouseOver.ToString());
         }
     }
 }
