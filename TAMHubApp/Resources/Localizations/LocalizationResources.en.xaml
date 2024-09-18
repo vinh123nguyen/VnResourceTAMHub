@@ -114,6 +114,7 @@
     <system:String x:Key="LANG_SET_API">API Address</system:String>
     <system:String x:Key="LANG_SET_MinScheduleDateStart">Minimun date to get data</system:String>
     <system:String x:Key="LANG_SET_MaxRowNumPerRequest">Maximun row num per request</system:String>
+    <system:String x:Key="LANG_SET_RunSyncForSchedule">Run Sync For Schedule</system:String>
     <system:String x:Key="Manual">Manual</system:String>
     <system:String x:Key="Schedule">Schedule</system:String>
     <system:String x:Key="Success">Success</system:String>

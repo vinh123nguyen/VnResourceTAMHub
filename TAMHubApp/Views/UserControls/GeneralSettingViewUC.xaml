@@ -47,6 +47,7 @@
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
 
@@ -59,6 +60,11 @@
                 <TextBlock FontSize="16" Margin="4" Text="{DynamicResource LANG_SET_MaxRowNumPerRequest}"/>
                 <TextBox Text="{Binding MaxRowNumPerRequest}" Margin="4" Width="50" />
             </StackPanel>
+
+            <CheckBox Grid.Column="1" Grid.Row="5"
+                FontSize="14" Margin="4"
+                Content="{DynamicResource LANG_SET_RunSyncForSchedule}"
+                IsChecked="{Binding IsRunSyncForSchedule, Mode=TwoWay}"/>
 
         </Grid>
     

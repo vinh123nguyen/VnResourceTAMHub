@@ -31,6 +31,9 @@ namespace TAMHubApp.ViewModels.UserControls
         private bool _isSyncApi { get; set; }
         public bool IsSyncApi { get => _isSyncApi; set { _isSyncApi = value; OnPropertyChanged(); } }
 
+        private bool _isRunSyncForSchedule { get; set; }
+        public bool IsRunSyncForSchedule { get => _isRunSyncForSchedule; set { _isRunSyncForSchedule = value; OnPropertyChanged(); } }
+
         private string _serverName { get; set; }
         public string ServerName { get => _serverName; set { _serverName = value; OnPropertyChanged();} }
 
@@ -72,10 +75,11 @@ namespace TAMHubApp.ViewModels.UserControls
 
         public async Task LoadDataConfig()
         {
-            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains("SYNC_"));
+            var config = await _unitOfWork.AppSettingRepository.GetAllAsync();
             var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_APIADDRESS.ToString());
             var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString());
             var mindatestart = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
+            var isRunSyncForSchedule = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.IS_RUN_SYNC_FOR_SCHEDULE.ToString());
 
             if (mindatestart != null)
             {
@@ -84,12 +88,16 @@ namespace TAMHubApp.ViewModels.UserControls
 
             if (maxdatarow != null)
             {
-                MaxRowNumPerRequest = maxdatarow.Value;
+                MaxRowNumPerRequest = maxdatarow.Value ?? "";
             }
 
             if (apiaddress != null)
             {
-                ApiAddress = apiaddress.Value;
+                ApiAddress = apiaddress.Value ?? "";
+            }
+            if (isRunSyncForSchedule != null)
+            {
+                IsRunSyncForSchedule = isRunSyncForSchedule.Value != null && isRunSyncForSchedule.Value == Boolean.TrueString ? true : false;
             }
 
 
@@ -98,10 +106,26 @@ namespace TAMHubApp.ViewModels.UserControls
         private async void SaveConfigCommandExcute(object obj)
         {
             _mainViewModel.IsLoading = true;
-            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains("SYNC_"));
+            var config = await _unitOfWork.AppSettingRepository.GetAllAsync();
             var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_APIADDRESS.ToString());
             var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString());
             var mindatestart = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
+            var isRunSyncForSchedule = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.IS_RUN_SYNC_FOR_SCHEDULE.ToString());
+
+            if (isRunSyncForSchedule != null)
+            {
+                isRunSyncForSchedule.Value = IsRunSyncForSchedule.ToString();
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.IS_RUN_SYNC_FOR_SCHEDULE.ToString(),
+                    Value = IsRunSyncForSchedule.ToString()
+                };
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
 
             if (maxdatarow != null)
             {
