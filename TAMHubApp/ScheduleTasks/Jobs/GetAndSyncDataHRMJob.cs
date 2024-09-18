@@ -42,17 +42,18 @@ namespace TAMHubApp.ScheduleTasks.Jobs
             {
                 await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
             }
-            foreach (var device in TAMSInstance.TAMs)
+            var configmindate = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
+            var isRunSync = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.IS_RUN_SYNC_FOR_SCHEDULE.ToString());
+            if (isRunSync != null && isRunSync.Value != null && isRunSync.Value == Boolean.TrueString)
             {
-                await Task.Run(async () =>
+                foreach (var device in TAMSInstance.TAMs)
                 {
                     var TAMService = new TAMCommonService();
                     var datestart = DateTime.MinValue;
-                    var configmindate = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
-                    if(configmindate != null && !string.IsNullOrEmpty(configmindate.Value))
+                    if (configmindate != null && !string.IsNullOrEmpty(configmindate.Value))
                     {
                         DateTime? dateconfig = DateTime.TryParseExact(configmindate.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateout) ? dateout : null;
-                        if(dateconfig != null)
+                        if (dateconfig != null)
                             datestart = dateconfig.Value;
                     }
                     var listrecord = await unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id);
@@ -64,7 +65,33 @@ namespace TAMHubApp.ScheduleTasks.Jobs
                     }
 
                     await TAMService.Action_GetDataByDate(TAMService, device, datestart, DateTime.Now, string.Empty, "Schedule", true);
-                });
+                }
+            }
+            else
+            {
+                foreach (var device in TAMSInstance.TAMs)
+                {
+                    await Task.Run(async () =>
+                    {
+                        var TAMService = new TAMCommonService();
+                        var datestart = DateTime.MinValue;
+                        if (configmindate != null && !string.IsNullOrEmpty(configmindate.Value))
+                        {
+                            DateTime? dateconfig = DateTime.TryParseExact(configmindate.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateout) ? dateout : null;
+                            if (dateconfig != null)
+                                datestart = dateconfig.Value;
+                        }
+                        var listrecord = await unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id);
+                        var lastrecord = listrecord.OrderByDescending(x => x.TimeLog).FirstOrDefault();
+
+                        if (lastrecord != null)
+                        {
+                            datestart = lastrecord.TimeLog;
+                        }
+
+                        await TAMService.Action_GetDataByDate(TAMService, device, datestart, DateTime.Now, string.Empty, "Schedule", true);
+                    });
+                }
             }
         }
     }

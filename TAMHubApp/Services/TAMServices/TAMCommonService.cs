@@ -116,6 +116,22 @@ namespace TAMHubApp.Services.TAMServices
                                 _singletonTAMInstance.UpdateDeviceFromDb(device.Id);
                             });
                         }
+                        else
+                        {
+                            var deviceConnectionIns2 = DeviceConnection.CreateConnection(ref deviceins);
+                            if (deviceConnectionIns2.Open() > 0)
+                            {
+                                rissdevice.DeviceIns = deviceins;
+                                rissdevice.DeviceConnectionIns = deviceConnectionIns2;
+                                rissdevice.IsConnected = true;
+                                result = true;
+                                _ = Task.Run(async () =>
+                                {
+                                    await Action_Realand_GetDeviceInfo(deviceins, deviceConnectionIns2, rissdevice, device.Id);
+                                    _singletonTAMInstance.UpdateDeviceFromDb(device.Id);
+                                });
+                            }
+                        }
                     }
                 }
                 catch (Exception ex)
@@ -633,6 +649,10 @@ namespace TAMHubApp.Services.TAMServices
                                             DateCreate = DateTime.Now
                                         }).ToList();
                                     }
+                                    else
+                                    {
+                                        Log.Information($"[{device.IPAddress}]: " + "Get AttRecords Lần 2 Fail");
+                                    }
                                 }
                             }
                         }
@@ -741,7 +761,8 @@ namespace TAMHubApp.Services.TAMServices
                     }
                     else
                     {
-                        actionLog.Status = "Error";
+                        actionLog.Status = "Success";
+                        actionLog.TotalRowDownload = 0;
                         actionLog.Message = "Data Downloaded is empty";
                     }
                     actionLog.TimeLogTo = DateTime.Now;
@@ -755,6 +776,7 @@ namespace TAMHubApp.Services.TAMServices
                 {
                     Log.Error($"[{device.IPAddress}]:" + " Have Exception: " + ex.Message);
 
+                    actionLog.Id = Guid.NewGuid();
                     actionLog.Status = "Error";
 
                     actionLog.TimeLogTo = DateTime.Now;
