@@ -37,5 +37,6 @@
         public const string LANG_SCH_Cycle = "LANG_SCH_Cycle";
         public const string LANG_SCH_ExcludeTime = "LANG_SCH_ExcludeTime";
         public const string LANG_SCH_ExcludeTime2 = "LANG_SCH_ExcludeTime2";
+        public const string LANG_SET_CheckForUpdate = "LANG_SET_CheckForUpdate";
     }
 }

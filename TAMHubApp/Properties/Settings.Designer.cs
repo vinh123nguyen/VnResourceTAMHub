@@ -33,12 +33,15 @@ namespace TAMHubApp.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool IsMigrateDb {
             get {
                 return ((bool)(this["IsMigrateDb"]));
+            }
+            set {
+                this["IsMigrateDb"] = value;
             }
         }
         
