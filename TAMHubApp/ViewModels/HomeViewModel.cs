@@ -7,6 +7,8 @@ using System.Windows.Media.Imaging;
 using static System.Net.Mime.MediaTypeNames;
 using TAMHubApp.Infrastructures.Enums;
 using TAMHubApp.Views;
+using Newtonsoft.Json.Linq;
+using System.Data.SqlClient;
 
 namespace TAMHubApp.ViewModels
 {
@@ -78,6 +80,15 @@ namespace TAMHubApp.ViewModels
             {
                 GreetingMessage = welcome.TranslateString();
                 ImagePath = new BitmapImage(new Uri(imagepath, UriKind.RelativeOrAbsolute));
+            });
+        }
+
+        public void onChangeLang()
+        {
+            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+            {
+                var datetofweek = $"LANG_GLO_{CurrentDate.DayOfWeek.ToString()}".TranslateString();
+                CurrentDateView = $"{datetofweek}, {CurrentDate.Day} {ConstantDisplay.LANG_GLO_Month.TranslateString()} {CurrentDate.Month}";
             });
         }
 
