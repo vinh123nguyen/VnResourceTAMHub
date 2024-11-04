@@ -50,6 +50,7 @@ namespace TAMHubApp.Infrastructures.Helpers
                 Properties.Settings.Default.Reload();
                 var homeviewModel = ServiceLocator.Instance.GetRequiredService<HomeViewModel>();
                 homeviewModel.ChangeImageWelcome();
+                homeviewModel.onChangeLang();
             }
             catch (Exception ex)
             {

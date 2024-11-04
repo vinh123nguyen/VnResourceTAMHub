@@ -1020,5 +1020,781 @@ namespace TAMHubApp.Services.TAMServices
                 }
             }
         }
+
+        public bool Action_DicconnectV2(BaseTAMService device)
+        {
+            try
+            {
+                if (device.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
+                {
+                    var zkdevice = (ZKTecoDeviceItem)device;
+                    zkdevice.IsConnected = false;
+                    zkdevice.DeviceIns.Disconnect();
+                    zkdevice.DeviceIns = null;
+                }
+                else if (device.DeviceSDKType == TAMSDKTypes.E_REALAND)
+                {
+                    var rissdevice = (RealandDeviceItem)device;
+                    if(rissdevice.DeviceConnectionIns != null)
+                        rissdevice.DeviceConnectionIns.Close();
+                    rissdevice.IsConnected = false;
+                    rissdevice.DeviceConnectionIns = null;
+                    rissdevice.DeviceIns = null;
+                }
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                });
+                return false;
+            }
+        }
+        public async Task Action_GetDeviceInfo_RealandV2(Riss.Devices.Device deviceins, DeviceConnection deviceConnectionIns, RealandDeviceItem rissdevice, Data.Entities.Device dbDevice, IUnitOfWork unitOfWork)
+        {
+            var result = false;
+            var isHaveChange = false;
+
+            object extraProperty2 = new object();
+            object extraData2 = new object();
+            var result1 = deviceConnectionIns.GetProperty(DeviceProperty.Status, extraProperty2, ref deviceins, ref extraData2);
+            if (result1)
+            {
+                UInt32[] count = (UInt32[])extraData2;
+
+                rissdevice.NewLogCount = (int)count[6];
+                dbDevice.NewLogCount = (int)count[6];
+
+                rissdevice.AllLogCount = (int)count[8];
+                dbDevice.AllLogCount = (int)count[8];
+                isHaveChange = true;
+            }
+            if (string.IsNullOrEmpty(dbDevice.SerialNumber))
+            {
+                object extraProperty1 = new object();
+                object extraData1 = Zd2911Utils.DeviceSerialNo;
+                result = deviceConnectionIns.GetProperty(DeviceProperty.SerialNo, extraProperty1, ref deviceins, ref extraData1);
+                if (result)
+                {
+                    rissdevice.SerialNumber = (string)extraData1;
+                    dbDevice.SerialNumber = (string)extraData1;
+                }
+                isHaveChange = true;
+            }
+            if (string.IsNullOrEmpty(dbDevice.ProductName))
+            {
+                object extraProperty1 = new object();
+                object extraData1 = Zd2911Utils.DeviceModel;
+                result = deviceConnectionIns.GetProperty(DeviceProperty.Model, extraProperty1, ref deviceins, ref extraData1);
+                if (result)
+                {
+                    rissdevice.ProductName = (string)extraData1;
+                    dbDevice.ProductName = (string)extraData1;
+                }
+                isHaveChange = true;
+            }
+            if (isHaveChange)
+                await unitOfWork.SaveChanageAsync();
+        }
+        public async Task<bool> Action_ConnectV2(BaseTAMService device, IUnitOfWork unitOfWork, bool IsDownSchedule = false, bool IsRetry = false)
+        {
+            var result = false;
+            try
+            {
+                var dbDevice = await unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
+                if (dbDevice == null)
+                    return false;
+
+                if (device.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_ZKTECO)
+                {
+                    var zkdevice = (ZKTecoDeviceItem)device;
+                    var _deviceIns = new CZKEM();
+                    if (device.CommPassword != null)
+                        _deviceIns.SetCommPassword(device.CommPassword.Value);
+                    result = _deviceIns.Connect_Net(device.IPAddress, device.Port);
+                    if (result)
+                    {
+                        int statusValue = 0;
+                        if (_deviceIns.GetDeviceStatus(zkdevice.MachineNo, 6, ref statusValue))
+                        {
+                            zkdevice.AllLogCount = statusValue;
+                            dbDevice.AllLogCount = statusValue;
+                        }
+                        if (string.IsNullOrEmpty(device.SerialNumber))
+                        {
+                            var serial = "";
+                            if (_deviceIns.GetSerialNumber(zkdevice.MachineNo, out serial))
+                            {
+                                zkdevice.SerialNumber = serial;
+                                dbDevice.SerialNumber = serial;
+                            }
+                        }
+                        if (string.IsNullOrEmpty(device.ProductName))
+                        {
+                            var prod = "";
+                            if (_deviceIns.GetProductCode(zkdevice.MachineNo, out prod))
+                            {
+                                zkdevice.ProductName = prod;
+                                dbDevice.ProductName = prod;
+                            }
+                        }
+
+                        dbDevice.ZKTeco_IsNewFirmwareMachine = _deviceIns.IsNewFirmwareMachine(zkdevice.MachineNo);
+                        dbDevice.ZKTeco_IsTFTMachine = _deviceIns.IsTFTMachine(zkdevice.MachineNo);
+                        dbDevice.LastTimeConnected = DateTime.Now;
+
+                        zkdevice.DeviceIns = _deviceIns;
+                        zkdevice.IsConnected = result;
+
+                        //RegisEventZk(zkdevice);
+
+                        await unitOfWork.SaveChanageAsync();
+                        _singletonTAMInstance.UpdateDeviceFromDb(device.Id);
+                    }
+                }
+                else if(device.DeviceSDKType == Infrastructures.Enums.TAMSDKTypes.E_REALAND)
+                {
+                    var rissdevice = (RealandDeviceItem)device;
+
+                    if(rissdevice.DeviceConnectionIns != null && rissdevice.DeviceIns != null)
+                    {
+                        try
+                        {
+                            rissdevice.DeviceConnectionIns.Close();
+                            rissdevice.DeviceConnectionIns = null;
+                            rissdevice.DeviceIns = null;
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+
+                    var deviceins = new Riss.Devices.Device();
+                    deviceins.DN = device.MachineNo;
+                    if (device.CommPassword != null)
+                        deviceins.Password = device.CommPassword.ToString();
+
+                    deviceins.Model = "ZDC2911";
+                    deviceins.IpAddress = device.IPAddress;
+                    deviceins.IpPort = device.Port;
+                    deviceins.CommunicationType = CommunicationType.Tcp;
+                    deviceins.ConnectionModel = 5;
+
+                    var deviceConnectionIns = DeviceConnection.CreateConnection(ref deviceins);
+
+                    if(deviceConnectionIns.Open() > 0)
+                    {
+                        rissdevice.DeviceIns = deviceins;
+                        rissdevice.DeviceConnectionIns = deviceConnectionIns;
+                        rissdevice.IsConnected = true;
+                        result = true;
+                        if(!IsDownSchedule && !IsRetry)
+                            await Action_GetDeviceInfo_RealandV2(deviceins, deviceConnectionIns, rissdevice, dbDevice, unitOfWork);
+                    }
+                    else
+                    {
+                        // retry connect
+                        var deviceConnectionIns2 = DeviceConnection.CreateConnection(ref deviceins);
+                        if (deviceConnectionIns2.Open() > 0)
+                        {
+                            rissdevice.DeviceIns = deviceins;
+                            rissdevice.DeviceConnectionIns = deviceConnectionIns2;
+                            rissdevice.IsConnected = true;
+                            result = true;
+                            if (!IsDownSchedule && !IsRetry)
+                                await Action_GetDeviceInfo_RealandV2(deviceins, deviceConnectionIns, rissdevice, dbDevice, unitOfWork);
+                        }
+                    }
+                }
+            }
+            catch(Exception ex)
+            {
+                System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                {
+                    _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                });
+                result = false;
+            }
+            return result;
+        }
+
+        public async Task<bool> Action_GetDataByDateV2(TAMCommonService service, BaseTAMService device, DateTime datefrom, DateTime dateend, string EnrollNumber, string DownloadType = "Manual", bool IsDownSchedule = false)
+        {
+            Log.Information($"[Start Get Single Device FNV2] + Name: {device.Name} + DeviceIP: {device.IPAddress}");
+            if(IsDownSchedule && device.IsInactive)
+            {
+                Log.Information($"[End Get Single Device FNV2] + Name: {device.Name} + DeviceIP: {device.IPAddress} + Message: Skip Inactive device");
+            }
+
+            using (var dbContext = new AppDbContext())
+            {
+                bool MasterResult = false;
+                UnitOfWork unitOfWork = new UnitOfWork(dbContext);
+                var actionLog = new ActionLog();
+                actionLog.Id = Guid.NewGuid();
+                if (!IsDownSchedule)
+                    datefrom = datefrom.Date;
+                dateend = dateend.Date.AddDays(1).AddMicroseconds(-1);
+
+                actionLog.DateDownDataFrom = datefrom; // set log
+                actionLog.DateDownDataTo = dateend; // set log
+                actionLog.TimeLogFrom = DateTime.Now; // set log
+                actionLog.DownloadType = DownloadType; // set log
+                actionLog.DeviceID = device.Id; // set log
+
+                Log.Information($"V2:[{device.IPAddress}]: " + "actionLog Start: {@actionLog}", actionLog);
+
+                try
+                {
+                    var listAttRecord = new List<TAMScanLog>();
+                    // check connect and connect on first times
+                    if (!device.IsConnected)
+                    {
+                        var resconnect = await service.Action_ConnectV2(device, unitOfWork, IsDownSchedule);
+                        if (!resconnect)
+                        {
+                            actionLog.Message = "Connect Fail";
+                            actionLog.Status = "Error";
+
+                            actionLog.TimeLogTo = DateTime.Now;
+                            actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+                            await unitOfWork.ActionLogRepository.AddAsync(actionLog);
+                            await unitOfWork.SaveChanageAsync();
+
+                            Log.Information($"[End Get Single Device FNV2] + Name: {device.Name} + DeviceIP: {device.IPAddress} + Message: Can not connect in first time");
+                            return false;
+                        }
+                    }
+
+                    if (device.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
+                    {
+                        var zkdevice = (ZKTecoDeviceItem)device;
+                        var settingenumconvert = GlobalEnumInOutConverter.ZKEnumConverter;
+                        try
+                        {
+                            if (zkdevice.ZKTeco_IsCanGetLogByTime && zkdevice.ZKTeco_IsNewFirmwareMachine)
+                            {
+                                if (zkdevice.DeviceIns.ReadTimeGLogData(zkdevice.MachineNo, datefrom.ToString("yyyy-MM-dd HH:mm:ss"), dateend.ToString("yyyy-MM-dd HH:mm:ss")))
+                                {
+                                    Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 1");
+                                    if (zkdevice.ZKTeco_IsTFTMachine)
+                                    {
+                                        int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
+                                        string enrollNumber;
+                                        while (zkdevice.DeviceIns.SSR_GetGeneralLogData(zkdevice.MachineNo,
+                                            out enrollNumber, out tVerifyMode,
+                                            out tInOutMode, out year, out month, out day, out hour, out minute, out second, ref workCode))
+                                        {
+                                            listAttRecord.Add(new TAMScanLog()
+                                            {
+                                                Id = Guid.NewGuid(),
+                                                DeviceID = device.Id,
+                                                EnrollNumber = int.Parse(enrollNumber),
+                                                VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                                VerifyModeOrigin = tVerifyMode,
+                                                InOutModeOrigin = tInOutMode,
+                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                DateCreate = DateTime.Now
+                                            });
+
+                                        }
+                                    }
+                                    else
+                                    {
+                                        int tVerifyMode = 0, tInOutMode = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, workCode = 0;
+                                        int enrollNumber = 0;
+                                        while (zkdevice.DeviceIns.GetAllGLogData(zkdevice.MachineNo,
+                                            ref enrollNumber, ref tVerifyMode,
+                                            ref tInOutMode, ref year, ref month, ref day, ref hour, ref minute, ref second, ref workCode))
+                                        {
+                                            listAttRecord.Add(new TAMScanLog()
+                                            {
+                                                Id = Guid.NewGuid(),
+                                                DeviceID = device.Id,
+                                                EnrollNumber = enrollNumber,
+                                                VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                                VerifyModeOrigin = tVerifyMode,
+                                                InOutModeOrigin = tInOutMode,
+                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                DateCreate = DateTime.Now
+                                            });
+
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    service.Action_Dicconnect(device);
+                                    device.IsConnected = false;
+                                    var conres = await service.Action_Connect(device);
+
+                                    Log.Information($"[{device.IPAddress}]:" + " Start Read Data Lần 2, Res Connect: " + conres.ToString());
+
+                                    if (conres)
+                                    {
+                                        if (zkdevice.DeviceIns.ReadTimeGLogData(zkdevice.MachineNo, datefrom.ToString("yyyy-MM-dd HH:mm:ss"), dateend.ToString("yyyy-MM-dd HH:mm:ss")))
+                                        {
+                                            Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 2");
+                                            if (zkdevice.ZKTeco_IsTFTMachine)
+                                            {
+                                                int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
+                                                string enrollNumber;
+                                                while (zkdevice.DeviceIns.SSR_GetGeneralLogData(zkdevice.MachineNo,
+                                                    out enrollNumber, out tVerifyMode,
+                                                    out tInOutMode, out year, out month, out day, out hour, out minute, out second, ref workCode))
+                                                {
+                                                    listAttRecord.Add(new TAMScanLog()
+                                                    {
+                                                        Id = Guid.NewGuid(),
+                                                        DeviceID = device.Id,
+                                                        EnrollNumber = int.Parse(enrollNumber),
+                                                        VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                                        VerifyModeOrigin = tVerifyMode,
+                                                        InOutModeOrigin = tInOutMode,
+                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                        DateCreate = DateTime.Now
+                                                    });
+
+                                                }
+                                            }
+                                            else
+                                            {
+                                                int tVerifyMode = 0, tInOutMode = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, workCode = 0;
+                                                int enrollNumber = 0;
+                                                while (zkdevice.DeviceIns.GetAllGLogData(zkdevice.MachineNo,
+                                                    ref enrollNumber, ref tVerifyMode,
+                                                    ref tInOutMode, ref year, ref month, ref day, ref hour, ref minute, ref second, ref workCode))
+                                                {
+                                                    listAttRecord.Add(new TAMScanLog()
+                                                    {
+                                                        Id = Guid.NewGuid(),
+                                                        DeviceID = device.Id,
+                                                        EnrollNumber = enrollNumber,
+                                                        VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                                        VerifyModeOrigin = tVerifyMode,
+                                                        InOutModeOrigin = tInOutMode,
+                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                        DateCreate = DateTime.Now
+                                                    });
+
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Log.Information($"[{device.IPAddress}]:" + " Read Data Fail Lần 2");
+                                            device.IsConnected = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Log.Information($"[{device.IPAddress}]:" + " Connect Fail Lần 2");
+                                        device.IsConnected = false;
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                var listAttRecordAll = new List<TAMScanLog>();
+                                if (zkdevice.DeviceIns.ReadAllGLogData(zkdevice.MachineNo))
+                                {
+                                    Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 1");
+                                    if (zkdevice.ZKTeco_IsTFTMachine)
+                                    {
+                                        int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
+                                        string enrollNumber;
+                                        while (zkdevice.DeviceIns.SSR_GetGeneralLogData(zkdevice.MachineNo,
+                                            out enrollNumber, out tVerifyMode,
+                                            out tInOutMode, out year, out month, out day, out hour, out minute, out second, ref workCode))
+                                        {
+                                            listAttRecordAll.Add(new TAMScanLog()
+                                            {
+                                                Id = Guid.NewGuid(),
+                                                DeviceID = device.Id,
+                                                EnrollNumber = int.Parse(enrollNumber),
+                                                VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                                VerifyModeOrigin = tVerifyMode,
+                                                InOutModeOrigin = tInOutMode,
+                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                DateCreate = DateTime.Now
+                                            });
+                                        }
+                                    }
+                                    else
+                                    {
+                                        int tVerifyMode = 0, tInOutMode = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, workCode = 0;
+                                        int enrollNumber = 0;
+                                        while (zkdevice.DeviceIns.GetAllGLogData(zkdevice.MachineNo,
+                                            ref enrollNumber, ref tVerifyMode,
+                                            ref tInOutMode, ref year, ref month, ref day, ref hour, ref minute, ref second, ref workCode))
+                                        {
+                                            listAttRecordAll.Add(new TAMScanLog()
+                                            {
+                                                Id = Guid.NewGuid(),
+                                                DeviceID = device.Id,
+                                                EnrollNumber = enrollNumber,
+                                                VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                                VerifyModeOrigin = tVerifyMode,
+                                                InOutModeOrigin = tInOutMode,
+                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                DateCreate = DateTime.Now
+                                            });
+
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    service.Action_Dicconnect(device);
+                                    device.IsConnected = false;
+                                    var conres = await service.Action_Connect(device);
+
+                                    Log.Information($"[{device.IPAddress}]:" + " Start Read Data Lần 2, Res Connect: " + conres.ToString());
+
+                                    if (conres)
+                                    {
+                                        if (zkdevice.DeviceIns.ReadAllGLogData(zkdevice.MachineNo))
+                                        {
+                                            Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 1");
+                                            if (zkdevice.ZKTeco_IsTFTMachine)
+                                            {
+                                                int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
+                                                string enrollNumber;
+                                                while (zkdevice.DeviceIns.SSR_GetGeneralLogData(zkdevice.MachineNo,
+                                                    out enrollNumber, out tVerifyMode,
+                                                    out tInOutMode, out year, out month, out day, out hour, out minute, out second, ref workCode))
+                                                {
+                                                    listAttRecordAll.Add(new TAMScanLog()
+                                                    {
+                                                        Id = Guid.NewGuid(),
+                                                        DeviceID = device.Id,
+                                                        EnrollNumber = int.Parse(enrollNumber),
+                                                        VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                                        VerifyModeOrigin = tVerifyMode,
+                                                        InOutModeOrigin = tInOutMode,
+                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                        DateCreate = DateTime.Now
+                                                    });
+                                                }
+                                            }
+                                            else
+                                            {
+                                                int tVerifyMode = 0, tInOutMode = 0, year = 0, month = 0, day = 0, hour = 0, minute = 0, second = 0, workCode = 0;
+                                                int enrollNumber = 0;
+                                                while (zkdevice.DeviceIns.GetAllGLogData(zkdevice.MachineNo,
+                                                    ref enrollNumber, ref tVerifyMode,
+                                                    ref tInOutMode, ref year, ref month, ref day, ref hour, ref minute, ref second, ref workCode))
+                                                {
+                                                    listAttRecordAll.Add(new TAMScanLog()
+                                                    {
+                                                        Id = Guid.NewGuid(),
+                                                        DeviceID = device.Id,
+                                                        EnrollNumber = enrollNumber,
+                                                        VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
+                                                        VerifyModeOrigin = tVerifyMode,
+                                                        InOutModeOrigin = tInOutMode,
+                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        TimeLog = new DateTime(year, month, day, hour, minute, second),
+                                                        DateCreate = DateTime.Now
+                                                    });
+
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            Log.Information($"[{device.IPAddress}]:" + " Read Data Fail Lần 2");
+                                            device.IsConnected = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        Log.Information($"[{device.IPAddress}]:" + " Connect Fail Lần 2");
+                                        device.IsConnected = false;
+                                    }
+                                }
+                                listAttRecord = listAttRecordAll.Where(x => x.TimeLog >= datefrom && x.TimeLog <= dateend).ToList();
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            device.IsConnected = false;
+                            System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                _mainWindow.Action_ShowToastNotify(ex.Message, ToastNotifyType.Error);
+                            });
+                            return false;
+                        }
+                    }
+                    else if(device.DeviceSDKType == TAMSDKTypes.E_REALAND)
+                    {
+                        object extraProperty = new object();
+                        object extraData = new object();
+
+                        List<DateTime> dtList = new List<DateTime>();
+                        dtList.Add(datefrom);
+                        dtList.Add(dateend);
+                        List<bool> boolList = new List<bool>();
+                        boolList.Add(false);
+                        boolList.Add(false);
+
+                        try
+                        {
+                            #region Check Connect and Retry Connect/Set Busy Device
+                            var rissdevice = (RealandDeviceItem)device;
+                            extraData = Global.DeviceBusy;
+                            var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                            if (!resultRiss)
+                            {
+                                Log.Information($"V2:[{device.IPAddress}]: " + "Set DeviceBusy Fail");
+                                Action_DicconnectV2(device);
+
+                                var resReconnect = await service.Action_ConnectV2(device, unitOfWork, IsDownSchedule, true);
+                                Log.Information($"V2:[{device.IPAddress}]:" + " Reconenct Time 2, Res Connect: " + resReconnect.ToString());
+                                if (resReconnect)
+                                {
+                                    extraProperty = new object();
+                                    extraData = Global.DeviceBusy;
+                                    resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                                    Log.Information($"V2:[{device.IPAddress}]:" + " Set DeviceBusy lần 2, Res Connect: " + resReconnect.ToString());
+                                    if (!resultRiss)
+                                    {
+                                        actionLog.Status = "Error";
+                                        actionLog.Message = "Reconnect fail";
+                                        actionLog.TimeLogTo = DateTime.Now;
+                                        actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+                                        await unitOfWork.ActionLogRepository.AddAsync(actionLog);
+                                        await unitOfWork.SaveChanageAsync();
+                                        Log.Information($"V2:[End Get Single Device] + Name: {device.Name} + DeviceIP: {device.IPAddress} Message: Set DeviceBusy Time 2 Fail");
+                                        return false;
+                                    }
+                                }
+                                else
+                                {
+                                    actionLog.Status = "Error";
+                                    actionLog.Message = "Reconnect fail";
+                                    actionLog.TimeLogTo = DateTime.Now;
+                                    actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+                                    await unitOfWork.ActionLogRepository.AddAsync(actionLog);
+                                    await unitOfWork.SaveChanageAsync();
+                                    Log.Information($"V2:[End Get Single Device] + Name: {device.Name} + DeviceIP: {device.IPAddress} Message: Reconnect Fail");
+                                    return false;
+                                }
+                            }
+                            #endregion
+
+
+                            #region Get AttRecords
+                            extraProperty = boolList;
+                            extraData = dtList;
+
+                            resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                            Log.Information($"V2:[{device.IPAddress}]: " + "Get AttRecords Time 1 Result: " + resultRiss.ToString());
+                            if (resultRiss)
+                            {
+                                List<Record> recordList = (List<Record>)extraData;
+                                listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
+                                {
+                                    Id = Guid.NewGuid(),
+                                    DeviceID = device.Id,
+                                    EnrollNumber = (int)x.DIN,
+                                    VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                    VerifyModeOrigin = x.Action,
+                                    InOutModeOrigin = x.Verify,
+                                    //InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                                    TimeLog = x.Clock,
+                                    DateCreate = DateTime.Now
+                                }).ToList();
+                                Log.Information($"V2:[{device.IPAddress}]: " + "Get AttRecords Time 1 Success, Count: " + listAttRecord.Count.ToString());
+                                MasterResult = true;
+                            }
+                            else
+                            {
+                                Log.Information($"V2:[{device.IPAddress}]: " + "Get AttRecords Time 1 Result Fail ==> retry connect + get");
+
+                                Action_DicconnectV2(device);
+
+                                var resReconnect = await service.Action_ConnectV2(device, unitOfWork, IsDownSchedule, true);
+                                Log.Information($"V2:[{device.IPAddress}]: " + "Get AttRecords Time 2 Result: " + resReconnect.ToString());
+                                if (resReconnect)
+                                {
+                                    extraProperty = boolList;
+                                    extraData = dtList;
+                                    resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                                    Log.Information($"V2:[{device.IPAddress}]: " + "Get AttRecords Time 2 Result: " + resultRiss.ToString());
+                                    if (resultRiss)
+                                    {
+                                        List<Record> recordList = (List<Record>)extraData;
+                                        listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
+                                        {
+                                            Id = Guid.NewGuid(),
+                                            DeviceID = device.Id,
+                                            EnrollNumber = (int)x.DIN,
+                                            VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                            VerifyModeOrigin = x.Action,
+                                            InOutModeOrigin = x.Verify,
+                                            //InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                                            TimeLog = x.Clock,
+                                            DateCreate = DateTime.Now
+                                        }).ToList();
+                                        Log.Information($"V2:[{device.IPAddress}]: " + "Get AttRecords Time 2 Success, Count: " + listAttRecord.Count.ToString());
+                                        MasterResult = true;
+                                    }
+                                }
+                                else
+                                {
+                                    actionLog.Status = "Error";
+                                    actionLog.Message = "Reconnect fail";
+                                    actionLog.TimeLogTo = DateTime.Now;
+                                    actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+                                    await unitOfWork.ActionLogRepository.AddAsync(actionLog);
+                                    await unitOfWork.SaveChanageAsync();
+                                    Log.Information($"V2:[End Get Single Device] + Name: {device.Name} + DeviceIP: {device.IPAddress} Message: Get AttRecords Time 2 Fail");
+                                    return false;
+                                }
+
+                            }
+
+                            #endregion
+                        }
+                        catch (Exception ex)
+                        {
+                            var rissdevice = (RealandDeviceItem)device;
+                            Log.Information($"V2:[{device.IPAddress}]: " + "Have Exception ==> retry");
+
+                            Action_DicconnectV2(device);
+
+                            var resReconnect = await service.Action_ConnectV2(device, unitOfWork, IsDownSchedule, true);
+                            Log.Information($"V2:[{device.IPAddress}]: " + "Have Exception --- Get AttRecords Result: " + resReconnect.ToString());
+                            if (resReconnect)
+                            {
+                                extraProperty = boolList;
+                                extraData = dtList;
+                                var resultRiss = rissdevice.DeviceConnectionIns.GetProperty(DeviceProperty.AttRecords, extraProperty, ref rissdevice.DeviceIns, ref extraData);
+                                Log.Information($"V2:[{device.IPAddress}]: " + "Have Exception --- Get AttRecords Result: " + resultRiss.ToString());
+                                if (resultRiss)
+                                {
+                                    List<Record> recordList = (List<Record>)extraData;
+                                    listAttRecord = recordList.Where(x => x.Clock >= datefrom && x.Clock <= dateend && x.DIN != 0).Select(x => new TAMScanLog()
+                                    {
+                                        Id = Guid.NewGuid(),
+                                        DeviceID = device.Id,
+                                        EnrollNumber = (int)x.DIN,
+                                        VerifyModeView = GlobalUtilities.VerifyType(x.Action),
+                                        VerifyModeOrigin = x.Action,
+                                        InOutModeOrigin = x.Verify,
+                                        //InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                                        TimeLog = x.Clock,
+                                        DateCreate = DateTime.Now
+                                    }).ToList();
+                                    Log.Information($"V2:[{device.IPAddress}]: " + "Have Exception --- Get AttRecords Success, Count: " + listAttRecord.Count.ToString());
+                                    MasterResult = true;
+                                }
+                            }
+                            else
+                            {
+                                actionLog.Status = "Error";
+                                actionLog.Message = ex.Message;
+                                actionLog.TimeLogTo = DateTime.Now;
+                                actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+                                await unitOfWork.ActionLogRepository.AddAsync(actionLog);
+                                await unitOfWork.SaveChanageAsync();
+                                Log.Information($"V2:[End Get Single Device] + Name: {device.Name} + DeviceIP: {device.IPAddress} Message: Have Exception");
+                                return false;
+                            }
+                        }
+                        finally
+                        {
+                            var rissdevice = (RealandDeviceItem)device;
+                            extraData = Global.DeviceIdle;
+                            var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
+                        }
+                    }
+                    if(listAttRecord.Any() && MasterResult == true)
+                    {
+                        actionLog.TotalRowDownload = listAttRecord.Count; // set to Action log
+
+                        var lstDbTAMScanLog = (await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id)).ToList();
+                        var lstDbTAMScanLogHistory = (await unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
+
+                        var lst1 = lstDbTAMScanLogHistory.Select(item => (item.EnrollNumber, item.TimeLog));
+                        var lst2 = lstDbTAMScanLog.Select(item => (item.EnrollNumber, item.TimeLog));
+
+                        var hsetDataDbTAMScanLog = new HashSet<(int, DateTime)>(lst1.Concat(lst2));
+
+                        var listInsertscanlog = listAttRecord.Where(item => !hsetDataDbTAMScanLog.Contains((item.EnrollNumber, item.TimeLog))).ToList();
+
+                        Log.Information($"V2:[{device.IPAddress}]:" + "Insert Data, Num row: " + listInsertscanlog.Count.ToString());
+
+                        actionLog.TotalNewlyData = 0;
+
+                        if(listInsertscanlog != null && listInsertscanlog.Any())
+                        {
+                            actionLog.TotalNewlyData = listInsertscanlog.Count;
+
+                            await unitOfWork.TAMScanLogRepository.AddRangeAsync(listInsertscanlog);
+                        }
+                        await unitOfWork.SaveChanageAsync();
+
+                        actionLog.Status = "Success";
+
+                        Log.Information($"[{device.IPAddress}]:" + " Start Sync Data");
+
+                        var dbDevice = await unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
+                        var ressync = await service.SyncDataByApi(dbDevice, actionLog, datefrom, dateend, EnrollNumber, IsDownSchedule);
+                        if (!ressync)
+                        {
+                            actionLog.Status = "Success";
+                            actionLog.Message = "Sync Data to HRM Error";
+                            MasterResult = false;
+                        }
+                    }
+                    else
+                    {
+                        actionLog.Status = "Error";
+                        actionLog.TotalRowDownload = 0;
+                        actionLog.Message = "Data Downloaded is empty or error";
+                        MasterResult = false;
+                    }
+                    actionLog.TimeLogTo = DateTime.Now;
+                    actionLog.TimeRun = actionLog.TimeLogTo.Subtract(actionLog.TimeLogFrom);
+                    await unitOfWork.ActionLogRepository.AddAsync(actionLog);
+                    await unitOfWork.SaveChanageAsync();
+                    Log.Information($"[End Get Single Device] + {DateTime.Now} + Name: {device.Name} + DeviceIP: {device.IPAddress}");
+                    return MasterResult;
+                }
+                catch(Exception ex)
+                {
+                    Log.Error($"[{device.IPAddress}]:" + " Have Exception: " + ex.Message);
+
+                    actionLog.Id = Guid.NewGuid();
+                    actionLog.Status = "Error";
+
+                    actionLog.TimeLogTo = DateTime.Now;
+
+                    actionLog.Message = ex.Message;
+
+                    await unitOfWork.ActionLogRepository.AddAsync(actionLog);
+
+                    await unitOfWork.SaveChanageAsync();
+
+                    Log.Information($"V2:[End Get Single Device] + Name: {device.Name} + DeviceIP: {device.IPAddress}");
+                    return false;
+                }
+                
+            }
+
+        }
+
     }
 }

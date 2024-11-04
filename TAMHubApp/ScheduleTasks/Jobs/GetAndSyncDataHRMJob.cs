@@ -64,7 +64,7 @@ namespace TAMHubApp.ScheduleTasks.Jobs
                         datestart = lastrecord.TimeLog;
                     }
 
-                    await TAMService.Action_GetDataByDate(TAMService, device, datestart, DateTime.Now, string.Empty, "Schedule", true);
+                    await TAMService.Action_GetDataByDateV2(TAMService, device, datestart, DateTime.Now, string.Empty, "Schedule", true);
                 }
             }
             else
@@ -89,7 +89,7 @@ namespace TAMHubApp.ScheduleTasks.Jobs
                             datestart = lastrecord.TimeLog;
                         }
 
-                        await TAMService.Action_GetDataByDate(TAMService, device, datestart, DateTime.Now, string.Empty, "Schedule", true);
+                        await TAMService.Action_GetDataByDateV2(TAMService, device, datestart, DateTime.Now, string.Empty, "Schedule", true);
                     });
                 }
             }

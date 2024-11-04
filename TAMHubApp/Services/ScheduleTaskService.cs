@@ -94,21 +94,42 @@ namespace TAMHubApp.Services
                     wcal.CalendarBase = dcal2;
                 }
 
+                //if (!string.IsNullOrEmpty(model.ExcludeDayOfWeek))
+                //{
+                //    var lstdayExclude = model.ExcludeDayOfWeek.Split(",").Select(x => (DayOfWeek)Enum.Parse(typeof(DayOfWeek), x)).ToList();
+                //    if(lstdayExclude != null && lstdayExclude.Any())
+                //    {
+                //        var dayofweek = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().ToList();
+                //        foreach (var dayinw in dayofweek)
+                //        {
+                //            if (lstdayExclude.Contains(dayinw))
+                //                wcal.SetDayExcluded(dayinw, true);
+                //            else
+                //                wcal.SetDayExcluded(dayinw, false);
+                //        }
+                //    }
+                //}
+
+                var lstdayExclude = new List<DayOfWeek>();
+
                 if (!string.IsNullOrEmpty(model.ExcludeDayOfWeek))
                 {
-                    var lstdayExclude = model.ExcludeDayOfWeek.Split(",").Select(x => (DayOfWeek)Enum.Parse(typeof(DayOfWeek), x)).ToList();
-                    if(lstdayExclude != null && lstdayExclude.Any())
+                    var lstex = model.ExcludeDayOfWeek.Split(",").Select(x => (DayOfWeek)Enum.Parse(typeof(DayOfWeek), x)).ToList();
+                    if(lstex != null && lstex.Any())
                     {
-                        var dayofweek = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().ToList();
-                        foreach (var dayinw in dayofweek)
-                        {
-                            if (lstdayExclude.Contains(dayinw))
-                                wcal.SetDayExcluded(dayinw, true);
-                            else
-                                wcal.SetDayExcluded(dayinw, false);
-                        }
+                        lstdayExclude.AddRange(lstex);
                     }
                 }
+
+                var dayofweek = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>().ToList();
+                foreach (var dayinw in dayofweek)
+                {
+                    if (lstdayExclude.Contains(dayinw))
+                        wcal.SetDayExcluded(dayinw, true);
+                    else
+                        wcal.SetDayExcluded(dayinw, false);
+                }
+
                 await scheduler.AddCalendar("WeeklyCalendar", wcal, true, false);
                 var starttime = DateTimeOffset.Now.Add(new TimeSpan(00, 00, 05));
                 if (model.StartTime != null)
