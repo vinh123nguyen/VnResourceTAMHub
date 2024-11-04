@@ -123,4 +123,6 @@
     <system:String x:Key="LANG_GLO_DeviceDownloadSuccess">Máy: {0} tải thành công</system:String>
     <system:String x:Key="LANG_DAT_DeleteData">Xóa {0} dòng thành công!</system:String>
     <system:String x:Key="LANG_GLO_TimeFromMustBeEarlyThanTimeTo">Thời gian bắt đầu phải sớm hơn thời gian kết thúc</system:String>
+    <system:String x:Key="LANG_SET_CheckForUpdate">Kiểm tra cập nhật</system:String>
+    
 </ResourceDictionary>

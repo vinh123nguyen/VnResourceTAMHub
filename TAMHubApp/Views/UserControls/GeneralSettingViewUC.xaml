@@ -66,6 +66,14 @@
                 Content="{DynamicResource LANG_SET_RunSyncForSchedule}"
                 IsChecked="{Binding IsRunSyncForSchedule, Mode=TwoWay}"/>
 
+            <uc:ButtonUC HorizontalAlignment="Center" Width="150" 
+                Grid.Column="2" Grid.Row="0" Margin="4"
+                FontSize="10" Title="{DynamicResource LANG_SET_CheckForUpdate}" 
+                Icon="{StaticResource Icon_Update}" 
+                IconBackground="#030FFA" 
+                ButtonBackground="#ADCAFB" Padding="1"
+                ClickCommand="{Binding CheckForUpdateCommand}"/>
+            
         </Grid>
     
     </Grid>

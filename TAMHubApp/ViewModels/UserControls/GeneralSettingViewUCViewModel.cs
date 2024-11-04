@@ -6,6 +6,7 @@ using TAMHubApp.Data.Entities;
 using TAMHubApp.Infrastructures;
 using TAMHubApp.Infrastructures.Enums;
 using TAMHubApp.Infrastructures.Helpers;
+using TAMHubApp.Services;
 
 namespace TAMHubApp.ViewModels.UserControls
 {
@@ -20,10 +21,15 @@ namespace TAMHubApp.ViewModels.UserControls
             _mainViewModel = mainViewModel;
 
             SaveConfigCommand = new RelayCommand<object>(x => { return true; }, SaveConfigCommandExcute);
+            CheckForUpdateCommand = new RelayCommand<object>(x => { return true; }, CheckForUpdateCommandExcute); 
 
             LoadDataConfig().Wait();
         }
 
+        private void CheckForUpdateCommandExcute(object obj)
+        {
+            AutoUpdaterService.CheckForUpdate();
+        }
 
         private bool _isSyncDb {  get; set; }
         public bool IsSyncDb { get => _isSyncDb; set {  _isSyncDb = value;  OnPropertyChanged(); } }
@@ -71,6 +77,7 @@ namespace TAMHubApp.ViewModels.UserControls
         }
 
         public ICommand SaveConfigCommand { get; set; }
+        public ICommand CheckForUpdateCommand { get; set; }
 
 
         public async Task LoadDataConfig()

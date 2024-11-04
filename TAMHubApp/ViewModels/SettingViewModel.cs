@@ -1,4 +1,5 @@
-﻿using System.Windows.Navigation;
+﻿using System.Reflection;
+using System.Windows.Navigation;
 using TAMHubApp.Commands;
 using TAMHubApp.Services;
 using TAMHubApp.ViewModels.UserControls;
@@ -16,7 +17,8 @@ namespace TAMHubApp.ViewModels
             NavigateZKTecoCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ZKTeco"; }, x => { SettingNavigate.NavigateTo<ZKTecoSettingViewUCViewModel>(); TabActive = "ZKTeco"; });
             NavigateRealandCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "Realand"; }, x => { SettingNavigate.NavigateTo<RealandSettingViewUCViewModel>(); TabActive = "Realand"; });
 
-            AppVersion = "Version: " + Properties.Settings.Default.AppVersion;
+            //AppVersion = "Version: " + Properties.Settings.Default.AppVersion;
+            AppVersion = "Version: " + Assembly.GetExecutingAssembly().GetName().Version?.ToString();
             ReleaseDate = Properties.Settings.Default.ReleaseDate;
             Task.Run(() =>
             {
