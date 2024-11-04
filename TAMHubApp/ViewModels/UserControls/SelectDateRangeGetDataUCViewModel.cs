@@ -105,7 +105,7 @@ namespace TAMHubApp.ViewModels.UserControls
                     {
                         var service = new TAMCommonService();
                         var result = false;
-                        result = await service.Action_GetDataByDate(service, device, DateFrom, DateTo, EnrollNumber);
+                        result = await service.Action_GetDataByDateV2(service, device, DateFrom, DateTo.Date.AddDays(1).AddMicroseconds(-1), EnrollNumber);
                         lstDeviceRunDone.Add(device.Id);
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
@@ -147,7 +147,7 @@ namespace TAMHubApp.ViewModels.UserControls
                     {
                         var service = new TAMCommonService();
                         var result = false;
-                        result = await service.Action_OnlyPushData(device, DateFrom, DateTo, EnrollNumber);
+                        result = await service.Action_OnlyPushData(device, DateFrom, DateTo.Date.AddDays(1).AddMicroseconds(-1), EnrollNumber);
                         System.Windows.Application.Current.Dispatcher.Invoke(() =>
                         {
                             _mainWindow.IsLoading = false;

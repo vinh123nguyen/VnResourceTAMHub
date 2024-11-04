@@ -66,6 +66,9 @@ namespace TAMHubApp.Services
                         {
                             if (AutoUpdater.DownloadUpdate(args))
                             {
+                                Properties.Settings.Default.IsMigrateDb = true;
+                                Properties.Settings.Default.Save();
+                                Properties.Settings.Default.Reload();
                                 //Application.Exit();
                                 System.Windows.Application.Current.Shutdown();
                             }
@@ -81,6 +84,9 @@ namespace TAMHubApp.Services
                 {
                     //MessageBox.Show(@"There is no update available please try again later.", @"No update available",
                     //    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    System.Windows.Forms.MessageBox.Show(
+                        @"There is no update available please try again later.",
+                        @"Dont Have Update", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             else

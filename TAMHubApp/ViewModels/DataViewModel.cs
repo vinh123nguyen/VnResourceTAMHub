@@ -24,6 +24,7 @@ namespace TAMHubApp.ViewModels
             , IDataNavigationService dataNavigationService
             , SingletonTAMInstance singletonTAMInstance)
         {
+            IsAlreadySyncData = true;
             _dataNavigationService = dataNavigationService;
             CurrentPage = 1;
             TotalRow = 0;
@@ -37,6 +38,7 @@ namespace TAMHubApp.ViewModels
             CloseOverlayPopupCommand = new RelayCommand<object>(x => { return true; }, CloseOverlayPopupExcute);
             RemoveDataCommand = new RelayCommand<object>(x => { return true; }, RemoveDataCommandExcute);
             Devices = singletonTAMInstance.TAMs;
+            Event_UpdateCurrentPage();
 
             //InitData();
         }
@@ -56,9 +58,9 @@ namespace TAMHubApp.ViewModels
         private bool _isOverlayPopupOpen;
         public bool IsOverlayPopupOpen { get => _isOverlayPopupOpen; set { _isOverlayPopupOpen = value; OnPropertyChanged(); } }
         private int _currentPage { get; set; }
-        public int CurrentPage { get => _currentPage; set { _currentPage = value; OnPropertyChanged(); Event_UpdateCurrentPage(value); } }
+        public int CurrentPage { get => _currentPage; set { _currentPage = value; OnPropertyChanged(); } }
         private int _totalRow { get; set; }
-        public int TotalRow { get => _totalRow; set { _totalRow = value; OnPropertyChanged(); TotalPages = (int)Math.Ceiling((double)TotalRow / PageSize); Event_UpdateCurrentPage(CurrentPage); } }
+        public int TotalRow { get => _totalRow; set { _totalRow = value; OnPropertyChanged(); TotalPages = (int)Math.Ceiling((double)TotalRow / PageSize); } }
         private int PageSize = 50;
         private int TotalPages = 0;
         
@@ -124,9 +126,9 @@ namespace TAMHubApp.ViewModels
             TAMSelected = defaulselect;
             ListOptionsTAMs = lstDeviceOptions;
         }
-        public void Event_UpdateCurrentPage(int currentpage)
+        public void Event_UpdateCurrentPage()
         {
-            CurrentPageView = $"{currentpage}/{TotalPages}";
+            CurrentPageView = $"{CurrentPage}/{TotalPages}";
             var startitemcount = TotalRow != 0 ? (((CurrentPage - 1) * PageSize) + 1): 0;
             var enditemcount = TotalRow != 0 ? ((CurrentPage-1) * PageSize + (ListTAMScanLogs != null ? ListTAMScanLogs.Count : 0)) : 0;
             DataRowInfo = $"{startitemcount} - {enditemcount} of {TotalRow} items";
@@ -179,7 +181,7 @@ namespace TAMHubApp.ViewModels
                         Id = x.Id,
                         DeviceID = x.DeviceID,
                         EnrollNumber = x.EnrollNumber,
-                        VerifyMode = x.VerifyMode,
+                        VerifyMode = x.VerifyModeView,
                         InOutModeView = x.InOutModeView,
                         TimeLog = x.TimeLog,
                         TimeLogView = x.TimeLog.ToString("dd/MM/yyyy HH:mm:ss"),
@@ -202,7 +204,7 @@ namespace TAMHubApp.ViewModels
                 }
                 if (DateTo != null)
                 {
-                    lstlog = lstlog.Where(x => x.TimeLog <= DateTo.Value).ToList();
+                    lstlog = lstlog.Where(x => x.TimeLog <= DateTo.Value.Date.AddDays(1).AddMicroseconds(-1)).ToList();
                 }
                 TotalRow = lstlog.Count;
                 lstlog = lstlog.OrderByDescending(x => x.TimeLog).ToList();
@@ -228,6 +230,7 @@ namespace TAMHubApp.ViewModels
                 ListTAMScanLogs = new ObservableCollection<TAMScanLogModel>(newlist);
 
                 _mainViewModel.IsLoading = false;
+                Event_UpdateCurrentPage();
             });
         }
 
@@ -246,36 +249,71 @@ namespace TAMHubApp.ViewModels
 
             Task.Run(async () =>
             {
-
-                var lstQuery = await _unitOfWork.TAMScanLogRepository.GetAllAsync();
-
-                if (!string.IsNullOrEmpty(EnrollNumber))
+                if (IsAlreadySyncData)
                 {
-                    lstQuery = lstQuery.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                    var lstQuery = await _unitOfWork.TAMScanLogHistoryRepository.GetAllAsync();
+
+                    if (!string.IsNullOrEmpty(EnrollNumber))
+                    {
+                        lstQuery = lstQuery.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                    }
+                    if (SelectedDevices != null && SelectedDevices.Any())
+                    {
+                        var selectedId = SelectedDevices.Select(x => x.Id).ToList();
+                        lstQuery = lstQuery.Where(x => selectedId.Contains(x.DeviceID)).ToList();
+                    }
+                    if (DateFrom != null)
+                    {
+                        lstQuery = lstQuery.Where(x => x.TimeLog >= DateFrom.Value).ToList();
+                    }
+                    if (DateTo != null)
+                    {
+                        lstQuery = lstQuery.Where(x => x.TimeLog <= DateTo.Value.Date.AddDays(1).AddMicroseconds(-1)).ToList();
+                    }
+
+                    _unitOfWork.TAMScanLogHistoryRepository.RemoveRange(lstQuery);
+
+                    await _unitOfWork.SaveChanageAsync();
+
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _mainViewModel.IsLoading = false;
+                        _mainViewModel.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DAT_DeleteData.TranslateString(), lstQuery.Count()), ToastNotifyType.Success);
+                    });
                 }
-                if (SelectedDevices != null && SelectedDevices.Any())
+                else
                 {
-                    var selectedId = SelectedDevices.Select(x => x.Id).ToList();
-                    lstQuery = lstQuery.Where(x => selectedId.Contains(x.DeviceID)).ToList();
-                }
-                if (DateFrom != null)
-                {
-                    lstQuery = lstQuery.Where(x => x.TimeLog >= DateFrom.Value).ToList();
-                }
-                if (DateTo != null)
-                {
-                    lstQuery = lstQuery.Where(x => x.TimeLog <= DateTo.Value).ToList();
-                }
+                    var lstQuery = await _unitOfWork.TAMScanLogRepository.GetAllAsync();
 
-                _unitOfWork.TAMScanLogRepository.RemoveRange(lstQuery);
+                    if (!string.IsNullOrEmpty(EnrollNumber))
+                    {
+                        lstQuery = lstQuery.Where(x => x.EnrollNumber.ToString() == EnrollNumber).ToList();
+                    }
+                    if (SelectedDevices != null && SelectedDevices.Any())
+                    {
+                        var selectedId = SelectedDevices.Select(x => x.Id).ToList();
+                        lstQuery = lstQuery.Where(x => selectedId.Contains(x.DeviceID)).ToList();
+                    }
+                    if (DateFrom != null)
+                    {
+                        lstQuery = lstQuery.Where(x => x.TimeLog >= DateFrom.Value).ToList();
+                    }
+                    if (DateTo != null)
+                    {
+                        lstQuery = lstQuery.Where(x => x.TimeLog <= DateTo.Value.Date.AddDays(1).AddMicroseconds(-1)).ToList();
+                    }
 
-                await _unitOfWork.SaveChanageAsync();
+                    _unitOfWork.TAMScanLogRepository.RemoveRange(lstQuery);
 
-                System.Windows.Application.Current.Dispatcher.Invoke(() =>
-                {
-                    _mainViewModel.IsLoading = false;
-                    _mainViewModel.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DAT_DeleteData.TranslateString(), lstQuery.Count()), ToastNotifyType.Success);
-                });
+                    await _unitOfWork.SaveChanageAsync();
+
+                    System.Windows.Application.Current.Dispatcher.Invoke(() =>
+                    {
+                        _mainViewModel.IsLoading = false;
+                        _mainViewModel.Action_ShowToastNotify(string.Format(ConstantDisplay.LANG_DAT_DeleteData.TranslateString(), lstQuery.Count()), ToastNotifyType.Success);
+                    });
+                }
+                
                 GetDataPaging();
             });
         }

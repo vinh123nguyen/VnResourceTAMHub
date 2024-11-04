@@ -92,6 +92,7 @@
                     </StackPanel>
                     <ComboBox HorizontalAlignment="Left" Grid.Column="2" Grid.Row="1" 
                               Width="200" Height="25" 
+                              IsEnabled="{Binding IsSdkTypeEnable}"
                               ItemsSource="{Binding SDKsOptions}" 
                               SelectedItem="{Binding SDKSelected, Mode=TwoWay}">
                         <ComboBox.ItemTemplate>

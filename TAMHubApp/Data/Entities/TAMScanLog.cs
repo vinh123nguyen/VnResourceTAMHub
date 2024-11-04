@@ -10,6 +10,7 @@
         public string? InOutModeView { get; set; }
         public int InOutModeOrigin { get; set; }
         public DateTime TimeLog { get; set; }
+        public DateTime DateCreate { get; set; }
 
         public Device Device { get; set; }
     }

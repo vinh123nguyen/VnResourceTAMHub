@@ -10,7 +10,7 @@
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
-            <ColumnDefinition/>
+            <!--<ColumnDefinition/>-->
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
@@ -36,42 +36,14 @@
                 SelectedDate="{Binding MinScheduleDateStart}"/>
         </StackPanel>
 
-        <RadioButton IsChecked="{Binding IsSyncDb}" GroupName="SyncType" Grid.Row="2" Margin="4" Content="Đồng bộ qua DB"/>
-        <RadioButton IsChecked="{Binding IsSyncApi}" GroupName="SyncType" Grid.Row="2" Margin="4" Grid.Column="1" Content="Đồng bộ qua API"/>
-
         <Grid Grid.Row="3" Grid.Column="0">
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
-
-            <TextBlock FontSize="16" Margin="4" Grid.Row="0" Grid.Column="1" Text="{DynamicResource LANG_SET_Server}"/>
-            <TextBlock FontSize="16" Margin="4" Grid.Row="1" Grid.Column="1" Text="{DynamicResource LANG_SET_DBName}"/>
-            <TextBlock FontSize="16" Margin="4" Grid.Row="2" Grid.Column="1" Text="{DynamicResource LANG_SET_UserID}"/>
-            <TextBlock FontSize="16" Margin="4" Grid.Row="3" Grid.Column="1" Text="{DynamicResource LANG_SET_Pwd}"/>
-
-            <TextBox Text="{Binding ServerName}" Margin="4" Width="200" Grid.Row="0" Grid.Column="2" />
-            <TextBox Text="{Binding DbName}" Margin="4" Grid.Row="1" Grid.Column="2" />
-            <TextBox Text="{Binding UserId}" Margin="4" Grid.Row="2" Grid.Column="2" />
-            <TextBox Text="{Binding Password}" Margin="4" Grid.Row="3" Grid.Column="2" />
-
-        </Grid>
-
-        <Grid Grid.Row="3" Grid.Column="1">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="Auto"/>
@@ -89,7 +61,19 @@
                 <TextBox Text="{Binding MaxRowNumPerRequest}" Margin="4" Width="50" />
             </StackPanel>
 
+            <CheckBox Grid.Column="1" Grid.Row="5"
+                FontSize="14" Margin="4"
+                Content="{DynamicResource LANG_SET_RunSyncForSchedule}"
+                IsChecked="{Binding IsRunSyncForSchedule, Mode=TwoWay}"/>
 
+            <uc:ButtonUC HorizontalAlignment="Center" Width="150" 
+                Grid.Column="2" Grid.Row="0" Margin="4"
+                FontSize="10" Title="{DynamicResource LANG_SET_CheckForUpdate}" 
+                Icon="{StaticResource Icon_Update}" 
+                IconBackground="#030FFA" 
+                ButtonBackground="#ADCAFB" Padding="1"
+                ClickCommand="{Binding CheckForUpdateCommand}"/>
+            
         </Grid>
     
     </Grid>

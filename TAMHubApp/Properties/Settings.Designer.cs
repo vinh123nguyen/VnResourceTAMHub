@@ -33,12 +33,15 @@ namespace TAMHubApp.Properties {
             }
         }
         
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool IsMigrateDb {
             get {
                 return ((bool)(this["IsMigrateDb"]));
+            }
+            set {
+                this["IsMigrateDb"] = value;
             }
         }
         
@@ -56,22 +59,19 @@ namespace TAMHubApp.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("v_1.0.6.3")]
+        [global::System.Configuration.DefaultSettingValueAttribute("V_1.2.2.8")]
         public string AppVersion {
             get {
                 return ((string)(this["AppVersion"]));
             }
         }
         
-        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("07/08/2024")]
+        [global::System.Configuration.DefaultSettingValueAttribute("04/11/2024")]
         public string ReleaseDate {
             get {
                 return ((string)(this["ReleaseDate"]));
-            }
-            set {
-                this["ReleaseDate"] = value;
             }
         }
     }

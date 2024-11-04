@@ -87,6 +87,7 @@ namespace TAMHubApp.Services.TAMServices
                             AllLogCount = devicedb.AllLogCount,
                             NewLogCount = devicedb.NewLogCount,
                             DeviceSDKTypeView = "Realand",
+                            IsInactive = devicedb.IsInactive,
                         };
                         lstDevicReturn.Add(zkdevice);
                     }
@@ -153,6 +154,7 @@ namespace TAMHubApp.Services.TAMServices
                                 ProductName = devicedb.ProductName,
                                 CompanyCode = devicedb.CompanyCode,
                                 DeviceSDKTypeView = "Realand",
+                                IsInactive = devicedb.IsInactive,
                             };
                             Application.Current.Dispatcher.Invoke(() =>
                             {

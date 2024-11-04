@@ -6,6 +6,7 @@ using TAMHubApp.Data.Entities;
 using TAMHubApp.Infrastructures;
 using TAMHubApp.Infrastructures.Enums;
 using TAMHubApp.Infrastructures.Helpers;
+using TAMHubApp.Services;
 
 namespace TAMHubApp.ViewModels.UserControls
 {
@@ -20,16 +21,24 @@ namespace TAMHubApp.ViewModels.UserControls
             _mainViewModel = mainViewModel;
 
             SaveConfigCommand = new RelayCommand<object>(x => { return true; }, SaveConfigCommandExcute);
+            CheckForUpdateCommand = new RelayCommand<object>(x => { return true; }, CheckForUpdateCommandExcute); 
 
             LoadDataConfig().Wait();
         }
 
+        private void CheckForUpdateCommandExcute(object obj)
+        {
+            AutoUpdaterService.CheckForUpdate();
+        }
 
         private bool _isSyncDb {  get; set; }
         public bool IsSyncDb { get => _isSyncDb; set {  _isSyncDb = value;  OnPropertyChanged(); } }
 
         private bool _isSyncApi { get; set; }
         public bool IsSyncApi { get => _isSyncApi; set { _isSyncApi = value; OnPropertyChanged(); } }
+
+        private bool _isRunSyncForSchedule { get; set; }
+        public bool IsRunSyncForSchedule { get => _isRunSyncForSchedule; set { _isRunSyncForSchedule = value; OnPropertyChanged(); } }
 
         private string _serverName { get; set; }
         public string ServerName { get => _serverName; set { _serverName = value; OnPropertyChanged();} }
@@ -68,33 +77,17 @@ namespace TAMHubApp.ViewModels.UserControls
         }
 
         public ICommand SaveConfigCommand { get; set; }
+        public ICommand CheckForUpdateCommand { get; set; }
 
 
         public async Task LoadDataConfig()
         {
-            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains("SYNC_"));
-            var servercf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_SERVER.ToString());
-            var dbnamecf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_DBNAME.ToString());
-            var useridcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_USERID.ToString());
-            var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
-            var synctype = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
+            var config = await _unitOfWork.AppSettingRepository.GetAllAsync();
             var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_APIADDRESS.ToString());
             var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString());
             var mindatestart = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
+            var isRunSyncForSchedule = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.IS_RUN_SYNC_FOR_SCHEDULE.ToString());
 
-            if (synctype != null)
-            {
-                if(synctype.Value == "DB")
-                {
-                    IsSyncDb = true;
-                    IsSyncApi = false;
-                }
-                if (synctype.Value == "API")
-                {
-                    IsSyncDb = false;
-                    IsSyncApi = true;
-                }
-            }
             if (mindatestart != null)
             {
                 MinScheduleDateStart = string.IsNullOrEmpty(mindatestart.Value) ? null : DateTime.TryParseExact(mindatestart.Value, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateout) ? dateout : null;
@@ -102,28 +95,16 @@ namespace TAMHubApp.ViewModels.UserControls
 
             if (maxdatarow != null)
             {
-                MaxRowNumPerRequest = maxdatarow.Value;
+                MaxRowNumPerRequest = maxdatarow.Value ?? "";
             }
 
-            if (servercf != null)
-            {
-                ServerName = servercf.Value;
-            }
-            if (dbnamecf != null)
-            {
-                DbName = dbnamecf.Value;
-            }
-            if (useridcf != null)
-            {
-                UserId = useridcf.Value;
-            }
-            if (pwdcf != null)
-            {
-                Password = pwdcf.Value;
-            }
             if (apiaddress != null)
             {
-                ApiAddress = apiaddress.Value;
+                ApiAddress = apiaddress.Value ?? "";
+            }
+            if (isRunSyncForSchedule != null)
+            {
+                IsRunSyncForSchedule = isRunSyncForSchedule.Value != null && isRunSyncForSchedule.Value == Boolean.TrueString ? true : false;
             }
 
 
@@ -132,15 +113,26 @@ namespace TAMHubApp.ViewModels.UserControls
         private async void SaveConfigCommandExcute(object obj)
         {
             _mainViewModel.IsLoading = true;
-            var config = await _unitOfWork.AppSettingRepository.GetManyAsync(x => x.Name.Contains("SYNC_"));
-            var servercf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_SERVER.ToString());
-            var dbnamecf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_DBNAME.ToString());
-            var useridcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_USERID.ToString());
-            var pwdcf = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_DB_PWD.ToString());
-            var synctype = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_TYPE.ToString());
+            var config = await _unitOfWork.AppSettingRepository.GetAllAsync();
             var apiaddress = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_APIADDRESS.ToString());
             var maxdatarow = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_API_MAX_DATAROW_PER_REQUEST.ToString());
             var mindatestart = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
+            var isRunSyncForSchedule = config.FirstOrDefault(x => x.Name == ConfigEnumConstant.IS_RUN_SYNC_FOR_SCHEDULE.ToString());
+
+            if (isRunSyncForSchedule != null)
+            {
+                isRunSyncForSchedule.Value = IsRunSyncForSchedule.ToString();
+            }
+            else
+            {
+                var item = new AppSetting()
+                {
+                    Id = Guid.NewGuid(),
+                    Name = ConfigEnumConstant.IS_RUN_SYNC_FOR_SCHEDULE.ToString(),
+                    Value = IsRunSyncForSchedule.ToString()
+                };
+                await _unitOfWork.AppSettingRepository.AddAsync(item);
+            }
 
             if (maxdatarow != null)
             {
@@ -167,95 +159,6 @@ namespace TAMHubApp.ViewModels.UserControls
                     Id = Guid.NewGuid(),
                     Name = ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString(),
                     Value = MinScheduleDateStart == null ? null : MinScheduleDateStart.Value.ToString("dd/MM/yyyy")
-                };
-                await _unitOfWork.AppSettingRepository.AddAsync(item);
-            }
-
-            if (synctype != null)
-            {
-                if (IsSyncDb)
-                {
-                    synctype.Value = "DB";
-                }
-                if (IsSyncApi)
-                {
-                    synctype.Value = "API";
-                }
-            }
-            else
-            {
-                var item = new AppSetting()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.SYNC_TYPE.ToString(),
-                };
-                if (IsSyncDb)
-                {
-                    item.Value = "DB";
-                }
-                if (IsSyncApi)
-                {
-                    item.Value = "API";
-                }
-                await _unitOfWork.AppSettingRepository.AddAsync(item);
-            }
-
-            if (servercf != null)
-            {
-                servercf.Value = ServerName;
-            }
-            else
-            {
-                var item = new AppSetting()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.SYNC_DB_SERVER.ToString(),
-                    Value = ServerName
-                };
-                await _unitOfWork.AppSettingRepository.AddAsync(item);
-            }
-
-            if (dbnamecf != null)
-            {
-                dbnamecf.Value = DbName;
-            }
-            else
-            {
-                var item = new AppSetting()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.SYNC_DB_DBNAME.ToString(),
-                    Value = DbName
-                };
-                await _unitOfWork.AppSettingRepository.AddAsync(item);
-            }
-
-            if (useridcf != null)
-            {
-                useridcf.Value = UserId;
-            }
-            else
-            {
-                var item = new AppSetting()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.SYNC_DB_USERID.ToString(),
-                    Value = UserId
-                };
-                await _unitOfWork.AppSettingRepository.AddAsync(item);
-            }
-
-            if (pwdcf != null)
-            {
-                pwdcf.Value = Password;
-            }
-            else
-            {
-                var item = new AppSetting()
-                {
-                    Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.SYNC_DB_PWD.ToString(),
-                    Value = Password
                 };
                 await _unitOfWork.AppSettingRepository.AddAsync(item);
             }

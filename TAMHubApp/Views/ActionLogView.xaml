@@ -336,14 +336,14 @@
                                 </DataGridCheckBoxColumn.HeaderTemplate>
                             </DataGridCheckBoxColumn>
                             <DataGridTextColumn Header="#" IsReadOnly="True" CanUserResize="False" Width="auto"/>
-                            <DataGridTextColumn Header="{DynamicResource LANG_ACL_TimeRangeDownData}" Binding="{Binding DateDownData}" IsReadOnly="True" Width="0.7*">
+                            <DataGridTextColumn Header="{DynamicResource LANG_ACL_TimeRangeDownData}" Binding="{Binding DateDownData}" IsReadOnly="True" Width="0.9*">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
                                     </Style>
                                 </DataGridTextColumn.ElementStyle>
                             </DataGridTextColumn>
-                            <DataGridTextColumn Header="{DynamicResource LANG_ACL_Time}" Binding="{Binding TimeLog}" IsReadOnly="True" Width="*">
+                            <DataGridTextColumn Header="{DynamicResource LANG_ACL_Time}" Binding="{Binding TimeLog}" IsReadOnly="True" Width="0.9*">
                                 <DataGridTextColumn.ElementStyle>
                                     <Style>
                                         <Setter Property="TextBlock.TextWrapping" Value="Wrap" />
