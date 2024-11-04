@@ -56,7 +56,7 @@ namespace TAMHubApp.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("V_1.2.2.7")]
+        [global::System.Configuration.DefaultSettingValueAttribute("V_1.2.2.8")]
         public string AppVersion {
             get {
                 return ((string)(this["AppVersion"]));

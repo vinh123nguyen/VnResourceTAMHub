@@ -1280,6 +1280,7 @@ namespace TAMHubApp.Services.TAMServices
                                 if (zkdevice.DeviceIns.ReadTimeGLogData(zkdevice.MachineNo, datefrom.ToString("yyyy-MM-dd HH:mm:ss"), dateend.ToString("yyyy-MM-dd HH:mm:ss")))
                                 {
                                     Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 1");
+                                    MasterResult = true;
                                     if (zkdevice.ZKTeco_IsTFTMachine)
                                     {
                                         int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
@@ -1340,6 +1341,7 @@ namespace TAMHubApp.Services.TAMServices
                                         if (zkdevice.DeviceIns.ReadTimeGLogData(zkdevice.MachineNo, datefrom.ToString("yyyy-MM-dd HH:mm:ss"), dateend.ToString("yyyy-MM-dd HH:mm:ss")))
                                         {
                                             Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 2");
+                                            MasterResult = true;
                                             if (zkdevice.ZKTeco_IsTFTMachine)
                                             {
                                                 int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
@@ -1406,6 +1408,7 @@ namespace TAMHubApp.Services.TAMServices
                                 if (zkdevice.DeviceIns.ReadAllGLogData(zkdevice.MachineNo))
                                 {
                                     Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 1");
+                                    MasterResult = true;
                                     if (zkdevice.ZKTeco_IsTFTMachine)
                                     {
                                         int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
@@ -1465,6 +1468,7 @@ namespace TAMHubApp.Services.TAMServices
                                         if (zkdevice.DeviceIns.ReadAllGLogData(zkdevice.MachineNo))
                                         {
                                             Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 1");
+                                            MasterResult = true;
                                             if (zkdevice.ZKTeco_IsTFTMachine)
                                             {
                                                 int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
@@ -1720,43 +1724,53 @@ namespace TAMHubApp.Services.TAMServices
                             var resultRiss = rissdevice.DeviceConnectionIns.SetProperty(DeviceProperty.Enable, extraProperty, rissdevice.DeviceIns, extraData);
                         }
                     }
-                    if(listAttRecord.Any() && MasterResult == true)
+                    if(MasterResult == true)
                     {
-                        actionLog.TotalRowDownload = listAttRecord.Count; // set to Action log
-
-                        var lstDbTAMScanLog = (await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id)).ToList();
-                        var lstDbTAMScanLogHistory = (await unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
-
-                        var lst1 = lstDbTAMScanLogHistory.Select(item => (item.EnrollNumber, item.TimeLog));
-                        var lst2 = lstDbTAMScanLog.Select(item => (item.EnrollNumber, item.TimeLog));
-
-                        var hsetDataDbTAMScanLog = new HashSet<(int, DateTime)>(lst1.Concat(lst2));
-
-                        var listInsertscanlog = listAttRecord.Where(item => !hsetDataDbTAMScanLog.Contains((item.EnrollNumber, item.TimeLog))).ToList();
-
-                        Log.Information($"V2:[{device.IPAddress}]:" + "Insert Data, Num row: " + listInsertscanlog.Count.ToString());
-
-                        actionLog.TotalNewlyData = 0;
-
-                        if(listInsertscanlog != null && listInsertscanlog.Any())
+                        if (listAttRecord.Any())
                         {
-                            actionLog.TotalNewlyData = listInsertscanlog.Count;
+                            actionLog.TotalRowDownload = listAttRecord.Count; // set to Action log
 
-                            await unitOfWork.TAMScanLogRepository.AddRangeAsync(listInsertscanlog);
-                        }
-                        await unitOfWork.SaveChanageAsync();
+                            var lstDbTAMScanLog = (await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == device.Id)).ToList();
+                            var lstDbTAMScanLogHistory = (await unitOfWork.TAMScanLogHistoryRepository.GetManyAsync(x => x.DeviceID == device.Id && x.TimeLog >= datefrom && x.TimeLog <= dateend)).ToList();
 
-                        actionLog.Status = "Success";
+                            var lst1 = lstDbTAMScanLogHistory.Select(item => (item.EnrollNumber, item.TimeLog));
+                            var lst2 = lstDbTAMScanLog.Select(item => (item.EnrollNumber, item.TimeLog));
 
-                        Log.Information($"[{device.IPAddress}]:" + " Start Sync Data");
+                            var hsetDataDbTAMScanLog = new HashSet<(int, DateTime)>(lst1.Concat(lst2));
 
-                        var dbDevice = await unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
-                        var ressync = await service.SyncDataByApi(dbDevice, actionLog, datefrom, dateend, EnrollNumber, IsDownSchedule);
-                        if (!ressync)
-                        {
+                            var listInsertscanlog = listAttRecord.Where(item => !hsetDataDbTAMScanLog.Contains((item.EnrollNumber, item.TimeLog))).ToList();
+
+                            Log.Information($"V2:[{device.IPAddress}]:" + "Insert Data, Num row: " + listInsertscanlog.Count.ToString());
+
+                            actionLog.TotalNewlyData = 0;
+
+                            if (listInsertscanlog != null && listInsertscanlog.Any())
+                            {
+                                actionLog.TotalNewlyData = listInsertscanlog.Count;
+
+                                await unitOfWork.TAMScanLogRepository.AddRangeAsync(listInsertscanlog);
+                            }
+                            await unitOfWork.SaveChanageAsync();
+
                             actionLog.Status = "Success";
-                            actionLog.Message = "Sync Data to HRM Error";
-                            MasterResult = false;
+
+                            Log.Information($"[{device.IPAddress}]:" + " Start Sync Data");
+
+                            var dbDevice = await unitOfWork.DeviceRepository.GetByIdAsync(device.Id);
+                            var ressync = await service.SyncDataByApi(dbDevice, actionLog, datefrom, dateend, EnrollNumber, IsDownSchedule);
+                            if (!ressync)
+                            {
+                                actionLog.Status = "Error";
+                                //actionLog.Message = "Sync Data to HRM Error";
+                                MasterResult = false;
+                            }
+                        }
+                        else
+                        {
+                            actionLog.TotalRowDownload = 0;
+                            actionLog.TotalNewlyData = 0;
+                            actionLog.TotalDataAdded = 0;
+                            actionLog.Status = "Success";
                         }
                     }
                     else
