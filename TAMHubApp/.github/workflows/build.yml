@@ -21,13 +21,13 @@ jobs:
           dotnet-version: '8.0.x'  # Replace with your desired .NET version
 
       - name: Restore dependencies
-        run: dotnet restore
+        run: cd TAMHubApp && dotnet restore
 
       - name: Build
-        run: dotnet build --configuration Release
+        run: cd TAMHubApp && dotnet build --configuration Release
 
       - name: Publish Artifact
-        run: dotnet publish -c Release -o ${{ github.workspace }}/publish
+        run: cd TAMHubApp && dotnet publish -c Release -o ${{ github.workspace }}/publish
 
       - name: Verify Directory
         run: ls -R ${{ github.workspace }}
