@@ -19,9 +19,7 @@ jobs:
         uses: microsoft/setup-msbuild@v2
 
       - name: Copy zkemkeeper.dll
-        run: |
-          mkdir -p ${{ github.workspace }}/TAMHubApp/TAMSDKs/ZKTeco/x64
-          cp TAMHubApp/TAMSDKs/ZKTeco/x64/zkemkeeper.dll ${{ github.workspace }}/TAMHubApp/TAMSDKs/ZKTeco/x64/  # Adjust this if needed
+        run: cp TAMHubApp/TAMSDKs/ZKTeco/x64/zkemkeeper.dll ${{ github.workspace }}/TAMHubApp/TAMSDKs/ZKTeco/x64/  # Adjust this if needed
 
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1
