@@ -30,7 +30,7 @@ jobs:
         run: cd TAMHubApp && msbuild TAMHubApp.csproj /p:Configuration="Release" /p:Platform="x64" /t:restore
 
       - name: Publish Artifact
-        run: cd TAMHubApp && dotnet publish -c Release -o ${{ github.workspace }}/publish
+        run: cd TAMHubApp && msbuild TAMHubApp.csproj /p:Configuration="Release" /p:Platform="x64" /t:Publish /p:OutputPath="${{ github.workspace }}/publish"
 
       - name: Verify Directory
         run: ls -R ${{ github.workspace }}
