@@ -23,8 +23,11 @@ jobs:
         with:
           dotnet-version: '8.0.x'  # Replace with your desired .NET version
 
-      - name: Restore dependencies
+      - name: Restore dependencies TAMHubApp
         run: cd TAMHubApp && dotnet restore
+
+      - name: Restore dependencies Sdl.MultiSelectComboBox
+        run: cd Sdl.MultiSelectComboBox && dotnet restore
 
       - name: Build
         run: cd TAMHubApp && msbuild TAMHubApp.csproj /p:Configuration="Release" /p:Platform="x64" /t:restore
