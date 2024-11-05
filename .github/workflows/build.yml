@@ -15,8 +15,11 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v2
 
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
+
       - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '8.0.x'  # Replace with your desired .NET version
 
@@ -24,7 +27,7 @@ jobs:
         run: cd TAMHubApp && dotnet restore
 
       - name: Build
-        run: cd TAMHubApp && dotnet build --configuration Release
+        run: cd TAMHubApp && msbuild TAMHubApp.csproj /p:Configuration=Release
 
       - name: Publish Artifact
         run: cd TAMHubApp && dotnet publish -c Release -o ${{ github.workspace }}/publish
