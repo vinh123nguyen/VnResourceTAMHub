@@ -17,7 +17,7 @@ jobs:
 
       - name: Set up MSBuild
         uses: microsoft/setup-msbuild@v2
-        
+
       - name: Setup .NET SDK
         uses: actions/setup-dotnet@v1
         with:
@@ -27,7 +27,7 @@ jobs:
         run: cd TAMHubApp && dotnet restore
 
       - name: Build
-        run: cd TAMHubApp && msbuild TAMHubApp.csproj /p:Configuration=Release
+        run: cd TAMHubApp && msbuild TAMHubApp.csproj /p:Configuration="Release" /p:Platform="x64" /t:restore
 
       - name: Publish Artifact
         run: cd TAMHubApp && dotnet publish -c Release -o ${{ github.workspace }}/publish
