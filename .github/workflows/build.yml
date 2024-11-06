@@ -49,7 +49,6 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: TAMHubApp-${{ github.ref_name }}
-          path: ${{ github.workspace }}\publish
       
       - name: Verify Directory
         run: ls -R ${{ github.workspace }}
