@@ -50,6 +50,10 @@ jobs:
         with:
           name: TAMHubApp-${{ github.ref_name }}
           path: ${{ github.workspace }}/publish
+      
+      - name: Verify Directory
+        run: ls -R ${{ github.workspace }}
+
     outputs:
       BuildVersion: ${{ github.ref_name}}
       artifact_net6x: TAMHubApp-${{ github.ref_name }}
