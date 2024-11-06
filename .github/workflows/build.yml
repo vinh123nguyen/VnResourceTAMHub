@@ -29,9 +29,6 @@ jobs:
       - name: Restore dependencies Sdl.MultiSelectComboBox
         run: cd Sdl.MultiSelectComboBox && dotnet restore
 
-      - name: Build
-        run: msbuild TAMHubApp/TAMHubApp.csproj /p:Configuration="Release" /p:Platform="x64" /t:restore
-
       - name: Publish Artifact
         run: msbuild TAMHubApp/TAMHubApp.csproj /p:Configuration="Release" /p:Platform="x64" /t:Publish /p:OutputPath="${{ github.workspace }}/publish"
 
