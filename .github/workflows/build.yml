@@ -96,7 +96,7 @@ jobs:
         run: echo "GITHUB_TOKEN is ${{ secrets.GITHUB_TOKEN }}"
       - name: Verify Directory
         run: ls -R ${{ github.workspace }}
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v4
         with:
           name: TAMHubApp-${{ github.ref_name }}
           path: TAMHubApp-${{ github.ref_name }}
@@ -183,7 +183,7 @@ jobs:
           token: ${{ secrets.PUBLIC_REPO_TOKEN }}
           fetch-depth: 0
       - name: Download Artifact
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: TAMHubApp-${{ github.ref_name }}
           path: TAMHubApp-${{ github.ref_name }}
