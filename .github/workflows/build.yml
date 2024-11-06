@@ -49,6 +49,7 @@ jobs:
       - uses: actions/upload-artifact@v3
         with:
           name: TAMHubApp-${{ github.ref_name }}
+          path: artifact
       
       - name: Verify Directory
         run: ls -R ${{ github.workspace }}
@@ -102,6 +103,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: TAMHubApp-${{ github.ref_name }}
+          path: artifact
 
       - name: Easy Zip Files
         uses: vimtor/action-zip@v1
@@ -188,6 +190,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: TAMHubApp-${{ github.ref_name }}
+          path: artifact
 
       - name: Easy Zip Files
         uses: vimtor/action-zip@v1
