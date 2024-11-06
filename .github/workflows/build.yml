@@ -32,8 +32,13 @@ jobs:
       - name: Build
         run: msbuild TAMHubApp/TAMHubApp.csproj /p:Configuration="Release" /p:Platform="x64" /t:restore
 
+      - name: Register COM DLL
+        run: |
+          regsvr32 /s ${{ github.workspace }}\TAMHubApp\TAMSDKs\ZKTeco\x64\zkemkeeper.dll
+        shell: cmd
+
       - name: Publish Artifact
-        run: msbuild TAMHubApp/TAMHubApp.csproj /p:Configuration="Release" /p:Platform="x64" /t:restore /t:publish /p:OutputPath="${{ github.workspace }}/publish"
+        run: msbuild TAMHubApp/TAMHubApp.csproj /p:Configuration="Release" /p:Platform="x64" /t:publish /p:OutputPath="${{ github.workspace }}/publish"
 
       - name: Verify Directory
         run: ls -R ${{ github.workspace }}

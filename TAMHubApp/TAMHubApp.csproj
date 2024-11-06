@@ -38,11 +38,7 @@
 			<EmbedInteropTypes>true</EmbedInteropTypes>
 		</COMReference>
 	</ItemGroup>
-	<ItemGroup>
-		<None Update="TAMSDKs\ZKTeco\x64\zkemkeeper.dll">
-			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
-		</None>
-	</ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Autoupdater.NET.Official" Version="1.9.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.6" />
