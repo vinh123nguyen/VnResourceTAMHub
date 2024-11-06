@@ -100,10 +100,9 @@ jobs:
         run: echo "GITHUB_TOKEN is ${{ secrets.GITHUB_TOKEN }}"
       - name: Verify Directory
         run: ls -R ${{ github.workspace }}
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v3
         with:
           name: TAMHubApp-${{ github.ref_name }}
-          path: artifact
 
       - name: Easy Zip Files
         uses: vimtor/action-zip@v1
@@ -187,10 +186,9 @@ jobs:
           token: ${{ secrets.PUBLIC_REPO_TOKEN }}
           fetch-depth: 0
       - name: Download Artifact
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v3
         with:
           name: TAMHubApp-${{ github.ref_name }}
-          path: artifact
 
       - name: Easy Zip Files
         uses: vimtor/action-zip@v1
