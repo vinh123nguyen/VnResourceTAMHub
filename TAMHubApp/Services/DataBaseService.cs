@@ -30,11 +30,12 @@ namespace TAMHubApp.Services
                     context.Database.Migrate();
                 }
             }
-            //if (Properties.Settings.Default.IsMigrateDb)
-            //{
-            //    Properties.Settings.Default.IsMigrateDb = false;
-            //    Properties.Settings.Default.Save();
-            //}
+            if (Properties.Settings.Default.IsMigrateDb)
+            {
+                Properties.Settings.Default.IsMigrateDb = false;
+                Properties.Settings.Default.Save();
+                Properties.Settings.Default.Reload();
+            }
         }
     }
 }

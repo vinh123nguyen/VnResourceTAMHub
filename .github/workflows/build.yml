@@ -46,10 +46,14 @@ jobs:
       - name: Verify Publish Directory
         run: ls -R ${{ github.workspace }}/publish
 
-      - uses: actions/upload-artifact@v3
+      - uses: actions/upload-artifact@v4
         with:
           name: TAMHubApp-${{ github.ref_name }}
-          path: artifact
+          path: ${{ github.workspace }}/publish
+          compression-level: 9
+          if-no-files-found: error
+          overwrite: false
+          include-hidden-files: false
       
       - name: Verify Directory
         run: ls -R ${{ github.workspace }}
@@ -100,7 +104,7 @@ jobs:
         run: echo "GITHUB_TOKEN is ${{ secrets.GITHUB_TOKEN }}"
       - name: Verify Directory
         run: ls -R ${{ github.workspace }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: TAMHubApp-${{ github.ref_name }}
 
@@ -186,7 +190,7 @@ jobs:
           token: ${{ secrets.PUBLIC_REPO_TOKEN }}
           fetch-depth: 0
       - name: Download Artifact
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: TAMHubApp-${{ github.ref_name }}
 
