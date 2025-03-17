@@ -19,6 +19,7 @@
     <system:String x:Key="LANG_DEV_Port">Port</system:String>
     <system:String x:Key="LANG_DEV_Password">Password</system:String>
     <system:String x:Key="LANG_DEV_SupportGetDataByDate">Support get data by date</system:String>
+    <system:String x:Key="LANG_DEV_IsIFaceDevice">Is IFace Device</system:String>
     <system:String x:Key="LANG_DEV_Inactive">Inactive</system:String>
     <system:String x:Key="LANG_DEV_FromDate">Date from</system:String>
     <system:String x:Key="LANG_DEV_ToDate">Date to</system:String>

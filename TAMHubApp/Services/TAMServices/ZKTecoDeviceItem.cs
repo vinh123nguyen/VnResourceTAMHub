@@ -9,7 +9,8 @@ namespace TAMHubApp.Services.TAMServices
         public bool ZKTeco_IsCanGetLogByTime { get; set; }
         public bool ZKTeco_IsNewFirmwareMachine { get; set; }
         public bool ZKTeco_IsTFTMachine { get; set; }
-        
+        public bool ZKTeco_IsIFaceDevice { get; set; }
+
 
 
         public ZKTecoDeviceItem()

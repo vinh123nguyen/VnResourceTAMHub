@@ -1281,7 +1281,7 @@ namespace TAMHubApp.Services.TAMServices
                                 {
                                     Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 1");
                                     MasterResult = true;
-                                    if (zkdevice.ZKTeco_IsTFTMachine)
+                                    if (zkdevice.ZKTeco_IsTFTMachine || zkdevice.ZKTeco_IsIFaceDevice)
                                     {
                                         int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
                                         string enrollNumber;
@@ -1342,7 +1342,7 @@ namespace TAMHubApp.Services.TAMServices
                                         {
                                             Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 2");
                                             MasterResult = true;
-                                            if (zkdevice.ZKTeco_IsTFTMachine)
+                                            if (zkdevice.ZKTeco_IsTFTMachine || zkdevice.ZKTeco_IsIFaceDevice)
                                             {
                                                 int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
                                                 string enrollNumber;
@@ -1409,7 +1409,7 @@ namespace TAMHubApp.Services.TAMServices
                                 {
                                     Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 1");
                                     MasterResult = true;
-                                    if (zkdevice.ZKTeco_IsTFTMachine)
+                                    if (zkdevice.ZKTeco_IsTFTMachine || zkdevice.ZKTeco_IsIFaceDevice)
                                     {
                                         int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
                                         string enrollNumber;
@@ -1469,7 +1469,7 @@ namespace TAMHubApp.Services.TAMServices
                                         {
                                             Log.Information($"[{device.IPAddress}]:" + " Read Data Done Lần 1");
                                             MasterResult = true;
-                                            if (zkdevice.ZKTeco_IsTFTMachine)
+                                            if (zkdevice.ZKTeco_IsTFTMachine || zkdevice.ZKTeco_IsIFaceDevice)
                                             {
                                                 int tVerifyMode, tInOutMode, year, month, day, hour, minute, second, workCode = 0;
                                                 string enrollNumber;

@@ -59,7 +59,7 @@ namespace TAMHubApp.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("V_1.2.2.9")]
+        [global::System.Configuration.DefaultSettingValueAttribute("V_1.2.2.10")]
         public string AppVersion {
             get {
                 return ((string)(this["AppVersion"]));
@@ -68,7 +68,7 @@ namespace TAMHubApp.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("08/01/2025")]
+        [global::System.Configuration.DefaultSettingValueAttribute("17/03/2025")]
         public string ReleaseDate {
             get {
                 return ((string)(this["ReleaseDate"]));

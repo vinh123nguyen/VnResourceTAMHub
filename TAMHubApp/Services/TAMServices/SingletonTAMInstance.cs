@@ -62,6 +62,7 @@ namespace TAMHubApp.Services.TAMServices
                             ProductName = devicedb.ProductName,
                             AllLogCount = devicedb.AllLogCount,
                             ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime,
+                            ZKTeco_IsIFaceDevice = devicedb.ZKTeco_IsIFaceDevice,
                             IsInactive = devicedb.IsInactive,
                             ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value,
                             ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value
@@ -131,6 +132,7 @@ namespace TAMHubApp.Services.TAMServices
                             ((ZKTecoDeviceItem)existDevice).ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value;
                             ((ZKTecoDeviceItem)existDevice).ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value;
                             ((ZKTecoDeviceItem)existDevice).ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime;
+                            ((ZKTecoDeviceItem)existDevice).ZKTeco_IsIFaceDevice = devicedb.ZKTeco_IsIFaceDevice;
                         }
                     }
                     else
@@ -182,6 +184,7 @@ namespace TAMHubApp.Services.TAMServices
                                 CompanyCode = devicedb.CompanyCode,
                                 IsInactive = devicedb.IsInactive,
                                 ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime,
+                                ZKTeco_IsIFaceDevice = devicedb.ZKTeco_IsIFaceDevice,
                                 ZKTeco_IsNewFirmwareMachine = devicedb.ZKTeco_IsNewFirmwareMachine == null ? false : devicedb.ZKTeco_IsNewFirmwareMachine.Value,
                                 ZKTeco_IsTFTMachine = devicedb.ZKTeco_IsTFTMachine == null ? false : devicedb.ZKTeco_IsTFTMachine.Value
                             };

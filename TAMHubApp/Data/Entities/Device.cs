@@ -20,6 +20,7 @@ namespace TAMHubApp.Data.Entities
         public bool IsInactive { get; set; }
         //ZKTeco prop
         public bool ZKTeco_IsCanGetLogByTime { get; set; }
+        public bool ZKTeco_IsIFaceDevice { get; set; }
         public bool? ZKTeco_IsTFTMachine { get; set; }
         public bool? ZKTeco_IsNewFirmwareMachine { get; set; }
 

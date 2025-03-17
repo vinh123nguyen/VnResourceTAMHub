@@ -79,6 +79,7 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <TextBlock Grid.ColumnSpan="2" Grid.Column="1" Grid.Row="0" Margin="8"
@@ -149,6 +150,9 @@
                     <CheckBox Style="{StaticResource style_IsCanGetLogByTime}" Grid.Column="2" Grid.Row="9"
                               Content="{DynamicResource LANG_DEV_SupportGetDataByDate}"
                               IsChecked="{Binding SupportGetDataByDate, Mode=TwoWay}"/>
+                    <CheckBox Style="{StaticResource style_IsCanGetLogByTime}" Grid.Column="2" Grid.Row="10"
+                              Content="{DynamicResource LANG_DEV_IsIFaceDevice}"
+                              IsChecked="{Binding IsIFaceDevice, Mode=TwoWay}"/>
                     <CheckBox Grid.Column="2" Grid.Row="8"
                               Content="{DynamicResource LANG_DEV_Inactive}"
                               IsChecked="{Binding IsInactive, Mode=TwoWay}"/>

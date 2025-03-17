@@ -19,6 +19,7 @@
     <system:String x:Key="LANG_DEV_Port">Port</system:String>
     <system:String x:Key="LANG_DEV_Password">Password</system:String>
     <system:String x:Key="LANG_DEV_SupportGetDataByDate">Hỗ trợ lấy dữ liệu theo ngày</system:String>
+    <system:String x:Key="LANG_DEV_IsIFaceDevice">Là IFace Device</system:String>
     <system:String x:Key="LANG_DEV_Inactive">Vô hiệu</system:String>
     <system:String x:Key="LANG_DEV_FromDate">Từ ngày</system:String>
     <system:String x:Key="LANG_DEV_ToDate">Đến ngày</system:String>

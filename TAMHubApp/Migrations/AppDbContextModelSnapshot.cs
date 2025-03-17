@@ -88,25 +88,25 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("3ec6369e-dc4b-4783-8b09-b0abe484d609"),
+                            Id = new Guid("ec4f424e-08f7-4f1e-921f-87f5508fd167"),
                             Name = "ENUM_INOUT_ZKTECO_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("76500526-620e-4108-b1cc-49821ded423a"),
+                            Id = new Guid("4717dcb8-fcdb-4781-a763-a83d25f453fe"),
                             Name = "ENUM_INOUT_ZKTECO_OUT_KEY",
                             Value = "E_OUT"
                         },
                         new
                         {
-                            Id = new Guid("9adb70e5-a674-4c3d-8385-68c072463799"),
+                            Id = new Guid("850505da-5d09-42bc-922b-db95f741715e"),
                             Name = "ENUM_INOUT_REALAND_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("f7a8ff7e-859c-4f7a-be88-42ac10c97cf3"),
+                            Id = new Guid("dd30dcee-4063-4262-bd4b-6bcd4d188ff2"),
                             Name = "ENUM_INOUT_REALAND_OUT_KEY",
                             Value = "E_OUT"
                         });
@@ -160,6 +160,9 @@ namespace TAMHubApp.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("ZKTeco_IsCanGetLogByTime")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("ZKTeco_IsIFaceDevice")
                         .HasColumnType("INTEGER");
 
                     b.Property<bool?>("ZKTeco_IsNewFirmwareMachine")

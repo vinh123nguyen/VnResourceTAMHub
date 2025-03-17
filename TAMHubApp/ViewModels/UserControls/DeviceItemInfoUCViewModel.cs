@@ -108,6 +108,9 @@ namespace TAMHubApp.ViewModels.UserControls
         private bool _supportGetDataByDate { get; set; }
         public bool SupportGetDataByDate { get => _supportGetDataByDate; set { _supportGetDataByDate = value; OnPropertyChanged(); } }
 
+        private bool _isIFaceDevice { get; set; }
+        public bool IsIFaceDevice { get => _isIFaceDevice; set { _isIFaceDevice = value; OnPropertyChanged(); } }
+
         private bool _isInactive { get; set; }
         public bool IsInactive { get => _isInactive; set { _isInactive = value; OnPropertyChanged(); } }
 
@@ -139,6 +142,7 @@ namespace TAMHubApp.ViewModels.UserControls
             if (currentDevice.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
             {
                 SupportGetDataByDate = ((ZKTecoDeviceItem)currentDevice).ZKTeco_IsCanGetLogByTime;
+                IsIFaceDevice = ((ZKTecoDeviceItem)currentDevice).ZKTeco_IsIFaceDevice;
             }
             IsInactive = currentDevice.IsInactive;
             IsSdkTypeEnable = false;
@@ -170,6 +174,7 @@ namespace TAMHubApp.ViewModels.UserControls
                     currentObject.DeviceSDKType = (TAMSDKTypes)Enum.Parse(typeof(TAMSDKTypes), SDKSelected.Key);
                     currentObject.CompanyCode = CompanyCode;
                     currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
+                    currentObject.ZKTeco_IsIFaceDevice = IsIFaceDevice;
                     currentObject.IsInactive = IsInactive;
                 }
             }
@@ -185,6 +190,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 currentObject.DeviceSDKType = (TAMSDKTypes)Enum.Parse(typeof(TAMSDKTypes), SDKSelected.Key);
                 currentObject.CompanyCode = CompanyCode;
                 currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
+                currentObject.ZKTeco_IsIFaceDevice = IsIFaceDevice;
                 currentObject.IsInactive = IsInactive;
                 await _unitOfWork.DeviceRepository.AddAsync(currentObject);
                 ObjectId = currentObject.Id;
