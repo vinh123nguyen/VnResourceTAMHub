@@ -107,6 +107,7 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: TAMHubApp-${{ github.ref_name }}
+          path: TAMHubApp-${{ github.ref_name }}
 
       - name: Easy Zip Files
         uses: vimtor/action-zip@v1
@@ -193,6 +194,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: TAMHubApp-${{ github.ref_name }}
+          path: TAMHubApp-${{ github.ref_name }}
 
       - name: Easy Zip Files
         uses: vimtor/action-zip@v1
