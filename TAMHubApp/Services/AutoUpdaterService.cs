@@ -66,9 +66,9 @@ namespace TAMHubApp.Services
                         {
                             if (AutoUpdater.DownloadUpdate(args))
                             {
-                                Properties.Settings.Default.IsMigrateDb = true;
-                                Properties.Settings.Default.Save();
-                                Properties.Settings.Default.Reload();
+                                //Properties.Settings.Default.IsMigrateDb = true;
+                                //Properties.Settings.Default.Save();
+                                //Properties.Settings.Default.Reload();
                                 //Application.Exit();
                                 System.Windows.Application.Current.Shutdown();
                             }

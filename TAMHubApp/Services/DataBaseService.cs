@@ -22,20 +22,23 @@ namespace TAMHubApp.Services
             {
                 Directory.CreateDirectory(folderPath);
             }
-            if (!File.Exists(dbFilePath) || Properties.Settings.Default.IsMigrateDb)
+            using (var scope = serviceProvider.CreateScope())
             {
-                using (var scope = serviceProvider.CreateScope())
+                var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+                if (context.Database.GetPendingMigrations().Any())
                 {
-                    var context = scope.ServiceProvider.GetRequiredService<AppDbContext>();
                     context.Database.Migrate();
                 }
             }
-            if (Properties.Settings.Default.IsMigrateDb)
-            {
-                Properties.Settings.Default.IsMigrateDb = false;
-                Properties.Settings.Default.Save();
-                Properties.Settings.Default.Reload();
-            }
+            //if (!File.Exists(dbFilePath) || Properties.Settings.Default.IsMigrateDb)
+            //{
+            //}
+            //if (Properties.Settings.Default.IsMigrateDb)
+            //{
+            //    Properties.Settings.Default.IsMigrateDb = false;
+            //    Properties.Settings.Default.Save();
+            //    Properties.Settings.Default.Reload();
+            //}
         }
     }
 }
