@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System.IO;
+using System.Reflection;
 using System.Windows.Navigation;
 using TAMHubApp.Commands;
 using TAMHubApp.Services;
@@ -19,7 +20,11 @@ namespace TAMHubApp.ViewModels
 
             //AppVersion = "Version: " + Properties.Settings.Default.AppVersion;
             AppVersion = "Version: " + Assembly.GetExecutingAssembly().GetName().Version?.ToString();
-            ReleaseDate = Properties.Settings.Default.ReleaseDate;
+            var dllPath = @"TAMHubApp.dll";
+            if (File.Exists(dllPath))
+            {
+                ReleaseDate = File.GetLastWriteTime(dllPath).ToString("dd/MM/yyyy");
+            }
             Task.Run(() =>
             {
                 TabActive = "General";

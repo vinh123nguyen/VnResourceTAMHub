@@ -35,18 +35,6 @@ namespace TAMHubApp.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool IsMigrateDb {
-            get {
-                return ((bool)(this["IsMigrateDb"]));
-            }
-            set {
-                this["IsMigrateDb"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("vi")]
         public string Language {
             get {
@@ -54,24 +42,6 @@ namespace TAMHubApp.Properties {
             }
             set {
                 this["Language"] = value;
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("V_1.2.2.10")]
-        public string AppVersion {
-            get {
-                return ((string)(this["AppVersion"]));
-            }
-        }
-        
-        [global::System.Configuration.ApplicationScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("17/03/2025")]
-        public string ReleaseDate {
-            get {
-                return ((string)(this["ReleaseDate"]));
             }
         }
     }
