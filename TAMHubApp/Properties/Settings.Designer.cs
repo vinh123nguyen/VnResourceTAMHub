@@ -12,7 +12,7 @@ namespace TAMHubApp.Properties {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.8.0.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.9.0.0")]
     public sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -25,8 +25,8 @@ namespace TAMHubApp.Properties {
         
         [global::System.Configuration.ApplicationScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/vnr-vuvoanh/VnResourceTAMHubRelease/main/update" +
-            ".xml")]
+        [global::System.Configuration.DefaultSettingValueAttribute("https://raw.githubusercontent.com/thtin21/VnResourceTAMHubRelease/main/update.xml" +
+            "")]
         public string GitHubUpdateVersionFile {
             get {
                 return ((string)(this["GitHubUpdateVersionFile"]));
