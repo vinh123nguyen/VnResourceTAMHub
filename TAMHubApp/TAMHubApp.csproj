@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <UseWPF>true</UseWPF>
-	<Version>1.2.2.10</Version>
+	<Version>1.2.2.11</Version>
 	<Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
