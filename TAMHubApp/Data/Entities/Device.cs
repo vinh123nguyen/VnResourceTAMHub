@@ -18,6 +18,7 @@ namespace TAMHubApp.Data.Entities
         public string? ProductName { get; set; }
         public string? CompanyCode { get; set; }
         public bool IsInactive { get; set; }
+        public string? InOutType { get; set; }
         //ZKTeco prop
         public bool ZKTeco_IsCanGetLogByTime { get; set; }
         public bool ZKTeco_IsIFaceDevice { get; set; }

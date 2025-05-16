@@ -287,7 +287,7 @@ namespace TAMHubApp.Services.TAMServices
                     if (device.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
                     {
                         var zkdevice = (ZKTecoDeviceItem)device;
-                        var settingenumconvert = GlobalEnumInOutConverter.ZKEnumConverter;
+                        //var settingenumconvert = GlobalEnumInOutConverter.ZKEnumConverter;
                         try
                         {
                             if (zkdevice.ZKTeco_IsCanGetLogByTime && zkdevice.ZKTeco_IsNewFirmwareMachine)
@@ -311,7 +311,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                 DateCreate = DateTime.Now
                                             });
@@ -334,7 +334,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                 DateCreate = DateTime.Now
                                             });
@@ -371,7 +371,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                         VerifyModeOrigin = tVerifyMode,
                                                         InOutModeOrigin = tInOutMode,
-                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                         DateCreate = DateTime.Now
                                                     });
@@ -394,7 +394,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                         VerifyModeOrigin = tVerifyMode,
                                                         InOutModeOrigin = tInOutMode,
-                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                         DateCreate = DateTime.Now
                                                     });
@@ -437,7 +437,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                 DateCreate = DateTime.Now
                                             });
@@ -459,7 +459,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                 DateCreate = DateTime.Now
                                             });
@@ -496,7 +496,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                         VerifyModeOrigin = tVerifyMode,
                                                         InOutModeOrigin = tInOutMode,
-                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                         DateCreate = DateTime.Now
                                                     });
@@ -518,7 +518,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                         VerifyModeOrigin = tVerifyMode,
                                                         InOutModeOrigin = tInOutMode,
-                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                         DateCreate = DateTime.Now
                                                     });
@@ -553,7 +553,7 @@ namespace TAMHubApp.Services.TAMServices
                     }
                     else if (device.DeviceSDKType == TAMSDKTypes.E_REALAND)
                     {
-                        var settingenumconvert = GlobalEnumInOutConverter.RealandEnumConverter;
+                        //var settingenumconvert = GlobalEnumInOutConverter.RealandEnumConverter;
 
                         List<DateTime> dtList = new List<DateTime>();
                         dtList.Add(datefrom);
@@ -612,7 +612,7 @@ namespace TAMHubApp.Services.TAMServices
                                     VerifyModeView = GlobalUtilities.VerifyType(x.Action),
                                     VerifyModeOrigin = x.Action,
                                     InOutModeOrigin = x.Verify,
-                                    InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                                    //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                     TimeLog = x.Clock,
                                     DateCreate = DateTime.Now
                                 }).ToList();
@@ -644,7 +644,7 @@ namespace TAMHubApp.Services.TAMServices
                                             VerifyModeView = GlobalUtilities.VerifyType(x.Action),
                                             VerifyModeOrigin = x.Action,
                                             InOutModeOrigin = x.Verify,
-                                            InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                                            //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                             TimeLog = x.Clock,
                                             DateCreate = DateTime.Now
                                         }).ToList();
@@ -687,7 +687,7 @@ namespace TAMHubApp.Services.TAMServices
                                             VerifyModeView = GlobalUtilities.VerifyType(x.Action),
                                             VerifyModeOrigin = x.Action,
                                             InOutModeOrigin = x.Verify,
-                                            InOutModeView = settingenumconvert.TryGetValue(x.Verify, out string cvenum) ? cvenum : null,
+                                            //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                             TimeLog = x.Clock,
                                             DateCreate = DateTime.Now
                                         }).ToList();
@@ -857,14 +857,27 @@ namespace TAMHubApp.Services.TAMServices
                     var listData = new List<SyncTAMScanLogDTO>();
 
                     var LstTAMScanLog = await unitOfWork.TAMScanLogRepository.GetManyAsync(x => x.DeviceID == devicedb.Id);
+
+                    var listDataConfig = await unitOfWork.AppSettingRepository.GetAllAsync();
+
+                    var zkInKey = listDataConfig.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_IN_KEY.ToString());
+                    var zkOutKey = listDataConfig.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_OUT_KEY.ToString());
+                    var dicConfig = new Dictionary<string, string>();
+                    if (zkInKey != null && !string.IsNullOrEmpty(zkInKey.Value))
+                        dicConfig.Add(EnumInOutType.E_IN.ToString(), zkInKey.Value);
+
+                    if (zkOutKey != null && !string.IsNullOrEmpty(zkOutKey.Value))
+                        dicConfig.Add(EnumInOutType.E_OUT.ToString(), zkOutKey.Value);
+
                     var listDatanew = LstTAMScanLog.Select(x => new SyncTAMScanLogDTO()
                     {
                         ID = x.Id,
                         EnrollNumber = x.EnrollNumber,
-                        InOutMode = x.InOutModeView,
+                        //InOutMode = x.InOutModeView,
                         TimeLog = x.TimeLog,
                         MachineNo = devicedb.MachineNo,
-                        CompanyCode = devicedb.CompanyCode
+                        CompanyCode = devicedb.CompanyCode,
+                        InOutMode = dicConfig.TryGetValue(devicedb?.InOutType ?? "", out var _inOutMode) ? _inOutMode : null,
                     });
                     if (listDatanew.Any())
                         listData.AddRange(listDatanew);
@@ -874,10 +887,11 @@ namespace TAMHubApp.Services.TAMServices
                         {
                             ID = x.Id,
                             EnrollNumber = x.EnrollNumber,
-                            InOutMode = x.InOutModeView,
+                            //InOutMode = x.InOutModeView,
                             TimeLog = x.TimeLog,
                             MachineNo = devicedb.MachineNo,
-                            CompanyCode = devicedb.CompanyCode
+                            CompanyCode = devicedb.CompanyCode,
+                            InOutMode = dicConfig.TryGetValue(devicedb?.InOutType ?? "", out var _inOutMode) ? _inOutMode : null
                         });
                         if (listDatold.Any())
                             listData.AddRange(listDatold);
@@ -1272,7 +1286,8 @@ namespace TAMHubApp.Services.TAMServices
                     if (device.DeviceSDKType == TAMSDKTypes.E_ZKTECO)
                     {
                         var zkdevice = (ZKTecoDeviceItem)device;
-                        var settingenumconvert = GlobalEnumInOutConverter.ZKEnumConverter;
+                        //var settingenumconvert = GlobalEnumInOutConverter.ZKEnumConverter;
+                        var inKey = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name.Contains(ConfigEnumConstant.ENUM_INOUT_IN_KEY.ToString()));
                         try
                         {
                             if (zkdevice.ZKTeco_IsCanGetLogByTime && zkdevice.ZKTeco_IsNewFirmwareMachine)
@@ -1297,7 +1312,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                 DateCreate = DateTime.Now
                                             });
@@ -1320,7 +1335,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                 DateCreate = DateTime.Now
                                             });
@@ -1358,7 +1373,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                         VerifyModeOrigin = tVerifyMode,
                                                         InOutModeOrigin = tInOutMode,
-                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                         DateCreate = DateTime.Now
                                                     });
@@ -1381,7 +1396,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                         VerifyModeOrigin = tVerifyMode,
                                                         InOutModeOrigin = tInOutMode,
-                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                         DateCreate = DateTime.Now
                                                     });
@@ -1425,7 +1440,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                 DateCreate = DateTime.Now
                                             });
@@ -1447,7 +1462,7 @@ namespace TAMHubApp.Services.TAMServices
                                                 VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                 VerifyModeOrigin = tVerifyMode,
                                                 InOutModeOrigin = tInOutMode,
-                                                InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                 TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                 DateCreate = DateTime.Now
                                             });
@@ -1485,7 +1500,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                         VerifyModeOrigin = tVerifyMode,
                                                         InOutModeOrigin = tInOutMode,
-                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                         DateCreate = DateTime.Now
                                                     });
@@ -1507,7 +1522,7 @@ namespace TAMHubApp.Services.TAMServices
                                                         VerifyModeView = ((ZKTecoVerifyMode)tVerifyMode).ToString(),
                                                         VerifyModeOrigin = tVerifyMode,
                                                         InOutModeOrigin = tInOutMode,
-                                                        InOutModeView = settingenumconvert.TryGetValue(tInOutMode, out string cvenum) ? cvenum : null,
+                                                        //InOutModeView = settingenumconvert.TryGetValue(device.InOutType ?? "", out string cvenum) ? cvenum : null,
                                                         TimeLog = new DateTime(year, month, day, hour, minute, second),
                                                         DateCreate = DateTime.Now
                                                     });

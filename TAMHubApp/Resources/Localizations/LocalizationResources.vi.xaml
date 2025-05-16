@@ -28,6 +28,7 @@
     <system:String x:Key="LANG_DEV_DeviceNotConnected">Thiết bị chưa được kết nối</system:String>
     <system:String x:Key="LANG_DEV_GetDataSuccess">Tải {0} dòng dữ liệu mới thành công</system:String>
     <system:String x:Key="LANG_DEV_CompanyCode">Mã công ty</system:String>
+    <system:String x:Key="LANG_DEV_InOutType">Loại vào ra</system:String>
     <system:String x:Key="LANG_GLO_Save">Lưu</system:String>
     <system:String x:Key="E_ZKTECO">ZKTeco</system:String>
     <system:String x:Key="E_REALAND">Realand</system:String>
@@ -120,6 +121,10 @@
     <system:String x:Key="Schedule">Tự động</system:String>
     <system:String x:Key="Success">Thành công</system:String>
     <system:String x:Key="Error">Lỗi</system:String>
+    <system:String x:Key="E_IN">Vào</system:String>
+    <system:String x:Key="E_OUT">Ra</system:String>
+    <system:String x:Key="LANG_SET_InOut">Cấu hình vào ra</system:String>
+    <system:String x:Key="PleaseSelect">Vui lòng chọn...</system:String>
     <system:String x:Key="LANG_GLO_DeviceDownloadError">Máy: {0} tải không thành công</system:String>
     <system:String x:Key="LANG_GLO_DeviceDownloadSuccess">Máy: {0} tải thành công</system:String>
     <system:String x:Key="LANG_DAT_DeleteData">Xóa {0} dòng thành công!</system:String>

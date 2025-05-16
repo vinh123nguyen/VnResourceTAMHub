@@ -16,7 +16,7 @@ namespace TAMHubApp.ViewModels
 
             NavigateGeneralCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "General"; }, x => { SettingNavigate.NavigateTo<GeneralSettingViewUCViewModel>(); TabActive = "General"; });
             NavigateZKTecoCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "ZKTeco"; }, x => { SettingNavigate.NavigateTo<ZKTecoSettingViewUCViewModel>(); TabActive = "ZKTeco"; });
-            NavigateRealandCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "Realand"; }, x => { SettingNavigate.NavigateTo<RealandSettingViewUCViewModel>(); TabActive = "Realand"; });
+            //NavigateRealandCommand = new RelayCommand<BaseViewModel>(x => { return TabActive != "Realand"; }, x => { SettingNavigate.NavigateTo<RealandSettingViewUCViewModel>(); TabActive = "Realand"; });
 
             //AppVersion = "Version: " + Properties.Settings.Default.AppVersion;
             AppVersion = "Version: " + Assembly.GetExecutingAssembly().GetName().Version?.ToString();
@@ -50,6 +50,6 @@ namespace TAMHubApp.ViewModels
 
         public RelayCommand<BaseViewModel> NavigateGeneralCommand { get; set; }
         public RelayCommand<BaseViewModel> NavigateZKTecoCommand { get; set; }
-        public RelayCommand<BaseViewModel> NavigateRealandCommand { get; set; }
+        //public RelayCommand<BaseViewModel> NavigateRealandCommand { get; set; }
     }
 }

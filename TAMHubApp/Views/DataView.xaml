@@ -408,14 +408,14 @@
                 </Grid>
             </Grid>
         </Grid>
-        <Grid x:Name="SchedulePageOverlay" Background="#50CECECE"
+        <!--<Grid x:Name="SchedulePageOverlay" Background="#50CECECE"
             Visibility="{Binding IsOverlayPopupOpen, Converter={StaticResource BooleanToVisibilityConverter}}">
             <ContentControl VerticalAlignment="Center" HorizontalAlignment="Center" 
             Width="400"
             Height="Auto"
             Content="{Binding OverlayNavigate.CurrentView}">
             </ContentControl>
-        </Grid>
+        </Grid>-->
 
     </Grid>
 </UserControl>

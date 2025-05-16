@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using TAMHubApp.Infrastructures.Enums;
+using TAMHubApp.Infrastructures.Helpers;
 
 namespace TAMHubApp.Services.TAMServices
 {
@@ -49,6 +50,11 @@ namespace TAMHubApp.Services.TAMServices
 
         private string? _companyCode { get; set; }
         public string? CompanyCode { get => _companyCode; set { _companyCode = value; OnPropertyChanged(); } }
+
+        private string? _inOutType { get; set; }
+        public string? InOutType { get => _inOutType; set { _inOutType = value; OnPropertyChanged(); OnPropertyChanged("InOutTypeView"); } }
+
+        public string InOutTypeView { get => InOutType != null ? InOutType.TranslateString() : InOutType; }
 
 
         #region Prop change

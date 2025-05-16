@@ -222,10 +222,11 @@ namespace TAMHubApp.ViewModels
                                   DeviceID = l.DeviceID,
                                   EnrollNumber = l.EnrollNumber,
                                   VerifyMode = l.VerifyMode,
-                                  InOutModeView = l.InOutModeView,
+                                  //InOutModeView = l.InOutModeView,
                                   TimeLog = l.TimeLog,
                                   TimeLogView = l.TimeLogView,
                                   DeviceName = devicelj?.Name ?? "",
+                                  InOutModeView = devicelj?.Name?.TranslateString() ?? string.Empty,
                               };
                 ListTAMScanLogs = new ObservableCollection<TAMScanLogModel>(newlist);
 

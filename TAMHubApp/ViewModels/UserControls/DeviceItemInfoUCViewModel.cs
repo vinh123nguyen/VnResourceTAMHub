@@ -1,5 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using System.Reflection.Metadata;
+using System.Windows.Input;
 using TAMHubApp.Commands;
 using TAMHubApp.Data;
 using TAMHubApp.Data.Entities;
@@ -44,6 +45,27 @@ namespace TAMHubApp.ViewModels.UserControls
             CloseOverlayCommand = new RelayCommand<object>(x => { return true; }, CloseOverlayCommandExcute);
             SavePopupCommand = new RelayCommand<object>(x => { return true; }, SavePopupCommandExcute);
             RemmoveDeviceCommand = new RelayCommand<object>(x => { return !string.IsNullOrEmpty(Id); }, RemmoveDeviceCommandExcute);
+
+            optionnull = new Option
+            {
+                Key = "",
+                Name = "PleaseSelect".TranslateString(),
+            };
+            InOutTypeSelected = optionnull;
+            InOutTypes = new ObservableCollection<Option>(new List<Option>()
+            {
+                optionnull,
+                new Option
+                {
+                    Key = EnumInOutType.E_IN.ToString(),
+                    Name = EnumInOutType.E_IN.ToString().TranslateString(),
+                },
+                new Option
+                {
+                    Key = EnumInOutType.E_OUT.ToString(),
+                    Name = EnumInOutType.E_OUT.ToString().TranslateString(),
+                }
+            });
         }
 
         
@@ -57,6 +79,8 @@ namespace TAMHubApp.ViewModels.UserControls
 
 
         #region Observable Properties
+        private Option optionnull;
+
         private ObservableCollection<Option> _options;
         public ObservableCollection<Option>? SDKsOptions
         {
@@ -123,6 +147,15 @@ namespace TAMHubApp.ViewModels.UserControls
         private bool _isSdkTypeEnable { get; set; }
         public bool IsSdkTypeEnable { get => _isSdkTypeEnable; set { _isSdkTypeEnable = value; OnPropertyChanged(); } }
 
+        private ObservableCollection<Option> _inOutTypes { get; set; }
+        public ObservableCollection<Option> InOutTypes
+        {
+            get => _inOutTypes ?? (_inOutTypes = new ObservableCollection<Option>());
+            set => _inOutTypes = value;
+        }
+        private Option _inOutTypeSelected { get; set; }
+        public Option InOutTypeSelected { get => _inOutTypeSelected; set { _inOutTypeSelected = value; OnPropertyChanged(); } }
+
         #endregion
 
         private void Action_SetDataInfoPopup(string Id)
@@ -146,6 +179,9 @@ namespace TAMHubApp.ViewModels.UserControls
             }
             IsInactive = currentDevice.IsInactive;
             IsSdkTypeEnable = false;
+            InOutTypeSelected = !string.IsNullOrEmpty(currentDevice.InOutType) 
+                ? InOutTypes.FirstOrDefault(x => x.Key == currentDevice.InOutType.ToString()) ?? optionnull
+                : optionnull;
         }
         private void Event_ChangeSDKType(Option option)
         {
@@ -176,6 +212,7 @@ namespace TAMHubApp.ViewModels.UserControls
                     currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
                     currentObject.ZKTeco_IsIFaceDevice = IsIFaceDevice;
                     currentObject.IsInactive = IsInactive;
+                    currentObject.InOutType = InOutTypeSelected.Key;
                 }
             }
             else
@@ -192,6 +229,7 @@ namespace TAMHubApp.ViewModels.UserControls
                 currentObject.ZKTeco_IsCanGetLogByTime = SupportGetDataByDate;
                 currentObject.ZKTeco_IsIFaceDevice = IsIFaceDevice;
                 currentObject.IsInactive = IsInactive;
+                currentObject.InOutType = InOutTypeSelected.Key;
                 await _unitOfWork.DeviceRepository.AddAsync(currentObject);
                 ObjectId = currentObject.Id;
             }
