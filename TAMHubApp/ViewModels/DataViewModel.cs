@@ -226,7 +226,7 @@ namespace TAMHubApp.ViewModels
                                   TimeLog = l.TimeLog,
                                   TimeLogView = l.TimeLogView,
                                   DeviceName = devicelj?.Name ?? "",
-                                  InOutModeView = devicelj?.Name?.TranslateString() ?? string.Empty,
+                                  InOutModeView = devicelj?.InOutType?.TranslateString() ?? string.Empty,
                               };
                 ListTAMScanLogs = new ObservableCollection<TAMScanLogModel>(newlist);
 
