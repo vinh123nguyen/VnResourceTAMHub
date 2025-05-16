@@ -6,85 +6,102 @@ using TAMHubApp.Infrastructures.Enums;
 
 namespace TAMHubApp.Services
 {
-    public class GlobalEnumInOutConverter
-    {
-        public GlobalEnumInOutConverter()
-        {
-            InitUpdateEnumConverter().Wait();
-        }
-        public static IDictionary<int, string> ZKEnumConverter { get; set; } = new Dictionary<int, string>();
-        public static IDictionary<int, string> RealandEnumConverter { get; set; } = new Dictionary<int, string>();
-        public static async Task InitUpdateEnumConverter(string enumtype = "")
-        {
+    //public class GlobalEnumInOutConverter
+    //{
+    //    public GlobalEnumInOutConverter()
+    //    {
+    //        InitUpdateEnumConverter().Wait();
+    //    }
+    //    public static IDictionary<string, string> ZKEnumConverter { get; set; } = new Dictionary<string, string>();
+    //    public static IDictionary<string, string> RealandEnumConverter { get; set; } = new Dictionary<string, string>();
+    //    public static async Task InitUpdateEnumConverter(string enumtype = "")
+    //    {
             
-            var unitOfWork = ServiceLocator.Instance.GetRequiredService<IUnitOfWork>();
+    //        var unitOfWork = ServiceLocator.Instance.GetRequiredService<IUnitOfWork>();
 
-            var listData = await unitOfWork.AppSettingRepository.GetAllAsync();
+    //        var listData = await unitOfWork.AppSettingRepository.GetAllAsync();
 
-            if(string.IsNullOrEmpty(enumtype) || enumtype == "ZKTeco")
-            {
-                ZKEnumConverter.Clear();
-                #region ZKTeco
-                var zkInKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_ZKTECO_IN_KEY.ToString());
-                var zkOutKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_ZKTECO_OUT_KEY.ToString());
+    //        var zkInKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_IN_KEY.ToString());
+    //        var zkOutKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_OUT_KEY.ToString());
 
-                var zkInItem = listData.Where(x => x.Name == ConfigEnumConstant.ENUM_INOUT_ZKTECO_IN_ITEM.ToString());
-                var zkOutItem = listData.Where(x => x.Name == ConfigEnumConstant.ENUM_INOUT_ZKTECO_OUT_ITEM.ToString());
+    //        ZKEnumConverter.Clear();
+    //        RealandEnumConverter.Clear();
 
-                if (zkInKey != null && !string.IsNullOrEmpty(zkInKey.Value) && zkInItem != null && zkInItem.Any())
-                {
-                    foreach (var item in zkInItem)
-                    {
-                        if (!int.TryParse(item.Value, out int num))
-                            continue;
-                        ZKEnumConverter.Add(num, zkInKey.Value);
-                    }
-                }
-                if (zkOutKey != null && !string.IsNullOrEmpty(zkOutKey.Value) && zkOutItem != null && zkOutItem.Any())
-                {
-                    foreach (var item in zkOutItem)
-                    {
-                        if (!int.TryParse(item.Value, out int num))
-                            continue;
-                        ZKEnumConverter.Add(num, zkOutKey.Value);
-                    }
-                }
-                #endregion
-            }
+    //        var listConfig = new Dictionary<string, string>();
 
-            if (string.IsNullOrEmpty(enumtype) || enumtype == "Realand")
-            {
-                RealandEnumConverter.Clear();
-                #region ZKTeco
-                var zkInKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_REALAND_IN_KEY.ToString());
-                var zkOutKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_REALAND_OUT_KEY.ToString());
+    //        if (zkInKey != null && !string.IsNullOrEmpty(zkInKey.Value))
+    //            listConfig.Add(EnumInOutType.E_IN.ToString(), zkInKey.Value);
 
-                var zkInItem = listData.Where(x => x.Name == ConfigEnumConstant.ENUM_INOUT_REALAND_IN_ITEM.ToString());
-                var zkOutItem = listData.Where(x => x.Name == ConfigEnumConstant.ENUM_INOUT_REALAND_OUT_ITEM.ToString());
+    //        if (zkOutKey != null && !string.IsNullOrEmpty(zkOutKey.Value))
+    //            listConfig.Add(EnumInOutType.E_OUT.ToString(), zkOutKey.Value);
 
-                if (zkInKey != null && !string.IsNullOrEmpty(zkInKey.Value) && zkInItem != null && zkInItem.Any())
-                {
-                    foreach (var item in zkInItem)
-                    {
-                        if (!int.TryParse(item.Value, out int num))
-                            continue;
-                        RealandEnumConverter.Add(num, zkInKey.Value);
-                    }
-                }
-                if (zkOutKey != null && !string.IsNullOrEmpty(zkOutKey.Value) && zkOutItem != null && zkOutItem.Any())
-                {
-                    foreach (var item in zkOutItem)
-                    {
-                        if (!int.TryParse(item.Value, out int num))
-                            continue;
-                        RealandEnumConverter.Add(num, zkOutKey.Value);
-                    }
-                }
-                #endregion
-            }
+    //        ZKEnumConverter = listConfig;
+    //        RealandEnumConverter = listConfig;
+
+    //        //if(string.IsNullOrEmpty(enumtype) || enumtype == "ZKTeco")
+    //        //{
+    //        //    ZKEnumConverter.Clear();
+    //        //    #region ZKTeco
+    //        //    var zkInKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_ZKTECO_IN_KEY.ToString());
+    //        //    var zkOutKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_ZKTECO_OUT_KEY.ToString());
+
+    //        //    var zkInItem = listData.Where(x => x.Name == ConfigEnumConstant.ENUM_INOUT_ZKTECO_IN_ITEM.ToString());
+    //        //    var zkOutItem = listData.Where(x => x.Name == ConfigEnumConstant.ENUM_INOUT_ZKTECO_OUT_ITEM.ToString());
+
+    //        //    if (zkInKey != null && !string.IsNullOrEmpty(zkInKey.Value) && zkInItem != null && zkInItem.Any())
+    //        //    {
+    //        //        foreach (var item in zkInItem)
+    //        //        {
+    //        //            if (!int.TryParse(item.Value, out int num))
+    //        //                continue;
+    //        //            ZKEnumConverter.Add(num, zkInKey.Value);
+    //        //        }
+    //        //    }
+    //        //    if (zkOutKey != null && !string.IsNullOrEmpty(zkOutKey.Value) && zkOutItem != null && zkOutItem.Any())
+    //        //    {
+    //        //        foreach (var item in zkOutItem)
+    //        //        {
+    //        //            if (!int.TryParse(item.Value, out int num))
+    //        //                continue;
+    //        //            ZKEnumConverter.Add(num, zkOutKey.Value);
+    //        //        }
+    //        //    }
+    //        //    #endregion
+    //        //}
+
+    //        //if (string.IsNullOrEmpty(enumtype) || enumtype == "Realand")
+    //        //{
+    //        //    RealandEnumConverter.Clear();
+    //        //    #region ZKTeco
+    //        //    var zkInKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_REALAND_IN_KEY.ToString());
+    //        //    var zkOutKey = listData.FirstOrDefault(x => x.Name == ConfigEnumConstant.ENUM_INOUT_REALAND_OUT_KEY.ToString());
+
+    //        //    var zkInItem = listData.Where(x => x.Name == ConfigEnumConstant.ENUM_INOUT_REALAND_IN_ITEM.ToString());
+    //        //    var zkOutItem = listData.Where(x => x.Name == ConfigEnumConstant.ENUM_INOUT_REALAND_OUT_ITEM.ToString());
+
+    //        //    if (zkInKey != null && !string.IsNullOrEmpty(zkInKey.Value) && zkInItem != null && zkInItem.Any())
+    //        //    {
+    //        //        foreach (var item in zkInItem)
+    //        //        {
+    //        //            if (!int.TryParse(item.Value, out int num))
+    //        //                continue;
+    //        //            RealandEnumConverter.Add(num, zkInKey.Value);
+    //        //        }
+    //        //    }
+    //        //    if (zkOutKey != null && !string.IsNullOrEmpty(zkOutKey.Value) && zkOutItem != null && zkOutItem.Any())
+    //        //    {
+    //        //        foreach (var item in zkOutItem)
+    //        //        {
+    //        //            if (!int.TryParse(item.Value, out int num))
+    //        //                continue;
+    //        //            RealandEnumConverter.Add(num, zkOutKey.Value);
+    //        //        }
+    //        //    }
+    //        //    #endregion
+    //        //}
 
 
-        }
+    //    }
 
-    }
+    //}
 }

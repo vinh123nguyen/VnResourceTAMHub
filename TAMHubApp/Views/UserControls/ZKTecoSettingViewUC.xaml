@@ -59,7 +59,7 @@
         
         <TextBlock Text="{DynamicResource LANG_SET_In}" FontSize="16" Margin="4" Grid.Row="2"/>
         <TextBox Grid.Column="1" Grid.Row="2" Margin="4" Text="{Binding EnumIn}"/>
-        <TextBlock Grid.Column="2" Grid.Row="2" FontSize="16"  Margin="4" Text="{DynamicResource LANG_SET_Enum}" />
+        <!--<TextBlock Grid.Column="2" Grid.Row="2" FontSize="16"  Margin="4" Text="{DynamicResource LANG_SET_Enum}" />
         <sdl:MultiSelectComboBox
             Grid.Column="3" Grid.Row="2"
             VerticalAlignment="Center"
@@ -73,11 +73,11 @@
             MaxDropDownHeight="300"
             EnableAutoComplete="False"
             sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedInItemsChangedCommand}"
-            />
+            />-->
 
         <TextBlock Text="{DynamicResource LANG_SET_Out}" FontSize="16" Margin="4" Grid.Row="3"/>
         <TextBox Grid.Column="1" Grid.Row="3" Margin="4" Text="{Binding EnumOut}"/>
-        <TextBlock Grid.Column="2" Grid.Row="3" FontSize="16"  Margin="4" Text="{DynamicResource LANG_SET_Enum}" />
+        <!--<TextBlock Grid.Column="2" Grid.Row="3" FontSize="16"  Margin="4" Text="{DynamicResource LANG_SET_Enum}" />
         <sdl:MultiSelectComboBox
             Grid.Column="3" Grid.Row="3"
             VerticalAlignment="Center"
@@ -91,7 +91,7 @@
             MaxDropDownHeight="300"
             EnableAutoComplete="False"
             sdl:SelectedItemsChangedBehaviour.SelectedItemsChanged="{Binding SelectedOutItemsChangedCommand}"
-            />
+            />-->
 
     </Grid>
 </UserControl>

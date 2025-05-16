@@ -58,6 +58,7 @@ namespace TAMHubApp.Services.TAMServices
                             IsConnected = false,
                             DeviceSDKTypeView = "ZKTeco",
                             CompanyCode = devicedb.CompanyCode,
+                            InOutType = devicedb.InOutType,
                             SerialNumber = devicedb.SerialNumber,
                             ProductName = devicedb.ProductName,
                             AllLogCount = devicedb.AllLogCount,
@@ -81,6 +82,7 @@ namespace TAMHubApp.Services.TAMServices
                             Port = devicedb.Port,
                             CommPassword = devicedb.CommPassword,
                             CompanyCode = devicedb.CompanyCode,
+                            InOutType = devicedb.InOutType,
                             SerialNumber = devicedb.SerialNumber,
                             ProductName = devicedb.ProductName,
                             IsConnectLoading = false,
@@ -123,6 +125,7 @@ namespace TAMHubApp.Services.TAMServices
                         existDevice.NewLogCount = devicedb.NewLogCount;
                         existDevice.DeviceSDKTypeView = "Realand";
                         existDevice.CompanyCode = devicedb.CompanyCode;
+                        existDevice.InOutType = devicedb.InOutType;
                         existDevice.SerialNumber = devicedb.SerialNumber;
                         existDevice.ProductName = devicedb.ProductName;
                         existDevice.IsInactive = devicedb.IsInactive;
@@ -155,6 +158,7 @@ namespace TAMHubApp.Services.TAMServices
                                 SerialNumber = devicedb.SerialNumber,
                                 ProductName = devicedb.ProductName,
                                 CompanyCode = devicedb.CompanyCode,
+                                InOutType = devicedb.InOutType,
                                 DeviceSDKTypeView = "Realand",
                                 IsInactive = devicedb.IsInactive,
                             };
@@ -182,6 +186,7 @@ namespace TAMHubApp.Services.TAMServices
                                 SerialNumber = devicedb.SerialNumber,
                                 ProductName = devicedb.ProductName,
                                 CompanyCode = devicedb.CompanyCode,
+                                InOutType = devicedb.InOutType,
                                 IsInactive = devicedb.IsInactive,
                                 ZKTeco_IsCanGetLogByTime = devicedb.ZKTeco_IsCanGetLogByTime,
                                 ZKTeco_IsIFaceDevice = devicedb.ZKTeco_IsIFaceDevice,

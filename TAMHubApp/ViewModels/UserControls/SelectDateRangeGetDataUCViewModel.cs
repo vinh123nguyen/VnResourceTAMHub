@@ -89,14 +89,14 @@ namespace TAMHubApp.ViewModels.UserControls
                 _mainWindow.IsLoading = true;
 
                 var lstSDK = lstDevice.Select(x => x.DeviceSDKType).ToList();
-                if (lstSDK.Contains(TAMSDKTypes.E_ZKTECO))
-                {
-                    await GlobalEnumInOutConverter.InitUpdateEnumConverter("ZKTeco");
-                }
-                if (lstSDK.Contains(TAMSDKTypes.E_REALAND))
-                {
-                    await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
-                }
+                //if (lstSDK.Contains(TAMSDKTypes.E_ZKTECO))
+                //{
+                //    await GlobalEnumInOutConverter.InitUpdateEnumConverter("ZKTeco");
+                //}
+                //if (lstSDK.Contains(TAMSDKTypes.E_REALAND))
+                //{
+                //    await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
+                //}
                 var numdevice = lstDevice.Count();
                 var lstDeviceRunDone = new ConcurrentBag<Guid>();
                 foreach (var device in lstDevice)

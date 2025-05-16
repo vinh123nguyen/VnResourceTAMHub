@@ -38,12 +38,12 @@
                 Grid.Row="1"
                 Background="White"
                 Icon="{DynamicResource Icon_Device}"
-                Title="{DynamicResource LANG_SET_ZKTeco}"
+                Title="{DynamicResource LANG_SET_InOut}"
                 NavigateCommand="{Binding NavigateZKTecoCommand}"
                 TabActive="{Binding TabActive}"
                 NameTab="ZKTeco"
                 />  
-            <uc:NavigationButtonUC
+            <!--<uc:NavigationButtonUC
                 Grid.Row="2"
                 Background="White"
                 Icon="{DynamicResource Icon_Device}"
@@ -51,7 +51,7 @@
                 NavigateCommand="{Binding NavigateRealandCommand}"
                 TabActive="{Binding TabActive}"
                 NameTab="Realand"
-                />
+                />-->
 
             <StackPanel Grid.Row="4" Margin="4" Orientation="Horizontal">
                 <TextBlock Text="{Binding AppVersion}" Margin= "0,0,4,0"/>

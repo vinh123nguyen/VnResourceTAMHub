@@ -34,14 +34,14 @@ namespace TAMHubApp.ScheduleTasks.Jobs
                 scheduletask.LastTimeRun = DateTime.Now;
             }
             var lstSDK = TAMSInstance.TAMs.Select(x => x.DeviceSDKType).ToList();
-            if (lstSDK.Contains(TAMSDKTypes.E_ZKTECO))
-            {
-                await GlobalEnumInOutConverter.InitUpdateEnumConverter("ZKTeco");
-            }
-            if (lstSDK.Contains(TAMSDKTypes.E_REALAND))
-            {
-                await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
-            }
+            //if (lstSDK.Contains(TAMSDKTypes.E_ZKTECO))
+            //{
+            //    await GlobalEnumInOutConverter.InitUpdateEnumConverter("ZKTeco");
+            //}
+            //if (lstSDK.Contains(TAMSDKTypes.E_REALAND))
+            //{
+            //    await GlobalEnumInOutConverter.InitUpdateEnumConverter("Realand");
+            //}
             var configmindate = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.SYNC_MIN_SCHEDULE_DATESTART.ToString());
             var isRunSync = await unitOfWork.AppSettingRepository.FindAsync(x => x.Name == ConfigEnumConstant.IS_RUN_SYNC_FOR_SCHEDULE.ToString());
             if (isRunSync != null && isRunSync.Value != null && isRunSync.Value == Boolean.TrueString)

@@ -88,26 +88,14 @@ namespace TAMHubApp.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("ec4f424e-08f7-4f1e-921f-87f5508fd167"),
-                            Name = "ENUM_INOUT_ZKTECO_IN_KEY",
+                            Id = new Guid("59dcb3e6-b1ef-421f-ad7f-6e8a232538cd"),
+                            Name = "ENUM_INOUT_IN_KEY",
                             Value = "E_IN"
                         },
                         new
                         {
-                            Id = new Guid("4717dcb8-fcdb-4781-a763-a83d25f453fe"),
-                            Name = "ENUM_INOUT_ZKTECO_OUT_KEY",
-                            Value = "E_OUT"
-                        },
-                        new
-                        {
-                            Id = new Guid("850505da-5d09-42bc-922b-db95f741715e"),
-                            Name = "ENUM_INOUT_REALAND_IN_KEY",
-                            Value = "E_IN"
-                        },
-                        new
-                        {
-                            Id = new Guid("dd30dcee-4063-4262-bd4b-6bcd4d188ff2"),
-                            Name = "ENUM_INOUT_REALAND_OUT_KEY",
+                            Id = new Guid("4f50416e-c25a-4961-bfe9-0968004fb682"),
+                            Name = "ENUM_INOUT_OUT_KEY",
                             Value = "E_OUT"
                         });
                 });
@@ -132,6 +120,9 @@ namespace TAMHubApp.Migrations
 
                     b.Property<string>("IPAddress")
                         .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("InOutType")
                         .HasColumnType("TEXT");
 
                     b.Property<bool>("IsInactive")

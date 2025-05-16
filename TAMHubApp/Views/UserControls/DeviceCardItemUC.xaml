@@ -150,6 +150,7 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"></RowDefinition>
                     <RowDefinition Height="Auto"></RowDefinition>
+                    <RowDefinition Height="Auto"></RowDefinition>
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"></ColumnDefinition>
@@ -180,6 +181,10 @@
                 <StackPanel Grid.Column="0" Grid.Row="1" Orientation="Horizontal">
                     <TextBlock Text="Platform:" Padding="4,0" FontSize="10"/>
                     <TextBlock Text="{Binding DeviceSDKTypeView}" FontSize="10"/>
+                </StackPanel>
+                <StackPanel Grid.Column="0" Grid.Row="2" Orientation="Horizontal">
+                    <TextBlock Text="In/Out Type:" Padding="4,0" FontSize="10"/>
+                    <TextBlock Text="{Binding InOutTypeView}" FontSize="10"/>
                 </StackPanel>
 
             </Grid>

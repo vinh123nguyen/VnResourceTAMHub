@@ -39,27 +39,37 @@ namespace TAMHubApp.Data
             builder.ApplyConfiguration(new ScheduleTaskConfiguration());
 
             builder.Entity<AppSetting>().HasData([
+                //new AppSetting(){
+                //    Id = Guid.NewGuid(),
+                //    Name = ConfigEnumConstant.ENUM_INOUT_ZKTECO_IN_KEY.ToString(),
+                //    Value = "E_IN"
+                //},
+                //new AppSetting(){
+                //    Id = Guid.NewGuid(),
+                //    Name = ConfigEnumConstant.ENUM_INOUT_ZKTECO_OUT_KEY.ToString(),
+                //    Value = "E_OUT"
+                //},
+                //new AppSetting(){
+                //    Id = Guid.NewGuid(),
+                //    Name = ConfigEnumConstant.ENUM_INOUT_REALAND_IN_KEY.ToString(),
+                //    Value = "E_IN"
+                //},
+                //new AppSetting(){
+                //    Id = Guid.NewGuid(),
+                //    Name = ConfigEnumConstant.ENUM_INOUT_REALAND_OUT_KEY.ToString(),
+                //    Value = "E_OUT"
+                //}
                 new AppSetting(){
                     Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.ENUM_INOUT_ZKTECO_IN_KEY.ToString(),
+                    Name = ConfigEnumConstant.ENUM_INOUT_IN_KEY.ToString(),
                     Value = "E_IN"
                 },
                 new AppSetting(){
                     Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.ENUM_INOUT_ZKTECO_OUT_KEY.ToString(),
+                    Name = ConfigEnumConstant.ENUM_INOUT_OUT_KEY.ToString(),
                     Value = "E_OUT"
                 },
-                new AppSetting(){
-                    Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.ENUM_INOUT_REALAND_IN_KEY.ToString(),
-                    Value = "E_IN"
-                },
-                new AppSetting(){
-                    Id = Guid.NewGuid(),
-                    Name = ConfigEnumConstant.ENUM_INOUT_REALAND_OUT_KEY.ToString(),
-                    Value = "E_OUT"
-                }
-                ]);
+            ]);
             
         }
 

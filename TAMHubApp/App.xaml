@@ -46,9 +46,9 @@
             <DataTemplate DataType="{x:Type TypeName=deviceUCVM:ZKTecoSettingViewUCViewModel}">
                 <viewUC:ZKTecoSettingViewUC/>
             </DataTemplate>
-            <DataTemplate DataType="{x:Type TypeName=deviceUCVM:RealandSettingViewUCViewModel}">
+            <!--<DataTemplate DataType="{x:Type TypeName=deviceUCVM:RealandSettingViewUCViewModel}">
                 <viewUC:RealandSettingViewUC/>
-            </DataTemplate>
+            </DataTemplate>-->
         </ResourceDictionary>
     </Application.Resources>
 </Application>

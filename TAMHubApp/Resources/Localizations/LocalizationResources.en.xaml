@@ -28,6 +28,7 @@
     <system:String x:Key="LANG_DEV_DeviceNotConnected">Device not connect</system:String>
     <system:String x:Key="LANG_DEV_GetDataSuccess">Download {0} data rows successfully</system:String>
     <system:String x:Key="LANG_DEV_CompanyCode">Company code</system:String>
+    <system:String x:Key="LANG_DEV_InOutType">InOut type</system:String>
     <system:String x:Key="LANG_GLO_Save">Save</system:String>
     <system:String x:Key="E_ZKTECO">ZKTeco</system:String>
     <system:String x:Key="E_REALAND">Realand</system:String>
@@ -120,6 +121,9 @@
     <system:String x:Key="Schedule">Schedule</system:String>
     <system:String x:Key="Success">Success</system:String>
     <system:String x:Key="Error">Error</system:String>
+    <system:String x:Key="E_IN">In</system:String>
+    <system:String x:Key="E_OUT">Out</system:String>
+    <system:String x:Key="PleaseSelect">Please select...</system:String>
     <system:String x:Key="LANG_GLO_DeviceDownloadError">Device: {0} download error</system:String>
     <system:String x:Key="LANG_GLO_DeviceDownloadSuccess">Device: {0} download success</system:String>
     <system:String x:Key="LANG_DAT_DeleteData">Remove {0} row success!</system:String>
